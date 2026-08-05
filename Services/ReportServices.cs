@@ -1,4 +1,4 @@
-﻿using Humanizer;
+using Humanizer;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
@@ -11,19 +11,19 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Net;
-using NVOAMASIS.Components.BaoCaoQuyTienMat.Pages;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using ABFreight.Components.BaoCaoQuyTienMat.Pages;
+using ABFreight.Data;
+using ABFreight.Models;
+using ABFreight.Response;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static MudBlazor.CategoryTypes;
 using static MudBlazor.Icons;
 using static Stimulsoft.Report.StiOptions.Export;
-using static NVOAMASIS.Components.BaoCaoQuyTienMat.Pages.BaoCaoQuyTienMat_Index;
-using static NVOAMASIS.Components.Report.Pages.TruckingReport7_3;
-using static NVOAMASIS.Components.Report.Pages.ShippingStatisticsReport;
+using static ABFreight.Components.BaoCaoQuyTienMat.Pages.BaoCaoQuyTienMat_Index;
+using static ABFreight.Components.Report.Pages.TruckingReport7_3;
+using static ABFreight.Components.Report.Pages.ShippingStatisticsReport;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class ReportServices(AppDbContext _context,  NavigationManager nav, IJSRuntime JSRuntime,CustomerService Cussv, ShipmentService shipsv)
     {

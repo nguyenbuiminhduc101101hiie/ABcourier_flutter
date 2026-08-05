@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     public class TrainSchedule
     {

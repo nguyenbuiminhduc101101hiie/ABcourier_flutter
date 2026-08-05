@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StiSerializer version="1.02" type="Net" application="StiReport">
   <CalculationMode>Interpretation</CalculationMode>
   <Culture>en-US</Culture>
@@ -1506,7 +1506,7 @@
   <ReportAuthor>MINH HAI</ReportAuthor>
   <ReportChanged>6/12/2026 4:26:24 PM</ReportChanged>
   <ReportCreated>5/3/2024 2:42:45 PM</ReportCreated>
-  <ReportFile>C:\Users\PCPV\source\repos\NVOAMASIS\wwwroot\Reports\BillArrivalNotice_Air.mrt</ReportFile>
+  <ReportFile>C:\Users\PCPV\source\repos\ABFreight\wwwroot\Reports\BillArrivalNotice_Air.mrt</ReportFile>
   <ReportGuid>5710fa367e5641329f6ccc0af830465a</ReportGuid>
   <ReportName>Report</ReportName>
   <ReportUnit>Inches</ReportUnit>

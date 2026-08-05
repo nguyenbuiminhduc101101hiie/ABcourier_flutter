@@ -1,15 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using Microsoft.Office.Interop.Excel;
 using Stimulsoft.Report;
 using Stimulsoft.Report.Blazor;
 using System.Buffers;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using ABFreight.Data;
+using ABFreight.Models;
+using ABFreight.Response;
 using ZXing;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class BookingService(AppDbContext _context, IWebHostEnvironment _env, IJSRuntime JSRuntime, AccountService asv)
     {

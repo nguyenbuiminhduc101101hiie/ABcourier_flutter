@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NVOAMASIS.Services.Localization;
+using ABFreight.Services.Localization;
 
-namespace NVOAMASIS.Controllers;
+namespace ABFreight.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

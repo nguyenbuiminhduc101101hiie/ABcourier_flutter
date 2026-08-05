@@ -1,6 +1,6 @@
 using Microsoft.Data.SqlClient;
 
-namespace NVOAMASIS.Services.MultiTenant;
+namespace ABFreight.Services.MultiTenant;
 
 public static class TenantConnectionStringBuilder
 {

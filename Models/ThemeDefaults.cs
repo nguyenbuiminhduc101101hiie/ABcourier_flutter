@@ -1,4 +1,4 @@
-namespace NVOAMASIS.Models;
+namespace ABFreight.Models;
 
 /// <summary>
 /// Màu nền mặc định cho theme. Chỉnh sửa tại đây để áp dụng cho toàn bộ ứng dụng.

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace NVOAMASIS.Migrations
+namespace ABFreight.Migrations
 {
     public partial class CreateParamTrongLuongCont : Migration
     {

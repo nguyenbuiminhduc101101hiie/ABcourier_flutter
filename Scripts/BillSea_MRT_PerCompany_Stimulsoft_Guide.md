@@ -100,7 +100,7 @@ function Export-MrtColumn($columnIndex, $fileName, $defaultSourcePath) {
 }
 
 # Đường dẫn file mặc định trong project (sửa nếu repo ở chỗ khác)
-$projectRoot = "C:\Users\PCPV\source\repos\NVOAMASIS"
+$projectRoot = "C:\Users\PCPV\source\repos\ABFreight"
 $defaultMain  = Join-Path $projectRoot "wwwroot\Reports\BillSea_NVOCC.mrt"
 $defaultAtt   = Join-Path $projectRoot "wwwroot\Reports\BillSea_NVOCC_Att_1.mrt"
 
@@ -236,4 +236,4 @@ SET BillSeaLayoutMrt = NULL,
 
 ---
 
-*Tài liệu tạo cho NVOAMASIS — Bill Sea layout multi-tenant.*
+*Tài liệu tạo cho ABFreight — Bill Sea layout multi-tenant.*

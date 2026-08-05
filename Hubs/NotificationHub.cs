@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
-namespace NVOAMASIS.Hubs
+namespace ABFreight.Hubs
 {
     public class NotificationHub : Hub
     {

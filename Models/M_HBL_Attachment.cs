@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     [Table("HBL_Attachment")]
     public class M_HBL_Attachment

@@ -2,10 +2,10 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using NVOAMASIS.Models;
+using ABFreight.Models;
 using UglyToad.PdfPig;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class InvoicePdfImportService(ChatGPTService chatGPTService, ILogger<InvoicePdfImportService> logger)
     {

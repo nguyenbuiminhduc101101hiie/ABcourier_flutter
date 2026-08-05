@@ -7,11 +7,11 @@ using ClosedXML.Excel;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models.Accounting.ExcelImport;
-using NVOAMASIS.Options;
+using ABFreight.Data;
+using ABFreight.Models.Accounting.ExcelImport;
+using ABFreight.Options;
 
-namespace NVOAMASIS.Services.Accounting.ExcelImport;
+namespace ABFreight.Services.Accounting.ExcelImport;
 
 public sealed class AccountBalanceExcelImportService : IAccountBalanceExcelImportService
 {

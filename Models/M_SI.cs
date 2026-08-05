@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     [Table("SI")]
     public class M_SI

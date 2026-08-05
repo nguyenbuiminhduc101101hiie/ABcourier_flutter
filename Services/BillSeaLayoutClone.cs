@@ -1,6 +1,6 @@
-using NVOAMASIS.Models;
+using ABFreight.Models;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public static class BillSeaLayoutClone
     {

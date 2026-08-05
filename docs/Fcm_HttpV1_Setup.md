@@ -1,4 +1,4 @@
-# FCM HTTP v1 — Push duyệt phiếu (NVOAMASIS)
+# FCM HTTP v1 — Push duyệt phiếu (ABFreight)
 
 Firebase project: **lms-qrscan** (Sender ID `171373076136`)  
 Android package: **com.vinalink.qrscan**  
@@ -8,7 +8,7 @@ API: FCM HTTP v1 + OAuth service account (Legacy Server Key đã tắt).
 
 1. Tải service account JSON từ Firebase Console → Project settings → Service accounts → Generate new private key.
 2. Đặt file:
-   - Local: `NVOAMASIS/Secrets/firebase-service-account.json`
+   - Local: `ABFreight/Secrets/firebase-service-account.json`
    - Prod: cùng relative path trên server (hoặc absolute path trong config).
 3. Không commit file thật (`Secrets/` đã trong `.gitignore`).
 4. Config:
@@ -21,7 +21,7 @@ API: FCM HTTP v1 + OAuth service account (Legacy Server Key đã tắt).
 }
 ```
 
-5. Restart NVOAMASIS sau khi thêm file / đổi config.
+5. Restart ABFreight sau khi thêm file / đổi config.
 6. Tenant DB phải có bảng `DevicePushToken` (`Scripts/Create_DevicePushToken.sql`).
 
 ## Verify

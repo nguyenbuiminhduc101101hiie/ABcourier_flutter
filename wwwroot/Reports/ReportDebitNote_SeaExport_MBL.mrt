@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StiSerializer version="1.02" type="Net" application="StiReport">
   <CalculationMode>Interpretation</CalculationMode>
   <Culture>en-US</Culture>
@@ -1677,7 +1677,7 @@ issue red invoice follow these information</Text>
   <ReportAuthor>MINH HAI</ReportAuthor>
   <ReportChanged>3/23/2026 9:22:07 AM</ReportChanged>
   <ReportCreated>5/8/2024 1:21:02 PM</ReportCreated>
-  <ReportFile>C:\Users\PCPV\source\repos\NVOAMASIS\wwwroot\Reports\ReportDebitNote_SeaExport_MBL.mrt</ReportFile>
+  <ReportFile>C:\Users\PCPV\source\repos\ABFreight\wwwroot\Reports\ReportDebitNote_SeaExport_MBL.mrt</ReportFile>
   <ReportGuid>e5720844660944b981111c34e3f90c04</ReportGuid>
   <ReportName>Report</ReportName>
   <ReportUnit>Inches</ReportUnit>

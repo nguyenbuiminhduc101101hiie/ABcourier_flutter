@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
+using ABFreight.Data;
+using ABFreight.Models;
 using System.Text;
 using System.Text.Json;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class ChatGPTService
     {
@@ -96,7 +96,7 @@ namespace NVOAMASIS.Services
         private string BuildSystemPrompt(string dataContext)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("Bạn là AI Assistant thông minh của hệ thống LMS-NVOAMASIS (Logistics Management System - Non-Vessel Operating Amasis).");
+            sb.AppendLine("Bạn là AI Assistant thông minh của hệ thống LMS-ABFreight (Logistics Management System - Non-Vessel Operating Amasis).");
             sb.AppendLine("Hệ thống quản lý toàn diện hoạt động logistics, vận tải biển, hàng không, trucking, kho bãi.");
             sb.AppendLine();
             sb.AppendLine("## CẤU TRÚC DATABASE CHÍNH:");
@@ -704,7 +704,7 @@ namespace NVOAMASIS.Services
             db.ChangeTracker.Clear();
 
             var sb = new StringBuilder();
-            sb.AppendLine("### 📊 TỔNG QUAN HỆ THỐNG LMS-NVOAMASIS");
+            sb.AppendLine("### 📊 TỔNG QUAN HỆ THỐNG LMS-ABFreight");
             sb.AppendLine();
 
             try { sb.AppendLine($"- 📦 **Job:** {await db.Job.AsNoTracking().CountAsync()}"); } catch { }

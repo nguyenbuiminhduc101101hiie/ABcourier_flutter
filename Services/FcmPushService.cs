@@ -4,9 +4,9 @@ using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NVOAMASIS.Data;
+using ABFreight.Data;
 
-namespace NVOAMASIS.Services;
+namespace ABFreight.Services;
 
 public class FcmOptions
 {

@@ -1,4 +1,4 @@
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     /// <summary>
     /// Bảng lưu token QR D/O theo (HblId, Type, BillType, Branches). Mỗi company/branch một QR còn hạn.

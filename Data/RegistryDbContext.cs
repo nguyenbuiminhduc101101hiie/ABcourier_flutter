@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Models;
+using ABFreight.Models;
 
-namespace NVOAMASIS.Data;
+namespace ABFreight.Data;
 
 public class RegistryDbContext(DbContextOptions<RegistryDbContext> options) : DbContext(options)
 {

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
-namespace NVOAMASIS.Services;
+namespace ABFreight.Services;
 
 public class CustomAuthenticationStateProvider(IHttpContextAccessor _http) : AuthenticationStateProvider
 {

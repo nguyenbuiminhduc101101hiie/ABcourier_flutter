@@ -1,7 +1,7 @@
 /*
-  NVOAMASIS: align dbo.account_balance with jnl (correct) schema.
+  ABFreight: align dbo.account_balance with jnl (correct) schema.
 
-  WRONG (current NVOAMASIS CREATE):
+  WRONG (current ABFreight CREATE):
     UNIQUE UQ_account_balance_account_period (account_code, period_year, period_month)  -- no book_code
 
   CORRECT (jnl + indexes from SSMS):
@@ -11,10 +11,10 @@
     - UNIQUE UQ_account_balance_account_period_book (account_code, period_year, period_month, book_code)
     - UNIQUE UQ_account_balance_company_account_period_book (company_id, account_code, period_year, period_month, book_code)
 
-  Run on database NVOAMASIS. Review orphan account_code rows before FK step.
+  Run on database ABFreight. Review orphan account_code rows before FK step.
 */
 
-USE [NVOAMASIS];
+USE [ABFreight];
 GO
 
 SET NOCOUNT ON;

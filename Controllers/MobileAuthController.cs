@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
-using NVOAMASIS.Services;
-using NVOAMASIS.Services.MultiTenant;
+using ABFreight.Data;
+using ABFreight.Models;
+using ABFreight.Services;
+using ABFreight.Services.MultiTenant;
 
-namespace NVOAMASIS.Controllers;
+namespace ABFreight.Controllers;
 
 [ApiController]
 [Route("api/mobile/auth")]
@@ -112,7 +112,7 @@ public class MobileAuthController(
             Send_OTP_login = appUser.Send_OTP_login
         };
 
-        var defaultDb = configuration["MultiTenant:TemplateDatabase"] ?? "nvoamasis";
+        var defaultDb = configuration["MultiTenant:TemplateDatabase"] ?? "ABfreight";
         var tenantId = Guid.Empty;
         var token = jwtTokenService.CreateToken(authUser, tenantId, defaultDb, out var expires);
 

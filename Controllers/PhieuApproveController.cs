@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NVOAMASIS.Services;
+using ABFreight.Services;
 
-namespace NVOAMASIS.Controllers;
+namespace ABFreight.Controllers;
 
 /// <summary>
 /// Public email approval page for PhieuThu / PhieuChi.

@@ -1,4 +1,4 @@
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     /// <summary>Payload cached theo token QR Arrival Notice (public link).</summary>
     public class ArrivalNoticeTokenPayload

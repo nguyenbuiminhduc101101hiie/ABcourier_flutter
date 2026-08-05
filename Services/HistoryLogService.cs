@@ -1,6 +1,6 @@
-﻿// Services/HistoryLogService.cs (Blazor Client)
+// Services/HistoryLogService.cs (Blazor Client)
 using System.Text.Json;
-using NVOAMASIS.Models;
+using ABFreight.Models;
 
 public class HistoryLogService
 {

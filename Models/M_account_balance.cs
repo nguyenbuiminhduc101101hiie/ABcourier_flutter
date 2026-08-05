@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     [Table("account_balance")]
     [Index(nameof(AccountCode), nameof(PeriodYear), nameof(PeriodMonth), IsUnique = true, Name = "UQ_account_balance_account_period")]

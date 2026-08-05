@@ -1,7 +1,7 @@
 using System.Globalization;
 using Microsoft.Extensions.Localization;
 
-namespace NVOAMASIS.Services.Localization;
+namespace ABFreight.Services.Localization;
 
 public class DbStringLocalizer : IStringLocalizer
 {

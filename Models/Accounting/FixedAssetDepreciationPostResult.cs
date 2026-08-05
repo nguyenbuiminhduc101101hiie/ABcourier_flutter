@@ -1,4 +1,4 @@
-namespace NVOAMASIS.Models.Accounting;
+namespace ABFreight.Models.Accounting;
 
 public sealed class FixedAssetDepreciationPostResult
 {

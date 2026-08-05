@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     /// <summary>Ánh xạ chỉ tiêu bảng cân đối kế toán ↔ mã tài khoản (bảng BalanceSheetMapping).</summary>
     public class M_BalanceSheetMapping

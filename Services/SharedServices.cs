@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using ABFreight.Data;
+using ABFreight.Models;
+using ABFreight.Response;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Net;
 using System.Security.Claims;
 using static MudBlazor.CategoryTypes;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class SharedServices(AppDbContext _context, CustomAuthenticationStateProvider _auth, NavigationManager nav, HistoryLogService HistoryLogService,AccountService asv, IJSRuntime JSRuntime, GlobalServices gl,DNTUServices DNTUSV, QuotationService Quosv, PhieuThu_Chi_Services ThuchiSV,IssueReportServices IRSV)
     {

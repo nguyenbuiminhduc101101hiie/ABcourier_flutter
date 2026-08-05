@@ -1,9 +1,9 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models.Accounting;
+using ABFreight.Data;
+using ABFreight.Models.Accounting;
 
-namespace NVOAMASIS.Services.Accounting;
+namespace ABFreight.Services.Accounting;
 
 public sealed class FixedAssetService : IFixedAssetService
 {

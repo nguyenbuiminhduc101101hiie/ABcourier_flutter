@@ -1,8 +1,8 @@
 using System.Globalization;
 using System.Xml.Linq;
-using NVOAMASIS.Models;
+using ABFreight.Models;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public static class BillSeaLayoutMrtHelper
     {

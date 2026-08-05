@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StiSerializer version="1.02" type="Net" application="StiReport">
   <Dictionary Ref="1" type="Dictionary" isKey="true">
     <BusinessObjects isList="true" count="0" />
@@ -2049,7 +2049,7 @@ Chúng tôi tin rằng có thể đáp ứng tốt nhu cầu của quý công ty
   <ReportAlias>Report</ReportAlias>
   <ReportChanged>3/26/2026 4:45:03 PM</ReportChanged>
   <ReportCreated>2/25/2025 5:22:45 PM</ReportCreated>
-  <ReportFile>C:\Users\PCPV\source\repos\NVOAMASIS\wwwroot\Reports\Quotation.mrt</ReportFile>
+  <ReportFile>C:\Users\PCPV\source\repos\ABFreight\wwwroot\Reports\Quotation.mrt</ReportFile>
   <ReportGuid>cfaadd6936e04f0ebcd1c12a39ac06db</ReportGuid>
   <ReportName>Report</ReportName>
   <ReportUnit>Inches</ReportUnit>

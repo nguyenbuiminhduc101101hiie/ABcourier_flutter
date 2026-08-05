@@ -5,7 +5,7 @@
   but FK failed with Msg 1776 (account_mapping.account_code not unique/PK).
 */
 
-USE [NVOAMASIS];
+USE [ABFreight];
 GO
 
 SET NOCOUNT ON;

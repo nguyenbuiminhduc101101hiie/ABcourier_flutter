@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using MudBlazor;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
+using ABFreight.Data;
+using ABFreight.Models;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class AttendanceService
     {

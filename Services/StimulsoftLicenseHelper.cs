@@ -2,7 +2,7 @@ using Stimulsoft.Base;
 using Stimulsoft.Report;
 using Stimulsoft.Report.Components;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     /// <summary>
     /// Gán license Stimulsoft trước mọi thao tác Load/Save/Render.

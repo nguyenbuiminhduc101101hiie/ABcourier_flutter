@@ -1,4 +1,4 @@
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     /// <summary>
     /// Bảng lưu token QR Arrival Notice theo (HblId, Type, BillType, Branches).

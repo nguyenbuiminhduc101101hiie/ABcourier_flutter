@@ -1,8 +1,8 @@
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
+using ABFreight.Data;
 
-namespace NVOAMASIS.Services.MultiTenant;
+namespace ABFreight.Services.MultiTenant;
 
 public class TenantContext(
     IHttpContextAccessor httpContextAccessor,

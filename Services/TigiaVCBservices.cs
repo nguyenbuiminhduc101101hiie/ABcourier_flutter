@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Xml.Linq;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using ABFreight.Data;
+using ABFreight.Models;
+using ABFreight.Response;
 using static Stimulsoft.Report.StiOptions.Export;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class tigiaVCBservices
     {

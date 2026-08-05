@@ -193,7 +193,7 @@
             var dialogOptions = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
             if (type.Contains("S")) // sea
             {
-                var anDialogParams = new DialogParameters { ["FormKind"] = NVOAMASIS.Models.BillLayoutFormKind.AnSea };
+                var anDialogParams = new DialogParameters { ["FormKind"] = ABFreight.Models.BillLayoutFormKind.AnSea };
                 var dialogRef = await DialogService.ShowAsync<Components.Shipment.Pages.DialogLayoutFormExportOption>("Export AN Sea - Chọn mẫu form", anDialogParams, dialogOptions);
                 var result = await dialogRef.Result;
                 if (result.Canceled) return;
@@ -203,7 +203,7 @@
             }
             else if (type.Contains("A")) // air
             {
-                var anDialogParams = new DialogParameters { ["FormKind"] = NVOAMASIS.Models.BillLayoutFormKind.AnAir };
+                var anDialogParams = new DialogParameters { ["FormKind"] = ABFreight.Models.BillLayoutFormKind.AnAir };
                 var dialogRef = await DialogService.ShowAsync<Components.Shipment.Pages.DialogLayoutFormExportOption>("Export AN Air - Chọn mẫu form", anDialogParams, dialogOptions);
                 var result = await dialogRef.Result;
                 if (result.Canceled) return;
@@ -240,7 +240,7 @@
             if (type.Contains("SI")) // sea
             {
                 var dialogOptions = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-                var anDialogParams = new DialogParameters { ["FormKind"] = NVOAMASIS.Models.BillLayoutFormKind.AnSea };
+                var anDialogParams = new DialogParameters { ["FormKind"] = ABFreight.Models.BillLayoutFormKind.AnSea };
                 var dialogRef = await DialogService.ShowAsync<Components.Shipment.Pages.DialogLayoutFormExportOption>("Export AN Sea - Chọn mẫu form", anDialogParams, dialogOptions);
                 var result = await dialogRef.Result;
                 if (result.Canceled) return;

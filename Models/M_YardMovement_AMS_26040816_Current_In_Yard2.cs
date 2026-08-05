@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace NVOAMASIS.Models;
+namespace ABFreight.Models;
 
 public class M_YardMovement_AMS_26040816_Current_In_Yard2 : IExcelImportEntity
 {

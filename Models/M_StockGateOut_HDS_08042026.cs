@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace NVOAMASIS.Models;
+namespace ABFreight.Models;
 
 public class M_StockGateOut_HDS_08042026 : IExcelImportEntity
 {

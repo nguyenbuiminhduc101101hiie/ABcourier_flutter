@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NVOAMASIS.Models;
+namespace ABFreight.Models;
 
 /// <summary>Quản lý container (sheet VNSGN - QUAN LY CONT).</summary>
 [Table("QuanLy_Cont")]

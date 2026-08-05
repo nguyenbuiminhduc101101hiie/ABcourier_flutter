@@ -8,10 +8,10 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
+using ABFreight.Data;
+using ABFreight.Models;
 
-namespace NVOAMASIS.Services;
+namespace ABFreight.Services;
 
 public static class BkavInvoiceCommandTypes
 {

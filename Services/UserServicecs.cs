@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Components.Account.Pages;
-using NVOAMASIS.Data;
-using NVOAMASIS.Interface;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using Microsoft.EntityFrameworkCore;
+using ABFreight.Components.Account.Pages;
+using ABFreight.Data;
+using ABFreight.Interface;
+using ABFreight.Models;
+using ABFreight.Response;
 using System;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class UserServicecs(AppDbContext _context) : IUserService
     {

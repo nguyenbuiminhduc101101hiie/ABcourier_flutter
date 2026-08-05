@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
-using NVOAMASIS.Interface;
-using NVOAMASIS.Models;
+using ABFreight.Data;
+using ABFreight.Interface;
+using ABFreight.Models;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class WordDocumentService : IWordDocumentService
     {

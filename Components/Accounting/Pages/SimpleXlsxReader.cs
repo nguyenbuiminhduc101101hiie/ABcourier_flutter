@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-namespace NVOAMASIS.Components.Accounting.Pages
+namespace ABFreight.Components.Accounting.Pages
 {
     /// <summary>
     /// Minimal .xlsx reader used by the voucher import screen.

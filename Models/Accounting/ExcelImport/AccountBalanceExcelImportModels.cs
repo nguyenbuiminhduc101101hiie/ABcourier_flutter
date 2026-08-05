@@ -1,4 +1,4 @@
-namespace NVOAMASIS.Models.Accounting.ExcelImport;
+namespace ABFreight.Models.Accounting.ExcelImport;
 
 public enum ExcelAccountingImportTarget : byte
 {

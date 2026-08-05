@@ -1,4 +1,4 @@
--- Chạy script này trên MỖI database tenant (không chỉ Acc_Multi_DB registry).
+-- Chạy script này trên MỖI database tenant (không chỉ ABFreight_Acc_Multi_DB registry).
 -- Bổ sung các cột còn thiếu cho bảng BillSeaLayoutForm.
 
 IF OBJECT_ID(N'dbo.BillSeaLayoutForm', N'U') IS NULL

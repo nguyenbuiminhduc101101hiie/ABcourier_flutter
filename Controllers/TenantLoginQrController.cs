@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NVOAMASIS.Services.MultiTenant;
+using ABFreight.Services.MultiTenant;
 
-namespace NVOAMASIS.Controllers;
+namespace ABFreight.Controllers;
 
 /// <summary>
 /// Public API: điện thoại quét QR gọi endpoint này để lấy thông tin đăng nhập theo token.

@@ -1,14 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Stimulsoft.Report;
 using Stimulsoft.Report.Blazor;
 using System.Globalization;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using ABFreight.Data;
+using ABFreight.Models;
+using ABFreight.Response;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class DNTUServices(AppDbContext _context, IWebHostEnvironment _env, AccountService asv, IJSRuntime JSRuntime)
     {

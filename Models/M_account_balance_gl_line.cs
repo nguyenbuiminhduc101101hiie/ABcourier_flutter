@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     [Table("account_balance_gl_line")]
     public class M_account_balance_gl_line

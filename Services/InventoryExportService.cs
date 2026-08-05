@@ -2,7 +2,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Text;
 
-namespace NVOAMASIS.Services;
+namespace ABFreight.Services;
 
 /// <summary>
 /// DTO for inventory export rows. Used by InventoryExportService.

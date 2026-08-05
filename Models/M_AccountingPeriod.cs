@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     [Table("accounting_period")]
     public class M_AccountingPeriod

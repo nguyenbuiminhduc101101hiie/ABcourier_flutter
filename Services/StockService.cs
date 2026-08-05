@@ -1,10 +1,10 @@
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
+using ABFreight.Data;
+using ABFreight.Models;
 using OfficeOpenXml;
 
-namespace NVOAMASIS.Services;
+namespace ABFreight.Services;
 
 public record StockListFilter(
     string? Location,

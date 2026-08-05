@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace NVOAMASIS.Controllers
+namespace ABFreight.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

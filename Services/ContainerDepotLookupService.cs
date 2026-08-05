@@ -1,10 +1,10 @@
 using System.Data;
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
+using ABFreight.Data;
+using ABFreight.Models;
 
-namespace NVOAMASIS.Services;
+namespace ABFreight.Services;
 
 public sealed class ContainerDepotLookupResult
 {

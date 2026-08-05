@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using Microsoft.EntityFrameworkCore;
+using ABFreight.Data;
+using ABFreight.Models;
+using ABFreight.Response;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class ThuTucTuVanHQ_Services(AppDbContext _context, IWebHostEnvironment _env, AccountService asv, HistoryLogService HistoryLogService)
     {

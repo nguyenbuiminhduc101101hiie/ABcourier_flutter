@@ -1,4 +1,4 @@
-# Flutter Prompt — Đồng bộ duyệt Phiếu thu/chi với NVOAMASIS Web
+# Flutter Prompt — Đồng bộ duyệt Phiếu thu/chi với ABFreight Web
 
 Copy toàn bộ nội dung bên dưới gửi cho team Flutter / AI coding agent.
 
@@ -8,7 +8,7 @@ Copy toàn bộ nội dung bên dưới gửi cho team Flutter / AI coding agent
 
 | Mục | Trạng thái |
 |---|---|
-| Code trong solution NVOAMASIS | **ĐÃ CÓ** |
+| Code trong solution ABFreight | **ĐÃ CÓ** |
 | Controllers | `Controllers/MobileAuthController.cs`, `MobileNotificationController.cs`, `MobilePhieuApproveController.cs`, `MobileDeviceController.cs` |
 | Bug ISnackbar / 500 HTML | **ĐÃ FIX** — `NotificationService` không còn inject MudBlazor `ISnackbar` |
 | FCM push khi gửi duyệt | **ĐÃ CÓ** FCM HTTP v1 (`FcmPushService` + `Google.Apis.Auth`). Legacy Server Key **không dùng**. |
@@ -50,13 +50,13 @@ Xây dựng trên Flutter (hoặc mở rộng app Flutter hiện có) tính năn
 3. Khi notification là yêu cầu duyệt phiếu thu/chi → mở màn **Approve / Deny**.
 4. Đồng bộ 100% với Web + Email: ai duyệt trước thì người còn lại không duyệt được.
 
-Backend NVOAMASIS đã có sẵn REST API JSON trong source. **Không tự tạo logic duyệt riêng trên Flutter** — chỉ gọi API.
+Backend ABFreight đã có sẵn REST API JSON trong source. **Không tự tạo logic duyệt riêng trên Flutter** — chỉ gọi API.
 
 ---
 
 ## Base URL
 
-Dùng base URL môi trường thực tế của server NVOAMASIS (nơi host API `/api/mobile/...`), ví dụ:
+Dùng base URL môi trường thực tế của server ABFreight (nơi host API `/api/mobile/...`), ví dụ:
 
 - Dev: `https://<host-dev>` hoặc `http://<ip>:<port>`
 - Prod: `https://<host-prod>`
@@ -82,7 +82,7 @@ Body:
 
 ```json
 {
-  "databaseName": "nvoamasis",
+  "databaseName": "ABfreight",
   "sqlUserId": "sgn-fc-admin",
   "sqlPassword": "***",
   "appUserName": "username",
@@ -99,7 +99,7 @@ Response success:
   "accessToken": "eyJhbGciOi...",
   "expiresAtUtc": "2026-07-27T00:00:00Z",
   "tenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-  "databaseName": "nvoamasis",
+  "databaseName": "ABfreight",
   "usrId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
   "usr": "username",
   "name": "Display Name",

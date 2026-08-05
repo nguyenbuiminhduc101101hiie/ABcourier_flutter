@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NVOAMASIS.Data;
+using ABFreight.Data;
 
 #nullable disable
 
-namespace NVOAMASIS.Migrations
+namespace ABFreight.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -22,7 +22,7 @@ namespace NVOAMASIS.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("NVOAMASIS.Models.AttendanceLog", b =>
+            modelBuilder.Entity("ABFreight.Models.AttendanceLog", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,7 +59,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("AttendanceLogs");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.AuthUser", b =>
+            modelBuilder.Entity("ABFreight.Models.AuthUser", b =>
                 {
                     b.Property<Guid>("UsrId")
                         .ValueGeneratedOnAdd()
@@ -103,7 +103,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("UserList");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.Booking", b =>
+            modelBuilder.Entity("ABFreight.Models.Booking", b =>
                 {
                     b.Property<Guid>("ContainerOutBoundNotifyId")
                         .ValueGeneratedOnAdd()
@@ -645,7 +645,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("CONTAINEROUTBOUNDNOTIFY_sale");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.ChargeModel", b =>
+            modelBuilder.Entity("ABFreight.Models.ChargeModel", b =>
                 {
                     b.Property<Guid>("CHARGE_ID")
                         .ValueGeneratedOnAdd()
@@ -728,7 +728,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Charge");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.ChargeTemplete", b =>
+            modelBuilder.Entity("ABFreight.Models.ChargeTemplete", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -775,7 +775,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("ChargeTemplete");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.Container_InBound", b =>
+            modelBuilder.Entity("ABFreight.Models.Container_InBound", b =>
                 {
                     b.Property<Guid>("InboundContainersID")
                         .ValueGeneratedOnAdd()
@@ -1026,7 +1026,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("ContainerRepair");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.CustomerCode", b =>
+            modelBuilder.Entity("ABFreight.Models.CustomerCode", b =>
                 {
                     b.Property<Guid?>("CustomerCode_ID")
                         .ValueGeneratedOnAdd()
@@ -1043,7 +1043,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("CustomerCode");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.CustomerCommondity", b =>
+            modelBuilder.Entity("ABFreight.Models.CustomerCommondity", b =>
                 {
                     b.Property<Guid?>("CustomerCommondity_ID")
                         .ValueGeneratedOnAdd()
@@ -1123,7 +1123,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("CustomerCommondity");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.CustomerCommondityFileUpload", b =>
+            modelBuilder.Entity("ABFreight.Models.CustomerCommondityFileUpload", b =>
                 {
                     b.Property<Guid>("FileID")
                         .ValueGeneratedOnAdd()
@@ -1149,7 +1149,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("CustomerCommondityFileUpload");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.CustomerMarket", b =>
+            modelBuilder.Entity("ABFreight.Models.CustomerMarket", b =>
                 {
                     b.Property<Guid>("CustomerMarket_Id")
                         .ValueGeneratedOnAdd()
@@ -1190,7 +1190,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("CustomerMarket");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.CustomerReport", b =>
+            modelBuilder.Entity("ABFreight.Models.CustomerReport", b =>
                 {
                     b.Property<Guid>("CusReport_ID")
                         .ValueGeneratedOnAdd()
@@ -1240,7 +1240,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("CUSTOMERREPORT");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.DanhMucTaiKhoan", b =>
+            modelBuilder.Entity("ABFreight.Models.DanhMucTaiKhoan", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1275,7 +1275,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("DanhMucTaiKhoan");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.DebitCreditTemplate", b =>
+            modelBuilder.Entity("ABFreight.Models.DebitCreditTemplate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1311,7 +1311,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("DebitCreditTemplate");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.Department", b =>
+            modelBuilder.Entity("ABFreight.Models.Department", b =>
                 {
                     b.Property<Guid>("DepartmentId")
                         .ValueGeneratedOnAdd()
@@ -1340,7 +1340,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Department");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.FormMenu", b =>
+            modelBuilder.Entity("ABFreight.Models.FormMenu", b =>
                 {
                     b.Property<Guid>("MenuID")
                         .ValueGeneratedOnAdd()
@@ -1357,7 +1357,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("MenuNames");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.GetBk", b =>
+            modelBuilder.Entity("ABFreight.Models.GetBk", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1380,7 +1380,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("SGN_bkno");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.HistoryLog", b =>
+            modelBuilder.Entity("ABFreight.Models.HistoryLog", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1412,7 +1412,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("HistoryLogs");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.In_bound", b =>
+            modelBuilder.Entity("ABFreight.Models.In_bound", b =>
                 {
                     b.Property<Guid?>("Blib_id")
                         .ValueGeneratedOnAdd()
@@ -1576,7 +1576,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Inbound");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.InboundFreightModel", b =>
+            modelBuilder.Entity("ABFreight.Models.InboundFreightModel", b =>
                 {
                     b.Property<string>("Book_EraseNo")
                         .HasColumnType("nvarchar(max)");
@@ -1857,7 +1857,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("InboundFreight");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.InboundFreight_HistoryModel", b =>
+            modelBuilder.Entity("ABFreight.Models.InboundFreight_HistoryModel", b =>
                 {
                     b.Property<Guid>("Inboundfreightid")
                         .HasColumnType("uniqueidentifier");
@@ -2117,7 +2117,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("InboundFreight_History");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.InboundFull", b =>
+            modelBuilder.Entity("ABFreight.Models.InboundFull", b =>
                 {
                     b.Property<string>("AgencyName")
                         .HasColumnType("nvarchar(max)");
@@ -2767,7 +2767,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("InboundFulls");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.LeaveRequest", b =>
+            modelBuilder.Entity("ABFreight.Models.LeaveRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2829,7 +2829,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("LeaveRequests");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.ListDebit", b =>
+            modelBuilder.Entity("ABFreight.Models.ListDebit", b =>
                 {
                     b.Property<bool?>("approve")
                         .HasColumnType("bit");
@@ -2999,7 +2999,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("listDebits");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.LocalizationResource", b =>
+            modelBuilder.Entity("ABFreight.Models.LocalizationResource", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3029,7 +3029,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("LocalizationResources");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.MARKET", b =>
+            modelBuilder.Entity("ABFreight.Models.MARKET", b =>
                 {
                     b.Property<Guid>("Market_ID")
                         .ValueGeneratedOnAdd()
@@ -3064,7 +3064,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("MARKET");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Agency", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Agency", b =>
                 {
                     b.Property<Guid?>("Agency_ID")
                         .ValueGeneratedOnAdd()
@@ -3132,7 +3132,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Agency");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_BieuGiaKDTV", b =>
+            modelBuilder.Entity("ABFreight.Models.M_BieuGiaKDTV", b =>
                 {
                     b.Property<Guid>("KDTVID")
                         .ValueGeneratedOnAdd()
@@ -3206,7 +3206,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("BieugiaKDTV");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_BieuGiaKTCL", b =>
+            modelBuilder.Entity("ABFreight.Models.M_BieuGiaKTCL", b =>
                 {
                     b.Property<Guid>("BieuGiaKTCLID")
                         .ValueGeneratedOnAdd()
@@ -3268,7 +3268,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("BieugiaKTCL");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_BieuGiaLuuKho", b =>
+            modelBuilder.Entity("ABFreight.Models.M_BieuGiaLuuKho", b =>
                 {
                     b.Property<Guid>("BieuGiaLuuKhoID")
                         .ValueGeneratedOnAdd()
@@ -3306,7 +3306,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Bieugialuukho");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Bieugianangha", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Bieugianangha", b =>
                 {
                     b.Property<Guid>("BieuGiaNangHaID")
                         .ValueGeneratedOnAdd()
@@ -3389,7 +3389,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("BieuGiaNangHa");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Bieugiarutruot", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Bieugiarutruot", b =>
                 {
                     b.Property<Guid>("RutRuotID")
                         .ValueGeneratedOnAdd()
@@ -3463,7 +3463,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Bieugiarutruot");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Booking", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Booking", b =>
                 {
                     b.Property<Guid?>("Booking_ID")
                         .ValueGeneratedOnAdd()
@@ -3597,7 +3597,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Booking");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Buyer", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Buyer", b =>
                 {
                     b.Property<Guid>("BuyerID")
                         .ValueGeneratedOnAdd()
@@ -3665,7 +3665,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Buyer");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_ChiTietBieuGiaLuuKho", b =>
+            modelBuilder.Entity("ABFreight.Models.M_ChiTietBieuGiaLuuKho", b =>
                 {
                     b.Property<Guid>("ChiTietBieuGiaLuuKhoID")
                         .ValueGeneratedOnAdd()
@@ -3712,7 +3712,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("chiTietBieuGiaLuuKho");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Commondity", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Commondity", b =>
                 {
                     b.Property<Guid>("Commondity_ID")
                         .ValueGeneratedOnAdd()
@@ -3747,7 +3747,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Commondity");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_CompanyInfo", b =>
+            modelBuilder.Entity("ABFreight.Models.M_CompanyInfo", b =>
                 {
                     b.Property<Guid>("CompanyID")
                         .ValueGeneratedOnAdd()
@@ -3803,7 +3803,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("CompanyInfomation");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_CongNoHoaDonDauRa", b =>
+            modelBuilder.Entity("ABFreight.Models.M_CongNoHoaDonDauRa", b =>
                 {
                     b.Property<Guid>("congnoHoadonDauraid")
                         .ValueGeneratedOnAdd()
@@ -3844,7 +3844,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("CongNoHoaDonDauRa");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_CongNoHoaDonDauVao", b =>
+            modelBuilder.Entity("ABFreight.Models.M_CongNoHoaDonDauVao", b =>
                 {
                     b.Property<Guid>("congnoHoadonDauvaoid")
                         .ValueGeneratedOnAdd()
@@ -3885,7 +3885,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("CongNoHoaDonDauVao");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Container", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Container", b =>
                 {
                     b.Property<Guid>("CTN_ID")
                         .ValueGeneratedOnAdd()
@@ -3994,7 +3994,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Container");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_ContainerDamage", b =>
+            modelBuilder.Entity("ABFreight.Models.M_ContainerDamage", b =>
                 {
                     b.Property<Guid>("DamageId")
                         .ValueGeneratedOnAdd()
@@ -4068,7 +4068,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("ContainerDamage");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_ContainerMovement", b =>
+            modelBuilder.Entity("ABFreight.Models.M_ContainerMovement", b =>
                 {
                     b.Property<Guid>("MovementId")
                         .ValueGeneratedOnAdd()
@@ -4137,7 +4137,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("ContainerMovement");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_ContainerSeal", b =>
+            modelBuilder.Entity("ABFreight.Models.M_ContainerSeal", b =>
                 {
                     b.Property<Guid>("SealId")
                         .ValueGeneratedOnAdd()
@@ -4189,7 +4189,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("ContainerSeal");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Credit", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Credit", b =>
                 {
                     b.Property<Guid>("creditid")
                         .ValueGeneratedOnAdd()
@@ -4275,7 +4275,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Credit");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_CuocCont", b =>
+            modelBuilder.Entity("ABFreight.Models.M_CuocCont", b =>
                 {
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
@@ -4334,7 +4334,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("CuocCont");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Currency", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Currency", b =>
                 {
                     b.Property<Guid>("CurrencyID")
                         .ValueGeneratedOnAdd()
@@ -4378,7 +4378,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Currency");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_CustomCostRequest", b =>
+            modelBuilder.Entity("ABFreight.Models.M_CustomCostRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4431,7 +4431,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("CustomCostRequest");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Customer", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Customer", b =>
                 {
                     b.Property<Guid>("Customer_ID")
                         .ValueGeneratedOnAdd()
@@ -4817,7 +4817,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Customer");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_CustomerBr", b =>
+            modelBuilder.Entity("ABFreight.Models.M_CustomerBr", b =>
                 {
                     b.Property<Guid>("customerBrID")
                         .ValueGeneratedOnAdd()
@@ -4864,7 +4864,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("CustomerBr");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Customer_ThamChieu", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Customer_ThamChieu", b =>
                 {
                     b.Property<Guid>("Customer_ID")
                         .ValueGeneratedOnAdd()
@@ -5250,7 +5250,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Customer_ThamChieu");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_DNHU", b =>
+            modelBuilder.Entity("ABFreight.Models.M_DNHU", b =>
                 {
                     b.Property<Guid>("DeNghiHoanUngID")
                         .ValueGeneratedOnAdd()
@@ -5321,7 +5321,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("deNghiHoanUng");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_DNTT_Logistics", b =>
+            modelBuilder.Entity("ABFreight.Models.M_DNTT_Logistics", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -5422,7 +5422,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("DNTT_Logistics");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_DNTU", b =>
+            modelBuilder.Entity("ABFreight.Models.M_DNTU", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -5496,7 +5496,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("DeNghiTamUng");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Debit", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Debit", b =>
                 {
                     b.Property<Guid>("debitId")
                         .ValueGeneratedOnAdd()
@@ -5606,7 +5606,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Debit");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_DebitCreditCustomer", b =>
+            modelBuilder.Entity("ABFreight.Models.M_DebitCreditCustomer", b =>
                 {
                     b.Property<Guid>("debitcreditcustomerid")
                         .ValueGeneratedOnAdd()
@@ -5689,7 +5689,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("DebitCreditCustomer");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Duan", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Duan", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -5781,7 +5781,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Duan");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Duyet_DNTT", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Duyet_DNTT", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -5834,7 +5834,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Duyet_DNTT");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_ExportCostDetail", b =>
+            modelBuilder.Entity("ABFreight.Models.M_ExportCostDetail", b =>
                 {
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
@@ -5875,7 +5875,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("ExportCostDetail");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_ExportCostRequest", b =>
+            modelBuilder.Entity("ABFreight.Models.M_ExportCostRequest", b =>
                 {
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
@@ -5946,7 +5946,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("ExportCostRequest");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_GetQuoTationNo", b =>
+            modelBuilder.Entity("ABFreight.Models.M_GetQuoTationNo", b =>
                 {
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
@@ -5975,7 +5975,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("GetQuotationNo");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_HBL", b =>
+            modelBuilder.Entity("ABFreight.Models.M_HBL", b =>
                 {
                     b.Property<Guid>("hblID")
                         .ValueGeneratedOnAdd()
@@ -6360,7 +6360,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("HBL");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_HBLViTriLoHang", b =>
+            modelBuilder.Entity("ABFreight.Models.M_HBLViTriLoHang", b =>
                 {
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
@@ -6409,7 +6409,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("HBLViTriLoHang");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_HoaDonDauRa", b =>
+            modelBuilder.Entity("ABFreight.Models.M_HoaDonDauRa", b =>
                 {
                     b.Property<Guid>("hoadondauraid")
                         .ValueGeneratedOnAdd()
@@ -6483,7 +6483,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("HoaDonDauRa");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_HoaDonDauVao", b =>
+            modelBuilder.Entity("ABFreight.Models.M_HoaDonDauVao", b =>
                 {
                     b.Property<Guid>("hoadondauvaoid")
                         .ValueGeneratedOnAdd()
@@ -6548,7 +6548,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("HoaDonDauVao");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_ImportCostRequest", b =>
+            modelBuilder.Entity("ABFreight.Models.M_ImportCostRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -6619,7 +6619,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("ImportCostRequest");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_IssueReports", b =>
+            modelBuilder.Entity("ABFreight.Models.M_IssueReports", b =>
                 {
                     b.Property<Guid>("IssueId")
                         .ValueGeneratedOnAdd()
@@ -6687,7 +6687,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("IssueReports");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Job", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Job", b =>
                 {
                     b.Property<Guid>("JobID")
                         .ValueGeneratedOnAdd()
@@ -6737,7 +6737,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Job");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_KTCLCostRequest", b =>
+            modelBuilder.Entity("ABFreight.Models.M_KTCLCostRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -6790,7 +6790,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("KTCLCostRequest");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_LenhDieuXe", b =>
+            modelBuilder.Entity("ABFreight.Models.M_LenhDieuXe", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -6879,7 +6879,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("LenhDieuXe");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_ListDept", b =>
+            modelBuilder.Entity("ABFreight.Models.M_ListDept", b =>
                 {
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
@@ -6896,7 +6896,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("ListDept");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_LocalCharge_pt", b =>
+            modelBuilder.Entity("ABFreight.Models.M_LocalCharge_pt", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -6985,7 +6985,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("localcharges_pt");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_MBL", b =>
+            modelBuilder.Entity("ABFreight.Models.M_MBL", b =>
                 {
                     b.Property<Guid>("MblID")
                         .ValueGeneratedOnAdd()
@@ -7304,7 +7304,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("MBL");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_PIC", b =>
+            modelBuilder.Entity("ABFreight.Models.M_PIC", b =>
                 {
                     b.Property<Guid>("PIC_ID")
                         .ValueGeneratedOnAdd()
@@ -7351,7 +7351,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("PIC");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_PhieuChi", b =>
+            modelBuilder.Entity("ABFreight.Models.M_PhieuChi", b =>
                 {
                     b.Property<Guid>("PhieuchiID")
                         .ValueGeneratedOnAdd()
@@ -7446,7 +7446,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Phieuchi");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_PhieuKeToan", b =>
+            modelBuilder.Entity("ABFreight.Models.M_PhieuKeToan", b =>
                 {
                     b.Property<Guid>("PhieuketoanID")
                         .ValueGeneratedOnAdd()
@@ -7598,7 +7598,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Phieuketoan");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_PhieuThu", b =>
+            modelBuilder.Entity("ABFreight.Models.M_PhieuThu", b =>
                 {
                     b.Property<Guid>("PhieuthuID")
                         .ValueGeneratedOnAdd()
@@ -7732,7 +7732,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Phieuthu");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Product_Price", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Product_Price", b =>
                 {
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
@@ -7788,7 +7788,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Product_Price");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Product_Price_Details", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Product_Price_Details", b =>
                 {
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
@@ -7832,7 +7832,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Product_Price_Details");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Product_Price_detail_ALL", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Product_Price_detail_ALL", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -7903,7 +7903,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Product_Price_Detail_ALL");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Quotation", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Quotation", b =>
                 {
                     b.Property<Guid>("quotationID")
                         .ValueGeneratedOnAdd()
@@ -8025,7 +8025,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Quotation");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_RFQ", b =>
+            modelBuilder.Entity("ABFreight.Models.M_RFQ", b =>
                 {
                     b.Property<Guid>("RFQ_ID")
                         .ValueGeneratedOnAdd()
@@ -8156,7 +8156,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("RFQ");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_RFQ_Log", b =>
+            modelBuilder.Entity("ABFreight.Models.M_RFQ_Log", b =>
                 {
                     b.Property<Guid>("RFQ_logID")
                         .ValueGeneratedOnAdd()
@@ -8191,7 +8191,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("RFQ_Log");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_RefNo", b =>
+            modelBuilder.Entity("ABFreight.Models.M_RefNo", b =>
                 {
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
@@ -8403,7 +8403,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("RefNo");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Sale", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Sale", b =>
                 {
                     b.Property<Guid>("Sale_ID")
                         .ValueGeneratedOnAdd()
@@ -8453,7 +8453,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Sale");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_TKHQ_Thongtinchitiet", b =>
+            modelBuilder.Entity("ABFreight.Models.M_TKHQ_Thongtinchitiet", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -8491,7 +8491,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("TKHQ_Thongtinchitiet");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_TKHQ_Thongtinchunglohang", b =>
+            modelBuilder.Entity("ABFreight.Models.M_TKHQ_Thongtinchunglohang", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -8586,7 +8586,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("TKHQ_Thongtinchunglohang");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_TaxDetail", b =>
+            modelBuilder.Entity("ABFreight.Models.M_TaxDetail", b =>
                 {
                     b.Property<Guid>("taxDetailID")
                         .ValueGeneratedOnAdd()
@@ -8648,7 +8648,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("TaxDetail");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_TaxInvoice", b =>
+            modelBuilder.Entity("ABFreight.Models.M_TaxInvoice", b =>
                 {
                     b.Property<Guid>("TaxInvoiceID")
                         .ValueGeneratedOnAdd()
@@ -8752,7 +8752,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("TaxInvoice");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Test_getapi", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Test_getapi", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -8775,7 +8775,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Test_getapi");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Theodoilohang", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Theodoilohang", b =>
                 {
                     b.Property<Guid>("theodoilohangID")
                         .ValueGeneratedOnAdd()
@@ -8825,7 +8825,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Theodoilohang");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_TiepDauNgu", b =>
+            modelBuilder.Entity("ABFreight.Models.M_TiepDauNgu", b =>
                 {
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
@@ -8848,7 +8848,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("TiepDauNgu");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_TraLoiYeuCauHQCO", b =>
+            modelBuilder.Entity("ABFreight.Models.M_TraLoiYeuCauHQCO", b =>
                 {
                     b.Property<Guid>("TraLoiyeuCauHQCOID")
                         .ValueGeneratedOnAdd()
@@ -8880,7 +8880,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("TraLoiYeuCauHQCO");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_TruckingCostRequest", b =>
+            modelBuilder.Entity("ABFreight.Models.M_TruckingCostRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -8957,7 +8957,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("TruckingCostRequest");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_VesselSpace", b =>
+            modelBuilder.Entity("ABFreight.Models.M_VesselSpace", b =>
                 {
                     b.Property<Guid?>("VesselSpaceID")
                         .ValueGeneratedOnAdd()
@@ -9010,7 +9010,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("VesselSpace");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_YeuCauTrucking", b =>
+            modelBuilder.Entity("ABFreight.Models.M_YeuCauTrucking", b =>
                 {
                     b.Property<Guid>("YeuCauTruckingID")
                         .ValueGeneratedOnAdd()
@@ -9084,7 +9084,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("YeuCauTrucking");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_YeuCauTuVanTTHQ", b =>
+            modelBuilder.Entity("ABFreight.Models.M_YeuCauTuVanTTHQ", b =>
                 {
                     b.Property<Guid>("YctvtthqcoID")
                         .ValueGeneratedOnAdd()
@@ -9149,7 +9149,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("YeuCauTuVanThuTucHQCO");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Ykien_HQCO", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Ykien_HQCO", b =>
                 {
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
@@ -9163,7 +9163,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Ykien_HQCO");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.MoveCustomer", b =>
+            modelBuilder.Entity("ABFreight.Models.MoveCustomer", b =>
                 {
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
@@ -9186,7 +9186,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("MoveCustomer");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.Notification", b =>
+            modelBuilder.Entity("ABFreight.Models.Notification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -9213,7 +9213,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.OutRequest", b =>
+            modelBuilder.Entity("ABFreight.Models.OutRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -9256,7 +9256,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("OutRequests");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.PermissionTemplate", b =>
+            modelBuilder.Entity("ABFreight.Models.PermissionTemplate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -9291,7 +9291,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("PermissionTemplate");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.Permission_M", b =>
+            modelBuilder.Entity("ABFreight.Models.Permission_M", b =>
                 {
                     b.Property<Guid?>("PermissionId")
                         .ValueGeneratedOnAdd()
@@ -9326,7 +9326,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Permissions");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.PortModel", b =>
+            modelBuilder.Entity("ABFreight.Models.PortModel", b =>
                 {
                     b.Property<Guid>("PORT_ID")
                         .ValueGeneratedOnAdd()
@@ -9397,7 +9397,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Port");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.Quotation_Tico", b =>
+            modelBuilder.Entity("ABFreight.Models.Quotation_Tico", b =>
                 {
                     b.Property<Guid?>("QuotationTicoID")
                         .ValueGeneratedOnAdd()
@@ -9522,7 +9522,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("QuotationTico");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.ShippingLine", b =>
+            modelBuilder.Entity("ABFreight.Models.ShippingLine", b =>
                 {
                     b.Property<Guid>("SHIPPINGLINEID")
                         .ValueGeneratedOnAdd()
@@ -9593,7 +9593,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("ShippingLine");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.Terminal_", b =>
+            modelBuilder.Entity("ABFreight.Models.Terminal_", b =>
                 {
                     b.Property<Guid>("TerminalID")
                         .ValueGeneratedOnAdd()
@@ -9646,7 +9646,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("Terminal");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.TrainSchedule", b =>
+            modelBuilder.Entity("ABFreight.Models.TrainSchedule", b =>
                 {
                     b.Property<Guid>("TerminalDeparture_ID")
                         .ValueGeneratedOnAdd()
@@ -9867,7 +9867,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("TERMINALDEPARTURE");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.TrangThai", b =>
+            modelBuilder.Entity("ABFreight.Models.TrangThai", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -9890,7 +9890,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("TrangThai");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.UserActionLog", b =>
+            modelBuilder.Entity("ABFreight.Models.UserActionLog", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -9913,7 +9913,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("UserActionLogs");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.UserThemePreference", b =>
+            modelBuilder.Entity("ABFreight.Models.UserThemePreference", b =>
                 {
                     b.Property<Guid>("PreferenceId")
                         .ValueGeneratedOnAdd()
@@ -9976,7 +9976,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("UserThemePreferences");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.WordDocument", b =>
+            modelBuilder.Entity("ABFreight.Models.WordDocument", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -10011,7 +10011,7 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("WordDocuments");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.ZaloAccessToken", b =>
+            modelBuilder.Entity("ABFreight.Models.ZaloAccessToken", b =>
                 {
                     b.Property<string>("Accesstoken")
                         .HasColumnType("nvarchar(450)");
@@ -10024,9 +10024,9 @@ namespace NVOAMASIS.Migrations
                     b.ToTable("ZaloAccesstoken");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_HBL", b =>
+            modelBuilder.Entity("ABFreight.Models.M_HBL", b =>
                 {
-                    b.HasOne("NVOAMASIS.Models.M_MBL", "MBL")
+                    b.HasOne("ABFreight.Models.M_MBL", "MBL")
                         .WithMany("HBLs")
                         .HasForeignKey("mblid")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -10035,18 +10035,18 @@ namespace NVOAMASIS.Migrations
                     b.Navigation("MBL");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_MBL", b =>
+            modelBuilder.Entity("ABFreight.Models.M_MBL", b =>
                 {
-                    b.HasOne("NVOAMASIS.Models.M_Job", "Job")
+                    b.HasOne("ABFreight.Models.M_Job", "Job")
                         .WithMany("MBLs")
                         .HasForeignKey("Jobid");
 
                     b.Navigation("Job");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.UserThemePreference", b =>
+            modelBuilder.Entity("ABFreight.Models.UserThemePreference", b =>
                 {
-                    b.HasOne("NVOAMASIS.Models.AuthUser", "User")
+                    b.HasOne("ABFreight.Models.AuthUser", "User")
                         .WithMany()
                         .HasForeignKey("UsrId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -10055,12 +10055,12 @@ namespace NVOAMASIS.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_Job", b =>
+            modelBuilder.Entity("ABFreight.Models.M_Job", b =>
                 {
                     b.Navigation("MBLs");
                 });
 
-            modelBuilder.Entity("NVOAMASIS.Models.M_MBL", b =>
+            modelBuilder.Entity("ABFreight.Models.M_MBL", b =>
                 {
                     b.Navigation("HBLs");
                 });

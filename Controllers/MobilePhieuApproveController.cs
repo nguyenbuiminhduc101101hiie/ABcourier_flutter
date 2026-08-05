@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NVOAMASIS.Services;
+using ABFreight.Services;
 
-namespace NVOAMASIS.Controllers;
+namespace ABFreight.Controllers;
 
 [ApiController]
 [Route("api/mobile/phieu-approve")]

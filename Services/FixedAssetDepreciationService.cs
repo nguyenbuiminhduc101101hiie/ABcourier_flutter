@@ -3,10 +3,10 @@ using System.Data.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models.Accounting;
+using ABFreight.Data;
+using ABFreight.Models.Accounting;
 
-namespace NVOAMASIS.Services.Accounting;
+namespace ABFreight.Services.Accounting;
 
 public sealed class FixedAssetDepreciationService
     : IFixedAssetDepreciationService

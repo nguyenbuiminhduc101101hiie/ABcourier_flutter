@@ -1,4 +1,4 @@
-﻿// Controllers/HistoryLogController.cs
+// Controllers/HistoryLogController.cs
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -6,9 +6,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using NVOAMASIS.Components.UserList.Pages;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
+using ABFreight.Components.UserList.Pages;
+using ABFreight.Data;
+using ABFreight.Models;
 
 [ApiController]
 [Route("api/[controller]")]

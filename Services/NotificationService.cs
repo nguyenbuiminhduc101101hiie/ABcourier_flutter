@@ -1,13 +1,13 @@
-﻿namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.SignalR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
-    using NVOAMASIS.Data;
-    using NVOAMASIS.Hubs;
-    using NVOAMASIS.Models;
-    using NVOAMASIS.Response;
+    using ABFreight.Data;
+    using ABFreight.Hubs;
+    using ABFreight.Models;
+    using ABFreight.Response;
 
     /// <summary>
     /// Không inject MudBlazor ISnackbar — service còn được gọi từ API/JWT

@@ -1,10 +1,10 @@
 using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
+using ABFreight.Data;
+using ABFreight.Models;
 using Stimulsoft.Report;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public static class BillSeaReportTemplateNames
     {

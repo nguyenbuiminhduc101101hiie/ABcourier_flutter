@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace NVOAMASIS.Controllers
+namespace ABFreight.Controllers
 {
     [Route("[controller]/[action]")]
     public class CultureController : Controller

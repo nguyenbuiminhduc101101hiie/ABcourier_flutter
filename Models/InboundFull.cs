@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     [Keyless]
     public class InboundFull

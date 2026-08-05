@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StiSerializer version="1.02" type="Net" application="StiReport">
   <CalculationMode>Interpretation</CalculationMode>
   <Culture>en-US</Culture>
@@ -1829,7 +1829,7 @@ IBAN CODE : {CompanyInfomation.IBAN_CODE}
   <ReportAuthor>MINH HAI</ReportAuthor>
   <ReportChanged>6/12/2026 3:57:32 PM</ReportChanged>
   <ReportCreated>5/8/2024 1:21:02 PM</ReportCreated>
-  <ReportFile>C:\Users\PCPV\source\repos\NVOAMASIS\wwwroot\Reports\ReportDebitNote_SeaImport_VND.mrt</ReportFile>
+  <ReportFile>C:\Users\PCPV\source\repos\ABFreight\wwwroot\Reports\ReportDebitNote_SeaImport_VND.mrt</ReportFile>
   <ReportGuid>707a91012cd846d9abfeafdb534d942a</ReportGuid>
   <ReportName>Report</ReportName>
   <ReportUnit>Inches</ReportUnit>

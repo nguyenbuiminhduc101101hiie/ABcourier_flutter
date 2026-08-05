@@ -1,18 +1,18 @@
-﻿
+
 
 
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using ABFreight.Data;
+using ABFreight.Models;
+using ABFreight.Response;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static Stimulsoft.Base.StiDbType;
 using static Stimulsoft.Report.Func;
-using static NVOAMASIS.Components.Report_RFQ.Pages.Index;
+using static ABFreight.Components.Report_RFQ.Pages.Index;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class ProductPriceServices(AppDbContext _context, IWebHostEnvironment _env,AccountService asv, HistoryLogService HistoryLogService)
     {

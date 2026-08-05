@@ -1,4 +1,4 @@
-namespace NVOAMASIS.Services.MultiTenant;
+namespace ABFreight.Services.MultiTenant;
 
 public interface ITenantContext
 {

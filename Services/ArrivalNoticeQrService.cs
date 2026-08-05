@@ -1,11 +1,11 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
+using ABFreight.Data;
+using ABFreight.Models;
 using QRCoder;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     /// <summary>
     /// QR Arrival Notice theo (HblId, loại). Single company — logo/connection inject lúc render PDF.

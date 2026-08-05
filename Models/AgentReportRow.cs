@@ -1,6 +1,6 @@
 using System;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     // DTO for 7.4 Agent Report
     public class AgentReportRow

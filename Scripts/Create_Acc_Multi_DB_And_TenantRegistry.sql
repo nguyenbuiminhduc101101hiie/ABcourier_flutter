@@ -1,18 +1,18 @@
 /*
-  Registry database for multi-tenant NVOAMASIS.
+  Registry database for multi-tenant ABFreight.
   Server: logisticssoftware.vn
-  Run with sa (or equivalent) — creates Acc_Multi_DB and TenantDatabaseRegistry.
+  Run with sa (or equivalent) — creates ABFreight_Acc_Multi_DB and TenantDatabaseRegistry.
 */
 USE master;
 GO
 
-IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = N'Acc_Multi_DB')
+IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = N'ABFreight_Acc_Multi_DB')
 BEGIN
-    CREATE DATABASE [Acc_Multi_DB];
+    CREATE DATABASE [ABFreight_Acc_Multi_DB];
 END
 GO
 
-USE [Acc_Multi_DB];
+USE [ABFreight_Acc_Multi_DB];
 GO
 
 IF OBJECT_ID(N'dbo.TenantDatabaseRegistry', N'U') IS NULL

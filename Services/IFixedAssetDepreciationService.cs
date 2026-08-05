@@ -1,6 +1,6 @@
-using NVOAMASIS.Models.Accounting;
+using ABFreight.Models.Accounting;
 
-namespace NVOAMASIS.Services.Accounting;
+namespace ABFreight.Services.Accounting;
 
 public interface IFixedAssetDepreciationService
 {

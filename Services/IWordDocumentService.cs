@@ -1,6 +1,6 @@
-using NVOAMASIS.Models;
+using ABFreight.Models;
 
-namespace NVOAMASIS.Interface
+namespace ABFreight.Interface
 {
     public interface IWordDocumentService
     {

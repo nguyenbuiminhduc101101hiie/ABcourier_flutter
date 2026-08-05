@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace NVOAMASIS.Migrations
+namespace ABFreight.Migrations
 {
     /// <summary>
     /// Inserts SharedResource key SI (Shipment Instruction) for en-US, vi-VN, zh-CN.

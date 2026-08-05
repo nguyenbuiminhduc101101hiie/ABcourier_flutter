@@ -1,13 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using Stimulsoft.Report;
 using Stimulsoft.Report.Blazor;
-using NVOAMASIS.Components.CUSTOMER.Pages;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using ABFreight.Components.CUSTOMER.Pages;
+using ABFreight.Data;
+using ABFreight.Models;
+using ABFreight.Response;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class LenhDieuXeServices(AppDbContext _context, IWebHostEnvironment _env, IJSRuntime JSRuntime, AccountService asv)
     {

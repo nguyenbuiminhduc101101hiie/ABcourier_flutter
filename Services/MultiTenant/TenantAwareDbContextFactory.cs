@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
+using ABFreight.Data;
 
-namespace NVOAMASIS.Services.MultiTenant;
+namespace ABFreight.Services.MultiTenant;
 
 /// <summary>
 /// Uses the current tenant connection from claims/registry, or falls back to DefaultConnection.

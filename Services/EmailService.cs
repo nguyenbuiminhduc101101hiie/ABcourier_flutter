@@ -16,15 +16,15 @@ using MailKit.Security;
 
 using Microsoft.EntityFrameworkCore;
 
-using NVOAMASIS.Data;
+using ABFreight.Data;
 
 using Microsoft.JSInterop;
 
-using NVOAMASIS.Models;
+using ABFreight.Models;
 
 
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 
 {
 

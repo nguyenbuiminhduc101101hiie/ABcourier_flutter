@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Components.Accounting.Pages;
-using NVOAMASIS.Models;
-using NVOAMASIS.Models.Accounting;
-namespace NVOAMASIS.Data
+using ABFreight.Components.Accounting.Pages;
+using ABFreight.Models;
+using ABFreight.Models.Accounting;
+namespace ABFreight.Data
 {
     public class AppDbContext (DbContextOptions <AppDbContext> options) : DbContext(options)
     {

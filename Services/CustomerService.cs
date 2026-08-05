@@ -14,16 +14,16 @@ using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using NVOAMASIS.Components.Charge.Pages;
-using NVOAMASIS.Components.Quotation.Pages;
-using NVOAMASIS.Data;
-using NVOAMASIS.Interface;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using ABFreight.Components.Charge.Pages;
+using ABFreight.Components.Quotation.Pages;
+using ABFreight.Data;
+using ABFreight.Interface;
+using ABFreight.Models;
+using ABFreight.Response;
 using static MudBlazor.CategoryTypes;
 using static MudBlazor.Icons;
-using static NVOAMASIS.Components.Report.Pages.Cus_RPT;
-namespace NVOAMASIS.Services;
+using static ABFreight.Components.Report.Pages.Cus_RPT;
+namespace ABFreight.Services;
 
 public class CustomerService(AppDbContext _context, HistoryLogService HistoryLogService, AccountService asv)
 {

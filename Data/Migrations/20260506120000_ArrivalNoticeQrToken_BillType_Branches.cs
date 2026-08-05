@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace NVOAMASIS.Data.Migrations
+namespace ABFreight.Data.Migrations
 {
     /// <summary>
     /// Bảng ArrivalNoticeQrToken: thêm BillType, Branches; đổi unique index (HblId, Type, BillType, Branches).

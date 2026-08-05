@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace NVOAMASIS.Data.Migrations
+namespace ABFreight.Data.Migrations
 {
     /// <summary>
     /// DoQrToken: thêm BillType, Branches; index unique mới.

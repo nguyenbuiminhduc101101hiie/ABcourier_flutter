@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     public class M_Customer
     {

@@ -1,4 +1,4 @@
-namespace NVOAMASIS.Options;
+namespace ABFreight.Options;
 
 public sealed class AccountBalanceImportOptions
 {

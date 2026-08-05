@@ -3,10 +3,10 @@ using System.Globalization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
+using ABFreight.Data;
+using ABFreight.Models;
 
-namespace NVOAMASIS.Services.Localization;
+namespace ABFreight.Services.Localization;
 
 public class DbStringLocalizerFactory : IStringLocalizerFactory
 {

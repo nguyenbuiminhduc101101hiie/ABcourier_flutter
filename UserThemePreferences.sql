@@ -8,7 +8,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
--- Giá trị DEFAULT bên dưới phải trùng với NVOAMASIS.Models.ThemeDefaults (ThemeDefaults.cs). Chỉnh màu mặc định ở 1 chỗ: ThemeDefaults.cs.
+-- Giá trị DEFAULT bên dưới phải trùng với ABFreight.Models.ThemeDefaults (ThemeDefaults.cs). Chỉnh màu mặc định ở 1 chỗ: ThemeDefaults.cs.
 CREATE TABLE [dbo].[UserThemePreferences](
 	[PreferenceId] [uniqueidentifier] NOT NULL,
 	[UsrId] [uniqueidentifier] NOT NULL,

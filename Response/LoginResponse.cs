@@ -1,6 +1,6 @@
-﻿using NVOAMASIS.Models;
+using ABFreight.Models;
 
-namespace NVOAMASIS.Response
+namespace ABFreight.Response
 {
     public record LoginResponse
         (bool Flag, string Message = null!, AuthUser AuthUser = null!, Guid? TenantId = null, string? TenantDatabaseName = null);

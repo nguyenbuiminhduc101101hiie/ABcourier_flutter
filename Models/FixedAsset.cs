@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace NVOAMASIS.Models.Accounting;
+namespace ABFreight.Models.Accounting;
 
 public enum FixedAssetType : byte
 {

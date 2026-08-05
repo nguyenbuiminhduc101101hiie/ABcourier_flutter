@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace NVOAMASIS.Models;
+namespace ABFreight.Models;
 
 /// <summary>FCM/APNs device token đăng ký từ Flutter.</summary>
 public class DevicePushToken

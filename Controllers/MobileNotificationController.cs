@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
-using NVOAMASIS.Hubs;
-using NVOAMASIS.Models;
-using NVOAMASIS.Services;
+using ABFreight.Data;
+using ABFreight.Hubs;
+using ABFreight.Models;
+using ABFreight.Services;
 
-namespace NVOAMASIS.Controllers;
+namespace ABFreight.Controllers;
 
 [ApiController]
 [Route("api/mobile/notifications")]

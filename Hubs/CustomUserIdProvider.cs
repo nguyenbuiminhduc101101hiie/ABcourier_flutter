@@ -1,9 +1,9 @@
-﻿namespace NVOAMASIS.Hubs
+namespace ABFreight.Hubs
 {
     using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.AspNetCore.SignalR;
     using System.Security.Claims;
-    using NVOAMASIS.Services;
+    using ABFreight.Services;
 
     public class CustomUserIdProvider : IUserIdProvider
     {

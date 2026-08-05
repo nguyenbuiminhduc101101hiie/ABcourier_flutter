@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <StiSerializer version="1.02" type="Net" application="StiReport">
   <CalculationMode>Interpretation</CalculationMode>
   <Culture>en-US</Culture>
@@ -2228,7 +2228,7 @@
   <ReportAuthor>MINH HAI</ReportAuthor>
   <ReportChanged>3/23/2026 3:51:42 PM</ReportChanged>
   <ReportCreated>5/8/2024 1:21:02 PM</ReportCreated>
-  <ReportFile>C:\Users\PCPV\source\repos\NVOAMASIS\wwwroot\Reports\ReportProfitHBL.mrt</ReportFile>
+  <ReportFile>C:\Users\PCPV\source\repos\ABFreight\wwwroot\Reports\ReportProfitHBL.mrt</ReportFile>
   <ReportGuid>8476c1e52b78431796c3074f4d03a763</ReportGuid>
   <ReportName>Report</ReportName>
   <ReportUnit>Inches</ReportUnit>

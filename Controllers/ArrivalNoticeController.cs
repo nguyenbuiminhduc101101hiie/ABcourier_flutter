@@ -2,10 +2,10 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using NVOAMASIS.Models;
-using NVOAMASIS.Services;
+using ABFreight.Models;
+using ABFreight.Services;
 
-namespace NVOAMASIS.Controllers
+namespace ABFreight.Controllers
 {
     /// <summary>
     /// API for Arrival Notice: serve Arrival Notice PDF by token when user scans QR code.

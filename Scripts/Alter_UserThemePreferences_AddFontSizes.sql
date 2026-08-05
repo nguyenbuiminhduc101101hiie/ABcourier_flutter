@@ -1,6 +1,6 @@
 -- Tạo / cập nhật bảng UserThemePreferences (theme + font size theo account).
--- Chạy trên DB app đang dùng (DefaultConnection = nvoamasis), KHÔNG dùng LMS.
--- Giá trị DEFAULT trùng NVOAMASIS.Models.ThemeDefaults.
+-- Chạy trên DB app đang dùng (DefaultConnection = ABfreight), KHÔNG dùng LMS.
+-- Giá trị DEFAULT trùng ABFreight.Models.ThemeDefaults.
 
 IF OBJECT_ID(N'[dbo].[UserThemePreferences]', N'U') IS NULL
 BEGIN

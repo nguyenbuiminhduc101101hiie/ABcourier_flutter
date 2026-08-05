@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     [Table("AccountingVoucherLines")]
     public class M_AccountingVoucherLines

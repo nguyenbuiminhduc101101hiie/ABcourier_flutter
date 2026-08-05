@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
-using NVOAMASIS.Interface;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using ABFreight.Data;
+using ABFreight.Interface;
+using ABFreight.Models;
+using ABFreight.Response;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore.Internal;
 using static MudBlazor.CategoryTypes;
 using static Stimulsoft.Report.StiRecentConnections;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class TrainScheduleServices(AppDbContext _context,AccountService asv, HistoryLogService HistoryLogService)
     {

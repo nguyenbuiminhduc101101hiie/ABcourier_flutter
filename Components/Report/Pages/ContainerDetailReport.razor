@@ -1,7 +1,7 @@
 @attribute [Authorize]
 @using MudBlazor
-@using NVOAMASIS.Models
-@using NVOAMASIS.Services
+@using ABFreight.Models
+@using ABFreight.Services
 @using Microsoft.EntityFrameworkCore
 
 @inject ShipmentService shipsv
@@ -10,7 +10,7 @@
 @inject AccountService asv
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<SharedResource> Localizer
-@inject IDbContextFactory<NVOAMASIS.Data.AppDbContext> DbFactory
+@inject IDbContextFactory<ABFreight.Data.AppDbContext> DbFactory
 
 <PageTitle>7.6 @Localizer["Container Detail Report"]</PageTitle>
 
@@ -89,7 +89,7 @@
             <PropertyColumn Property="x => x.Description" Title='@Localizer["Description"]' />
             <PropertyColumn Property="x => x.InDepot" Title="In Depot" />
             <PropertyColumn Property="x => x.InPort" Title="In Port" />
-            <PropertyColumn Property="x => x.NVOCCStatus" Title="NVOAMASIS Status" />
+            <PropertyColumn Property="x => x.NVOCCStatus" Title="ABFreight Status" />
             <PropertyColumn Property="x => x.LoaiHang" Title='@Localizer["Cargo Type"]' />
             <TemplateColumn Title="Decommission">
                 <CellTemplate Context="ctx">

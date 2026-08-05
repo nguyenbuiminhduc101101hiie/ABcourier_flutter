@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     /// <summary>Một dòng lịch sử đính kèm/ghỡ file trên SI (lưu trong AttachmentHistoryJson).</summary>
     public sealed class SiAttachmentHistoryEntry

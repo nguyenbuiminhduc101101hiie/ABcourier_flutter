@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     [Table("M_8_3_7_YARD_SP_ITC")]
     public class M_8_3_7_YARD_SP_ITC

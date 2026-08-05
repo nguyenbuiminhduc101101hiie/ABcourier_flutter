@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-namespace NVOAMASIS.Models
+using System.ComponentModel.DataAnnotations;
+namespace ABFreight.Models
 {
     public class M_CuocCont
     {

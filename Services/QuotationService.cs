@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using Org.BouncyCastle.Ocsp;
@@ -6,13 +6,13 @@ using Stimulsoft.Blockly.Model;
 using Stimulsoft.Report;
 using Stimulsoft.Report.Blazor;
 using System.Text.Json;
-using NVOAMASIS.Components.Report_RFQ.Pages;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
-using static NVOAMASIS.Components.Report_RFQ.Pages.Index;
+using ABFreight.Components.Report_RFQ.Pages;
+using ABFreight.Data;
+using ABFreight.Models;
+using ABFreight.Response;
+using static ABFreight.Components.Report_RFQ.Pages.Index;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class QuotationService(AppDbContext _context, IWebHostEnvironment _env, IJSRuntime JSRuntime, AccountService asv, HistoryLogService HistoryLogService)
     {

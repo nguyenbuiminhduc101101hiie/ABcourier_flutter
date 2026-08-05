@@ -733,7 +733,7 @@
             MaxWidth = MaxWidth.Small,
             FullWidth = true,
         };
-        var formDialogParams = new DialogParameters { ["FormKind"] = NVOAMASIS.Models.BillLayoutFormKind.Booking };
+        var formDialogParams = new DialogParameters { ["FormKind"] = ABFreight.Models.BillLayoutFormKind.Booking };
         var formDialogRef = await DialogService.ShowAsync<Shipment.Pages.DialogLayoutFormExportOption>(
             "Export Booking - Chọn mẫu form", formDialogParams, formDialogOptions);
         var formResult = await formDialogRef.Result;

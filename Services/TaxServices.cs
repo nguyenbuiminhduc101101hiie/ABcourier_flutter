@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using ABFreight.Data;
+using ABFreight.Models;
+using ABFreight.Response;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class TaxServices(AppDbContext _context, IWebHostEnvironment _env, IJSRuntime JSRuntime, AccountService asv, SupportServices supsv)
     {

@@ -1,17 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
-using NVOAMASIS.Components.BaoCaoQuyTienMat;
-using NVOAMASIS.Components.BaoCaoQuyTienMat.Pages;
-using static NVOAMASIS.Components.BaoCaoQuyTienMat.Pages.BaoCaoQuyTienMat_Index;
+using Microsoft.EntityFrameworkCore;
+using ABFreight.Data;
+using ABFreight.Models;
+using ABFreight.Response;
+using ABFreight.Components.BaoCaoQuyTienMat;
+using ABFreight.Components.BaoCaoQuyTienMat.Pages;
+using static ABFreight.Components.BaoCaoQuyTienMat.Pages.BaoCaoQuyTienMat_Index;
 using Microsoft.JSInterop;
 using Stimulsoft.Report.Blazor;
 using Stimulsoft.Report;
 using System.Globalization;
-using NVOAMASIS.Components.CUSTOMER.Pages;
+using ABFreight.Components.CUSTOMER.Pages;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class PhieuThu_Chi_Services(AppDbContext _context, IWebHostEnvironment _env, AccountService asv ,CustomerService Cussv, IJSRuntime JSRuntime)
     {

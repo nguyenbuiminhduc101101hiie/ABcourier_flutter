@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     [Table("TransactionTypes")]
     [Index(nameof(Code), IsUnique = true, Name = "UQ_TransactionTypes_Code")]

@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace NVOAMASIS.Migrations
+namespace ABFreight.Migrations
 {
     /// <inheritdoc />
     public partial class AddSettingTemperatureAndVentOpenToBooking : Migration

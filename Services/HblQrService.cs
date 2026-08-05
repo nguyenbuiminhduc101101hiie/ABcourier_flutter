@@ -1,6 +1,6 @@
 using QRCoder;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class HblQrService
     {

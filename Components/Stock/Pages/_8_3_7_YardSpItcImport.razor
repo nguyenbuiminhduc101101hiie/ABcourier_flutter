@@ -6,8 +6,8 @@
 @using System.Globalization
 @using System.Security.Cryptography
 @using System.Text
-@using NVOAMASIS.Models
-@using NVOAMASIS.Data
+@using ABFreight.Models
+@using ABFreight.Data
 @inject AppDbContext Db
 @inject ISnackbar Snackbar
 
@@ -147,7 +147,7 @@
 </MudPaper>
 
 @code {
-    // IMPORTANT: nếu namespace AppDbContext khác NVOAMASIS.Data thì đổi dòng @using ở trên theo namespace thật trong AppDbContext.cs.
+    // IMPORTANT: nếu namespace AppDbContext khác ABFreight.Data thì đổi dòng @using ở trên theo namespace thật trong AppDbContext.cs.
 
     private readonly List<M_8_3_7_YARD_SP_ITC> PreviewRows = new();
     private readonly HashSet<string> ExistingHashes = new(StringComparer.OrdinalIgnoreCase);

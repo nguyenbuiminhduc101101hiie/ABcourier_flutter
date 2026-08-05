@@ -11,17 +11,17 @@ using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using MudBlazor.Services;
 using MudExtensions.Services;
-using NVOAMASIS.Components;
-using NVOAMASIS.Data;
-using NVOAMASIS.Hubs;
-using NVOAMASIS.Interface;
-using NVOAMASIS.Models;
-using NVOAMASIS.Options;
-using NVOAMASIS.Services;
-using NVOAMASIS.Services.Accounting;
-using NVOAMASIS.Services.Accounting.ExcelImport;
-using NVOAMASIS.Services.Localization;
-using NVOAMASIS.Services.MultiTenant;
+using ABFreight.Components;
+using ABFreight.Data;
+using ABFreight.Hubs;
+using ABFreight.Interface;
+using ABFreight.Models;
+using ABFreight.Options;
+using ABFreight.Services;
+using ABFreight.Services.Accounting;
+using ABFreight.Services.Accounting.ExcelImport;
+using ABFreight.Services.Localization;
+using ABFreight.Services.MultiTenant;
 using Stimulsoft.Drawing;
 using System.Text;
 
@@ -79,7 +79,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(cfg =>
     {
         cfg.LoginPath = "/Account/Login"; // default: /Accout/Login
-        cfg.Cookie.Name = ".NVOAMASIS.Cookies"; //default:.AspNetCore.Cookies
+        cfg.Cookie.Name = ".ABFreight.Cookies"; //default:.AspNetCore.Cookies
         cfg.Cookie.SameSite = SameSiteMode.Lax;
         cfg.Cookie.HttpOnly = true;
         cfg.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
@@ -224,11 +224,11 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 builder.Services.AddScoped<IForgotPasswordEmailService, ForgotPasswordEmailService>();
 
 // AI Assistant - ChatGPT integration
-builder.Services.Configure<NVOAMASIS.Models.ChatGPTSettings>(builder.Configuration.GetSection("ChatGPT"));
-builder.Services.AddHttpClient<NVOAMASIS.Services.ChatGPTService>();
-builder.Services.AddScoped<NVOAMASIS.Services.ChatGPTService>();
-builder.Services.AddHttpClient<NVOAMASIS.Services.WebSearchService>();
-builder.Services.AddScoped<NVOAMASIS.Services.WebSearchService>();
+builder.Services.Configure<ABFreight.Models.ChatGPTSettings>(builder.Configuration.GetSection("ChatGPT"));
+builder.Services.AddHttpClient<ABFreight.Services.ChatGPTService>();
+builder.Services.AddScoped<ABFreight.Services.ChatGPTService>();
+builder.Services.AddHttpClient<ABFreight.Services.WebSearchService>();
+builder.Services.AddScoped<ABFreight.Services.WebSearchService>();
 
 
 

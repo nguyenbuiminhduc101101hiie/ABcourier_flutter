@@ -1,7 +1,7 @@
-﻿using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using ABFreight.Models;
+using ABFreight.Response;
 
-namespace NVOAMASIS.Interface
+namespace ABFreight.Interface
 {
     public interface IUserService
     {

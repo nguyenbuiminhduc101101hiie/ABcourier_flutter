@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.SignalR;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
-using NVOAMASIS.Hubs;
+using ABFreight.Data;
+using ABFreight.Models;
+using ABFreight.Response;
+using ABFreight.Hubs;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class LeaveRequestService
     {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace NVOAMASIS.Models;
+namespace ABFreight.Models;
 
 public class M_8_3_IN_OUT_YARD_1 : IExcelImportEntity
 {

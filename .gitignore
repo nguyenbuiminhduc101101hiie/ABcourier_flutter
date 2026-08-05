@@ -402,3 +402,6 @@ Secrets/
 **/firebase-service-account.json
 **/firebase-adminsdk*.json
 
+
+# Local build check output
+_build_check_out/

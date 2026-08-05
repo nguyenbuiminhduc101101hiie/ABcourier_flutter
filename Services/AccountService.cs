@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
-using NVOAMASIS.Interface;
-using NVOAMASIS.Models;
-using NVOAMASIS.Response;
+using ABFreight.Data;
+using ABFreight.Interface;
+using ABFreight.Models;
+using ABFreight.Response;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 
-namespace NVOAMASIS.Services;
+namespace ABFreight.Services;
 
 public class AccountService (IUserService userServices, AppDbContext _context, CustomAuthenticationStateProvider _cusAuth)
 {

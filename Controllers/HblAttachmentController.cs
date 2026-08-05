@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NVOAMASIS.Data;
+using ABFreight.Data;
 
-namespace NVOAMASIS.Controllers;
+namespace ABFreight.Controllers;
 
 [ApiController]
 [Route("api/hbl-attachment")]

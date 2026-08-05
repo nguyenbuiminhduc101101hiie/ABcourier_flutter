@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NVOAMASIS.Models
+namespace ABFreight.Models
 {
     public class FinancialReportSnapshot
     {

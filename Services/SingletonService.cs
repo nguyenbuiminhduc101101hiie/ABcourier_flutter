@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Stimulsoft.Blockly.Model;
 using System.Globalization;
 using System.Net.Http;
 using System.Xml.Linq;
-using NVOAMASIS.Data;
-using NVOAMASIS.Models;
+using ABFreight.Data;
+using ABFreight.Models;
 
-namespace NVOAMASIS.Services
+namespace ABFreight.Services
 {
     public class SingletonSerivce(IDbContextFactory<AppDbContext> _ctxFactory, CustomAuthenticationStateProvider _cusAuth, HttpClient _httpClient)
     {
