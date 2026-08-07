@@ -397,6 +397,9 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
+# ASP.NET Data Protection keys (must stay on IIS server across republish)
+Keys/
+
 # Firebase service account (do not commit)
 Secrets/
 **/firebase-service-account.json

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.SignalR;
@@ -62,27 +63,37 @@ builder.Services.AddDistributedSqlServerCache(options =>
     options.TableName = "DistributedCache";
 });
 
+// Cookie auth keys must survive IIS app-pool recycle / republish,
+// otherwise the login cookie cannot be decrypted and the user looks "logged out".
+var dataProtectionKeysPath = Path.Combine(builder.Environment.ContentRootPath, "Keys");
+Directory.CreateDirectory(dataProtectionKeysPath);
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysPath))
+    .SetApplicationName("ABFreight");
+
 //# for BLAZOR COOKIE Auth
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
+    sp.GetRequiredService<CustomAuthenticationStateProvider>());
+builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddMudExtensions();
 builder.Services.AddBlazorBootstrap();
 
 //## for BLAZOR COOKIE Auth
-/// ref �� https://blazorhelpwebsite.com/ViewBlogPost/36
-//builder.Services.Configure<CookiePolicyOptions>(options =>
-//{
-//  options.CheckConsentNeeded = context => true;
-//  options.MinimumSameSitePolicy = SameSiteMode.Strict;
-//});
+/// ref — https://blazorhelpwebsite.com/ViewBlogPost/36
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(cfg =>
     {
-        cfg.LoginPath = "/Account/Login"; // default: /Accout/Login
-        cfg.Cookie.Name = ".ABFreight.Cookies"; //default:.AspNetCore.Cookies
+        cfg.LoginPath = "/Account/Login";
+        cfg.LogoutPath = "/Account/Logout";
+        cfg.Cookie.Name = ".ABFreight.Cookies";
+        cfg.Cookie.Path = "/";
         cfg.Cookie.SameSite = SameSiteMode.Lax;
         cfg.Cookie.HttpOnly = true;
         cfg.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        cfg.ExpireTimeSpan = TimeSpan.FromDays(30);
+        cfg.SlidingExpiration = true;
     })
     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
@@ -154,7 +165,6 @@ builder.Services.AddSingleton<IDbContextFactory<AppDbContext>, TenantAwareDbCont
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<ReportServices>();
 builder.Services.AddScoped<TrainScheduleServices>();
-builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<IUserService, UserServicecs>();
 builder.Services.Configure<FormOptions>(options =>
 {
@@ -213,12 +223,12 @@ builder.Services.AddScoped<ThemeService>();
 builder.Services.AddScoped<IFixedAssetService, FixedAssetService>();
 builder.Services.AddScoped<IFixedAssetDepreciationService, FixedAssetDepreciationService>();
 
-// Forwarded headers (X-Forwarded-For / X-Forwarded-Proto) support
+// Forwarded headers (X-Forwarded-For / X-Forwarded-Proto) support for IIS / reverse proxy
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-    // Optionally add known networks/proxies if you want to restrict trust:
-    // options.KnownProxies.Add(System.Net.IPAddress.Parse("127.0.0.1"));
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
 });
 
 builder.Services.AddScoped<IForgotPasswordEmailService, ForgotPasswordEmailService>();
@@ -286,7 +296,6 @@ builder.Services.AddDbContextFactory<AppDbContext>(options =>
 
 // Change SingletonSerivce to scoped to align with per-request auth/user context and avoid holding onto stale user/context state.
 builder.Services.AddScoped<SingletonSerivce>();
-// Remove duplicate singleton registration of CustomAuthenticationStateProvider (already added as scoped above)
 
 var app = builder.Build(); //--------------------------------------------------
 
@@ -298,27 +307,30 @@ var localizationOptions = new RequestLocalizationOptions()
 app.UseRequestLocalization(localizationOptions);
 
 // Configure the HTTP request pipeline.
+var disableHttpsRedirection = builder.Configuration.GetValue("DisableHttpsRedirection", false);
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    if (!disableHttpsRedirection)
+    {
+        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+        app.UseHsts();
+    }
 }
 
-app.UseHttpsRedirection();
+// MUST appear early, before HTTPS/auth middleware that reads scheme or RemoteIpAddress
+app.UseForwardedHeaders();
 
-// MUST appear early, before auth and other middleware that reads scheme or RemoteIpAddress
-//app.UseForwardedHeaders();
-app.UseForwardedHeaders(new ForwardedHeadersOptions
+// HTTP-only IIS sites: set "DisableHttpsRedirection": true in appsettings to avoid login cookie loss.
+if (!disableHttpsRedirection)
 {
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-});
+    app.UseHttpsRedirection();
+}
 
 app.UseStaticFiles();
 app.UseAntiforgery();
 app.UseCors();
 //# for BLAZOR COOKIE Auth
-app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseMiddleware<TenantMiddleware>();
 app.UseAuthorization();

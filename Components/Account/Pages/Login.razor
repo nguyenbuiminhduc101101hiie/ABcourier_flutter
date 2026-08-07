@@ -1900,12 +1900,12 @@
         }
 
         var userIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var rememberMe = (SimpleLoginInput?.RememberMe ?? false) || (LoginInput?.RememberMe ?? false);
         var authProperties = new AuthenticationProperties
         {
-            IssuedUtc = DateTimeOffset.UtcNow.AddDays(-1),
-            ExpiresUtc = DateTimeOffset.UtcNow.AddMonths(1),
-            RedirectUri = ReturnUrl,
-            IsPersistent = (SimpleLoginInput?.RememberMe ?? false) || (LoginInput?.RememberMe ?? false)
+            IsPersistent = rememberMe,
+            ExpiresUtc = rememberMe ? DateTimeOffset.UtcNow.AddDays(30) : null,
+            RedirectUri = ReturnUrl
         };
 
         await HttpContext.SignInAsync(
