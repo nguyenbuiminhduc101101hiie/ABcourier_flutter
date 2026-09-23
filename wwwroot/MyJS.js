@@ -57,6 +57,10 @@ window.setPageTitle = (title) => {
     document.title = title;
 }
 
+window.clickElementById = (elementId) => {
+    document.getElementById(elementId)?.click();
+}
+
 window.downloadFileFromStream = (filename, base64Data) => {
     const link = document.createElement('a');
     link.download = filename;

@@ -2028,8 +2028,11 @@
     {
         var base64 = Convert.ToBase64String(bytes);
         var safeFileName = fileName.Replace("'", string.Empty).Replace("\\", string.Empty).Replace("/", string.Empty);
-        var script = $"(() => {{ const a = document.createElement('a'); a.href = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{base64}'; a.download = '{safeFileName}'; document.body.appendChild(a); a.click(); a.remove(); }})()";
-        await JS.InvokeVoidAsync("eval", script);
+        await JS.InvokeVoidAsync(
+            "downloadFileFromBase64",
+            safeFileName,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            base64);
     }
 
     private static string GetBookForExport(M_GeneralLedgerEntries line)
@@ -2158,8 +2161,11 @@
             var bytes = package.GetAsByteArray();
             var base64 = Convert.ToBase64String(bytes);
             var fileName = $"GL_Import_Template_{DateTime.Today:yyyyMMdd}.xlsx";
-            var script = $"(() => {{ const a = document.createElement('a'); a.href = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{base64}'; a.download = '{fileName}'; document.body.appendChild(a); a.click(); a.remove(); }})()";
-            await JS.InvokeVoidAsync("eval", script);
+            await JS.InvokeVoidAsync(
+                "downloadFileFromBase64",
+                fileName,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                base64);
         }
         catch (Exception ex)
         {
