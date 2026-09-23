@@ -76,18 +76,586 @@
         touch-action: none;
     }
 </style>
+<style>
+    :root {
+        --shell-bg: #f5f7fa;
+        --shell-surface: #ffffff;
+        --shell-border: #e5eaf0;
+        --shell-text: #111827;
+        --shell-muted: #64748b;
+        --shell-sidebar: #072a35;
+        --shell-sidebar-deep: #061f29;
+        --shell-sidebar-text: #d7e4e8;
+        --shell-sidebar-muted: #86a2aa;
+        --shell-radius: 12px;
+        --workspace-accent: #0f766e;
+        --workspace-accent-strong: #075e58;
+        --workspace-accent-soft: #ecf8f6;
+        --workspace-blue: #2563eb;
+        --workspace-heading: #0f172a;
+        --workspace-border: #dfe6ec;
+        --workspace-subtle: #f8fafc;
+        --workspace-shadow: 0 8px 24px rgba(15, 23, 42, .055);
+    }
+
+    html,
+    body {
+        background: var(--shell-bg);
+    }
+
+    .app-shell .mud-layout {
+        background: var(--shell-bg);
+    }
+
+    .app-shell .appbar-custom {
+        min-height: 64px;
+        background: rgba(255, 255, 255, .97) !important;
+        color: var(--shell-text) !important;
+        border-bottom: 1px solid var(--shell-border);
+        box-shadow: 0 2px 10px rgba(15, 23, 42, .045) !important;
+        backdrop-filter: blur(12px);
+    }
+
+    .app-shell .appbar-custom .mud-toolbar {
+        min-height: 64px;
+        padding: 0 18px;
+    }
+
+    .shell-menu-button {
+        color: #0f766e !important;
+        border: 1px solid #dce7e8 !important;
+        border-radius: 9px !important;
+    }
+
+    .topbar-context {
+        min-width: 0;
+        margin-left: 12px;
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+    }
+
+    .topbar-context strong {
+        color: var(--shell-text);
+        font-size: 14px;
+        font-weight: 750;
+    }
+
+    .topbar-context span {
+        margin-top: 3px;
+        color: var(--shell-muted);
+        font-size: 11px;
+    }
+
+    .topbar-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 6px;
+        min-width: 0;
+    }
+
+    .topbar-actions .mud-icon-button {
+        width: 36px;
+        height: 36px;
+        padding: 7px !important;
+        color: #475569 !important;
+        border-radius: 9px;
+    }
+
+    .topbar-actions .mud-icon-button:hover {
+        color: #0f766e !important;
+        background: #edf8f6 !important;
+    }
+
+    .topbar-notification {
+        margin: 0 6px 0 0 !important;
+    }
+
+    .topbar-checkin {
+        min-width: 118px !important;
+        min-height: 36px !important;
+        margin: 0 8px !important;
+        border-radius: 9px !important;
+        background: #0f766e !important;
+        box-shadow: none !important;
+        font-size: 12px !important;
+        font-weight: 750 !important;
+        letter-spacing: .01em !important;
+    }
+
+    .topbar-user-chip {
+        height: 36px !important;
+        margin: 0 4px !important;
+        color: #0f172a !important;
+        background: #f1f5f9 !important;
+        border: 1px solid #e2e8f0;
+        font-size: 12px !important;
+        font-weight: 650 !important;
+    }
+
+    .topbar-logout {
+        margin: 0 4px !important;
+        padding: 0 8px !important;
+        border-radius: 9px !important;
+    }
+
+    .topbar-logout .mud-nav-link-text {
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+    .app-shell-drawer {
+        border-right: 0 !important;
+        background: linear-gradient(180deg, var(--shell-sidebar) 0%, var(--shell-sidebar-deep) 100%) !important;
+        box-shadow: 8px 0 24px rgba(2, 23, 31, .12) !important;
+    }
+
+    .app-shell-drawer .mud-drawer-content {
+        background: transparent !important;
+    }
+
+    .sidebar-brand {
+        min-height: 64px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .sidebar-brand-mark {
+        width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 36px;
+        border-radius: 10px;
+        color: #ffffff;
+        background: linear-gradient(135deg, #0f766e 0%, #2563eb 100%);
+        box-shadow: 0 6px 14px rgba(15, 118, 110, .24);
+    }
+
+    .sidebar-brand-copy {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar-brand-copy strong {
+        color: #f8fafc;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: .01em;
+    }
+
+    .sidebar-brand-copy span {
+        margin-top: 2px;
+        color: var(--shell-sidebar-muted);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+    }
+
+    .app-main-content {
+        min-height: 100vh;
+        background: var(--shell-bg);
+    }
+
+    .workspace-content {
+        min-height: calc(100vh - 94px);
+    }
+
+    .custom-tab > .mud-tabs-toolbar {
+        min-height: 48px !important;
+        padding: 7px 10px 0 !important;
+        background: #f4f7f9 !important;
+        border-bottom: 1px solid var(--shell-border) !important;
+        box-shadow: none !important;
+    }
+
+    .custom-tab > .mud-tabs-toolbar .mud-tabs-toolbar-inner,
+    .custom-tab > .mud-tabs-toolbar .mud-tabs-toolbar-wrapper,
+    .custom-tab > .mud-tabs-toolbar .mud-tabs-toolbar-content {
+        min-width: 0;
+    }
+
+    .custom-tab > .mud-tabs-toolbar .mud-tab {
+        width: auto !important;
+        min-width: 124px !important;
+        max-width: 232px !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        margin: 0 2px 0 0 !important;
+        padding: 0 9px 0 14px !important;
+        justify-content: space-between !important;
+        gap: 8px;
+        color: #526277 !important;
+        background: #edf2f5 !important;
+        border: 1px solid #dce4e9 !important;
+        border-bottom-color: var(--shell-border) !important;
+        border-radius: 8px 8px 0 0 !important;
+        font-family: "Roboto", "Segoe UI", Arial, sans-serif !important;
+        font-size: 12.5px !important;
+        font-weight: 700 !important;
+        line-height: 1 !important;
+        text-transform: none !important;
+        box-shadow: none !important;
+        transition: color .15s ease, background .15s ease, border-color .15s ease !important;
+    }
+
+    .custom-tab > .mud-tabs-toolbar .mud-tab:hover {
+        color: #0c6862 !important;
+        background: #f8fbfb !important;
+        border-color: #c9d9dc !importan
+    }
+
+    .custom-tab > .mud-tabs-toolbar .mud-tab.mud-tab-active {
+        position: relative;
+        z-index: 1;
+        color: #075e58 !important;
+        background: #ffffff !important;
+        border-color: #cfdadd !important;
+        border-top: 3px solid #0f8b80 !important;
+        border-bottom-color: #ffffff !important;
+        padding-top: 1px !important;
+    }
+
+    .custom-tab > .mud-tabs-toolbar .mud-tab > span:not(.mud-icon-root),
+    .custom-tab > .mud-tabs-toolbar .mud-tab .mud-typography,
+    .custom-tab > .mud-tabs-toolbar .mud-tab .mud-tabs-panel-header {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .custom-tab > .mud-tabs-toolbar .mud-tab .mud-tabs-panel-header {
+        display: block !important;
+        flex: 1 1 auto !important;
+        max-width: 188px;
+        line-height: 40px !important;
+        text-align: left;
+    }
+
+    .custom-tab > .mud-tabs-toolbar .mud-tab .mud-tabs-panel-header,
+    .custom-tab > .mud-tabs-toolbar .mud-tab .mud-tabs-panel-header * {
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    .custom-tab > .mud-tabs-toolbar .close-tab-icon {
+        width: 22px !important;
+        height: 22px !important;
+        margin-left: 2px !important;
+        padding: 2px !important;
+        flex: 0 0 22px;
+        color: #91a0b3 !important;
+        border-radius: 5px !important;
+    }
+
+    .custom-tab > .mud-tabs-toolbar .close-tab-icon:hover {
+        color: #dc2626 !important;
+        background: #fee2e2 !important;
+    }
+
+    .custom-tab > .mud-tabs-toolbar .mud-tabs-scroll-button {
+        width: 32px !important;
+        min-width: 32px !important;
+        height: 32px !important;
+        margin: 4px 3px !important;
+        color: #526174 !important;
+        background: transparent !important;
+        border: 0 !important;
+        border-radius: 6px !important;
+    }
+
+    .custom-tab > .mud-tabs-toolbar .workspace-add-tab-hidden {
+        display: none !important;
+    }
+
+    .custom-tab > .mud-tabs-toolbar .mud-tabs-tabbar .mud-tab-slider {
+        display: none !important;
+    }
+
+    .custom-tab > .mud-tabs-panels {
+        background: var(--shell-bg) !important;
+    }
+
+    /* Shared visual baseline for every page opened in DynamicTabs. */
+    .workspace-page {
+        min-width: 0;
+        color: var(--shell-text);
+        font-family: "Roboto", "Segoe UI", Arial, sans-serif;
+    }
+
+    .workspace-standard-page {
+        min-height: calc(100vh - 142px);
+        background: var(--shell-bg);
+    }
+
+    .workspace-standard-page,
+    .workspace-standard-page .mud-typography,
+    .workspace-standard-page button,
+    .workspace-standard-page input,
+    .workspace-standard-page textarea,
+    .workspace-standard-page select {
+        font-family: "Roboto", "Segoe UI", Arial, sans-serif;
+    }
+
+    .workspace-standard-page > .mud-container {
+        padding-top: 18px;
+        padding-bottom: 18px;
+    }
+
+    .workspace-standard-page > .mud-container + .mud-container {
+        padding-top: 0;
+    }
+
+    .workspace-standard-page :where(h1, h2, h3, .mud-typography-h4, .mud-typography-h5, .mud-typography-h6) {
+        color: var(--workspace-heading);
+        font-weight: 750;
+        letter-spacing: -.015em;
+    }
+
+    .workspace-standard-page :where(.mud-typography-body2, .mud-typography-caption) {
+        color: var(--shell-muted);
+    }
+
+    .workspace-standard-page [style*="font-size:xx-large"] {
+        color: var(--workspace-heading) !important;
+        font-size: 22px !important;
+        font-weight: 800 !important;
+        letter-spacing: -.02em;
+    }
+
+    .workspace-standard-page :where(.mud-button-root) {
+        border-radius: 8px;
+        font-weight: 650;
+        letter-spacing: 0;
+        text-transform: none;
+        box-shadow: none;
+    }
+
+    .workspace-standard-page :where(.mud-icon-button) {
+        border-radius: 8px;
+    }
+
+    .workspace-standard-page :where(.mud-button-root, .mud-icon-button):focus-visible {
+        outline: 3px solid rgba(37, 99, 235, .18);
+        outline-offset: 2px;
+    }
+
+    .workspace-standard-page :where(.mud-input-label) {
+        color: #566579;
+        font-weight: 550;
+    }
+
+    .workspace-standard-page :where(.mud-input-outlined-border) {
+        border-color: #d6dfe7;
+    }
+
+    .workspace-standard-page :where(.mud-input-control:hover .mud-input-outlined-border) {
+        border-color: #9fb7bd;
+    }
+
+    .workspace-standard-page :where(.mud-card) {
+        border: 1px solid var(--workspace-border);
+        border-radius: 12px;
+        box-shadow: var(--workspace-shadow);
+    }
+
+    .workspace-standard-page :where(.mud-table-root) {
+        border: 1px solid var(--workspace-border);
+        border-radius: 12px;
+        background: var(--shell-surface);
+        box-shadow: 0 4px 16px rgba(15, 23, 42, .035);
+        overflow: hidden;
+    }
+
+    .workspace-standard-page :where(.mud-table-head .mud-table-cell) {
+        color: #334155;
+        background: var(--workspace-subtle);
+        border-bottom: 1px solid #dfe7ee;
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: .01em;
+    }
+
+    .workspace-standard-page :where(.mud-table-body .mud-table-cell) {
+        color: #273548;
+        border-bottom-color: #edf1f5;
+    }
+
+    .workspace-standard-page :where(.mud-table-body .mud-table-row:hover .mud-table-cell) {
+        background: #f3f9f8;
+    }
+
+    .workspace-standard-page :where(.mud-table-pagination) {
+        color: #536277;
+        background: #fbfcfd;
+        border-top: 1px solid #edf1f5;
+    }
+
+    /* MudBlazor renders operator and clear-filter actions together.
+       Keep clear available on demand without repeating two filter icons in every column. */
+    .workspace-standard-page .filter-header-cell > .d-flex.flex-row {
+        align-items: center;
+        gap: 2px;
+    }
+
+    .workspace-standard-page .filter-header-cell > .d-flex.flex-row > .mud-icon-button:last-child {
+        width: 0;
+        min-width: 0;
+        max-width: 0;
+        margin: 0;
+        padding: 0 !important;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(.86);
+        transition: width .14s ease, min-width .14s ease, max-width .14s ease, opacity .14s ease, transform .14s ease;
+    }
+
+    .workspace-standard-page .filter-header-cell:hover > .d-flex.flex-row > .mud-icon-button:last-child,
+    .workspace-standard-page .filter-header-cell:focus-within > .d-flex.flex-row > .mud-icon-button:last-child {
+        width: 28px;
+        min-width: 28px;
+        max-width: 28px;
+        padding: 4px !important;
+        color: #64748b;
+        opacity: .82;
+        pointer-events: auto;
+        transform: scale(1);
+    }
+
+    .workspace-standard-page .filter-header-cell > .d-flex.flex-row > .mud-icon-button:last-child:hover {
+        color: #dc2626;
+        background: #fee2e2;
+    }
+
+    .workspace-standard-page :where(.mud-chip) {
+        border-radius: 7px;
+        font-weight: 650;
+    }
+
+    .workspace-standard-page :where(.mud-alert) {
+        border-radius: 10px;
+    }
+
+    /* Nested tabs belong to a screen; they must not inherit the document-tab shape above. */
+    .workspace-standard-page .mud-tabs:not(.custom-tab) > .mud-tabs-toolbar {
+        min-height: 42px;
+        padding: 0 4px;
+        background: transparent;
+        border-bottom: 1px solid var(--workspace-border);
+        box-shadow: none;
+    }
+
+    .workspace-standard-page .mud-tabs:not(.custom-tab) > .mud-tabs-toolbar .mud-tab {
+        width: auto;
+        min-width: 96px;
+        min-height: 42px;
+        padding: 0 14px;
+        color: #64748b;
+        background: transparent;
+        border: 0;
+        border-radius: 8px 8px 0 0;
+        font-size: 12.5px;
+        font-weight: 650;
+        line-height: 1.2;
+        text-transform: none;
+    }
+
+    .workspace-standard-page .mud-tabs:not(.custom-tab) > .mud-tabs-toolbar .mud-tab:hover {
+        color: var(--workspace-accent-strong);
+        background: var(--workspace-accent-soft);
+    }
+
+    .workspace-standard-page .mud-tabs:not(.custom-tab) > .mud-tabs-toolbar .mud-tab.mud-tab-active {
+        color: var(--workspace-accent-strong);
+        background: #ffffff;
+    }
+
+    .workspace-standard-page .mud-tabs:not(.custom-tab) > .mud-tabs-toolbar .mud-tab-slider {
+        height: 2px;
+        background: var(--workspace-accent);
+    }
+
+    @@media (max-width: 720px) {
+        .workspace-standard-page > .mud-container {
+            padding-top: 12px;
+            padding-right: 12px;
+            padding-bottom: 14px;
+            padding-left: 12px;
+        }
+
+        .workspace-standard-page .mud-tabs:not(.custom-tab) > .mud-tabs-toolbar .mud-tab {
+            min-width: 84px;
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+    }
+
+    .app-footer {
+        min-height: 30px;
+        padding: 6px 18px;
+        display: flex;
+        align-items: center;
+        color: #94a3b8;
+        background: var(--shell-bg);
+        border-top: 1px solid #edf1f5;
+    }
+
+    .app-footer .mud-typography {
+        font-size: 11px !important;
+    }
+
+    @@media (max-width: 1100px) {
+        .topbar-context,
+        .topbar-user-chip .mud-chip-content,
+        .topbar-logout .mud-nav-link-text {
+            display: none !important;
+        }
+
+        .topbar-checkin {
+            min-width: 96px !important;
+        }
+    }
+
+    @@media (max-width: 720px) {
+        .app-shell .appbar-custom .mud-toolbar {
+            padding: 0 10px;
+        }
+
+        .topbar-actions .mud-icon-button:nth-last-of-type(-n+3),
+        .topbar-user-chip,
+        .topbar-logout {
+            display: none !important;
+        }
+
+        .topbar-checkin {
+            min-width: 88px !important;
+            margin-right: 0 !important;
+        }
+    }
+</style>
 <CascadingValue Value="this">
 
+    <div class="app-shell">
     <MudLayout>
-        <MudAppBar Elevation="1" Class="appbar-custom" Style="@($"background-color: {mainLayoutBackgroundColor} !important;")">
+        <MudAppBar Elevation="0" Class="appbar-custom" Style="@($"--shell-accent: {mainLayoutBackgroundColor};")">
 
-            <MudIconButton Icon=@Icons.Material.Filled.Menu Color=Color.Inherit Edge=Edge.Start OnClick=DrawerToggle />
-            @* <MudImage Src="Logo.png" Alt="LMS" Height="50" ObjectFit="ObjectFit.ScaleDown" Class="rounded-lg" /> *@
-            <MudText Typo=Typo.h5 Class="ml-3">LMS - NVOCC</MudText>
+            <MudIconButton Icon=@Icons.Material.Filled.Menu Color=Color.Inherit Edge=Edge.Start OnClick=DrawerToggle Class="shell-menu-button" />
+            <div class="topbar-context">
+                <strong>Operations workspace</strong>
+                <span>Quản lý vận hành và dữ liệu tập trung</span>
+            </div>
             <MudSpacer />
 
-            <div class="mud-toolbar mud-toolbar-dense">
-                <div class="flex-grow-1"></div>
+            <div class="topbar-actions">
                 <AuthorizeView Context="auth">
                     <NotAuthorized>
                         <MudNavLink Href="/Account/Login" Icon=@Icons.Material.Filled.Login IconColor=Color.Success>@Localizer["Login"]</MudNavLink>
@@ -98,7 +666,7 @@
                         <MudBadge Content="@_unreadEmailCount"
                         Color="Color.Error"
                         Visible="_unreadEmailCount > 0"
-                        Style="position: relative; top: -1px; right: -8px; margin-right: 40px;">
+                        Class="topbar-notification">
                             <MudIconButton Icon="@Icons.Material.Filled.Email"
                             Color="Color.Inherit"
                             @onclick="TogglePopover" Style="padding:0.5px" />
@@ -152,7 +720,7 @@
                             {
                                 <MudIconButton Icon="@Icons.Material.Filled.EventNote" Color="Color.Inherit" @onclick="OpenLeaveRequestTab" Style="margin-right:20px" />
                             }
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="_checkedInToday" OnClick="CheckIn" Style="margin-right:20px; min-width:140px">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="_checkedInToday" OnClick="CheckIn" Class="topbar-checkin">
                                 @(_checkedInToday ? Localizer["Đã chấm"] : Localizer["Chấm công"])
                             </MudButton>
                         }
@@ -163,16 +731,16 @@
                             {
                                 <MudIconButton Icon="@Icons.Material.Filled.AssignmentLate" Color="Color.Inherit" @onclick="OpenAdminLeaveRequest" Style="margin-right:20px" />
                             }
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="_checkedInToday" OnClick="CheckIn" Style="margin-right:20px; min-width:140px">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="_checkedInToday" OnClick="CheckIn" Class="topbar-checkin">
                                 @(_checkedInToday ? Localizer["Đã chấm"] : Localizer["Chấm công"])
                             </MudButton>
                         }
 
 
-                        <MudChip Icon=@Icons.Material.Filled.Person Color=Color.Secondary IconColor=Color.Inherit>
+                        <MudChip Icon=@Icons.Material.Filled.Person Color=Color.Secondary IconColor=Color.Inherit Class="topbar-user-chip">
                             @(auth.User.Identity?.Name) - @(user.Department)
                         </MudChip>
-                        <MudNavLink Href="/Account/Logout" Icon=@Icons.Material.Filled.Logout IconColor=Color.Success>
+                        <MudNavLink Href="/Account/Logout" Icon=@Icons.Material.Filled.Logout IconColor=Color.Success Class="topbar-logout">
                             @Localizer["Logout"]
                         </MudNavLink>
 
@@ -191,8 +759,17 @@
         Variant="DrawerVariant.Responsive"
         Breakpoint="Breakpoint.Md" DisableOverlay
         Width="@($"{_drawerWidth}px")"
-        Class="@(_isResizingDrawer ? "drawer-resizing" : null)">
+        Class="@($"app-shell-drawer {(_isResizingDrawer ? "drawer-resizing" : string.Empty)}")">
             <div class="drawer-with-resize">
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-mark">
+                        <MudIcon Icon="@Icons.Material.Rounded.LocalShipping" Size="Size.Medium" />
+                    </div>
+                    <div class="sidebar-brand-copy">
+                        <strong>LMS · NVOCC</strong>
+                        <span>Operations platform</span>
+                    </div>
+                </div>
                 <NavMenu OnTabRequest="@((t) => OpenTab(t.Key,t.Title,t.Content))" @ref="_navMenuRef" />
                 @if (_drawerOpen)
                 {
@@ -211,22 +788,17 @@
                  @onpointerup="OnDrawerResizeEnd"
                  @onpointercancel="OnDrawerResizeEnd"></div>
         }
-        <MudMainContent>
+        <MudMainContent Class="app-main-content">
             @* @Body *@
-            <DynamicTabs @ref="_tabs" />
-            <div class="mud-container mud-container-maxwidth-lg" style="position:fixed; bottom:0; width:100%">
-                <div class="mud-toolbar mud-toolbar-dense">
-                    <MudText Typo="Typo.caption">Copyright © @DateTime.Now.Year LMS.</MudText>
-
-                </div>
+            <div class="workspace-content">
+                <DynamicTabs @ref="_tabs" />
             </div>
-            <div class="mud-container mud-container-maxwidth-lg">
-                <div class="mud-toolbar mud-toolbar-dense">
-                </div>
-            </div>
-
+            <footer class="app-footer">
+                <MudText Typo="Typo.caption">Copyright © @DateTime.Now.Year LMS · NVOCC</MudText>
+            </footer>
         </MudMainContent>
     </MudLayout>
+    </div>
 
     @* AI Assistant - only visible when authenticated *@
     <AuthorizeView>
@@ -332,19 +904,42 @@
         user = asv.GetUserDetail() ?? new();
         if (user != null && user.UsrId != Guid.Empty)
         {
-            _unreadEmailCount = await _notificationService.GetUnreadEmailCountAsync(user.UsrId);
+            try
+            {
+                _unreadEmailCount = await _notificationService.GetUnreadEmailCountAsync(user.UsrId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unable to load notification count: {ex.Message}");
+            }
             
             // Check permissions
             if (!string.IsNullOrEmpty(user.Usr))
             {
-                _canViewLeaveRequests = await SharedService.CheckPermission(user.Usr, "view", "LeaveRequests");
-                _canApproveLeaveRequests = await SharedService.CheckPermission(user.Usr, "approve", "LeaveRequests");
+                try
+                {
+                    _canViewLeaveRequests = await SharedService.CheckPermission(user.Usr, "view", "LeaveRequests");
+                    _canApproveLeaveRequests = await SharedService.CheckPermission(user.Usr, "approve", "LeaveRequests");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unable to load layout permissions: {ex.Message}");
+                }
             }
         }
 
         await LoadThemePreference();
         await LoadFontPreferenceFromDb();
-        await StartHub();
+        try
+        {
+            await StartHub();
+        }
+        catch (Exception ex)
+        {
+            // Notifications are optional. A transient hub failure must not
+            // terminate the complete layout or leave the menu half-rendered.
+            Console.WriteLine($"Unable to start notification hub: {ex.Message}");
+        }
         // await LoadCheckInStatus();
         ScheduleNextCheck();
     }

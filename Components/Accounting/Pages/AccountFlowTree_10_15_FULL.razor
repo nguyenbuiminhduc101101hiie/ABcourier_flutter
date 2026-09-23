@@ -1033,7 +1033,7 @@
 
     private async Task PrintAsync()
     {
-        await JS.InvokeVoidAsync("eval", "window.print();");
+        await JS.InvokeVoidAsync("window.print");
     }
 
     private void ClearData()

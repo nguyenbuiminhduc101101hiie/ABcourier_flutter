@@ -5,7 +5,18 @@
 @inject IHttpContextAccessor HttpContextAccessor
 @inject IConfiguration Configuration
 
-<div class="nav-menu-full-height" style="background-color: @navMenuBackgroundColor; color: @navMenuTextColor;">
+<div class="nav-menu-full-height" style="--nav-theme-bg: @navMenuBackgroundColor; --nav-theme-text: @navMenuTextColor;">
+    <div class="nav-menu-intro">
+        <span>Navigation</span>
+        <small>Chọn khu vực làm việc</small>
+    </div>
+    @if (!_permissionsLoaded)
+    {
+        <div class="nav-permission-status" role="status" aria-live="polite">
+            <MudProgressCircular Indeterminate="true" Size="Size.Small" />
+            <span>@(_permissionsLoading ? "Đang tải quyền truy cập..." : "Đang đồng bộ menu...")</span>
+        </div>
+    }
     @if (_canSeeSiMenu)
     {
         <MudNavMenu Color="Color.Primary" Style="background-color: transparent;">
@@ -343,7 +354,7 @@
             {
             <MudNavGroup Title="@($"10.{Localizer["Manage_company_cash_flow_nav"]}")"
                          Class="px-4 mud-typography mud-typography-overline"
-                         Icon=@Icons.Material.Rounded.Savings IconColor=Color.Primary>
+                         Icon=@Icons.Material.Rounded.Savings IconColor=Color.Primary @bind-Expanded="_expandedCashFlow">
                 <MudNavLink Style="@NavHidden("Phieuthu")" OnClick="@(() => OpenTab("Phieuthu", $"10.1 {Localizer["Phieuthu"]}", RenderComponent(typeof(Components.PhieuThu.Pages.PhieuThu_Index))))" Icon=@Icons.Material.Filled.MoneyOff IconColor=Color.Primary>
                     10.1 @Localizer["Phieuthu"]
                 </MudNavLink>
@@ -801,21 +812,36 @@
     builder.AddAttribute(1, nameof(Components.Accounting.Pages.AccountBalanceSnapshot_10_9_1.OnTabRequest), OnTabRequest);
     builder.CloseComponent();
 };
-    private bool _expandedSystem = false;
-    private bool _expandedBusiness = false;
-    private bool _expandedTask = false;
-    private bool _expandedPayment = false;
-    private bool _expandedPriceSd = false;
-    private bool _expandedPricing = false;
-    private bool _expandedStatistical = false;
-    private bool _expandedEQ = false;
+    private string? _expandedPrimaryGroup;
+
+    private bool IsPrimaryGroupExpanded(string group) =>
+        string.Equals(_expandedPrimaryGroup, group, StringComparison.Ordinal);
+
+    private void SetPrimaryGroupExpanded(string group, bool expanded)
+    {
+        if (expanded)
+            _expandedPrimaryGroup = group;
+        else if (IsPrimaryGroupExpanded(group))
+            _expandedPrimaryGroup = null;
+    }
+
+    private bool _expandedSystem { get => IsPrimaryGroupExpanded("system"); set => SetPrimaryGroupExpanded("system", value); }
+    private bool _expandedBusiness { get => IsPrimaryGroupExpanded("business"); set => SetPrimaryGroupExpanded("business", value); }
+    private bool _expandedTask { get => IsPrimaryGroupExpanded("task"); set => SetPrimaryGroupExpanded("task", value); }
+    private bool _expandedPayment { get => IsPrimaryGroupExpanded("payment"); set => SetPrimaryGroupExpanded("payment", value); }
+    private bool _expandedPriceSd { get => IsPrimaryGroupExpanded("price-schedule"); set => SetPrimaryGroupExpanded("price-schedule", value); }
+    private bool _expandedPricing { get => IsPrimaryGroupExpanded("pricing"); set => SetPrimaryGroupExpanded("pricing", value); }
+    private bool _expandedStatistical { get => IsPrimaryGroupExpanded("statistical"); set => SetPrimaryGroupExpanded("statistical", value); }
+    private bool _expandedEQ { get => IsPrimaryGroupExpanded("equipment"); set => SetPrimaryGroupExpanded("equipment", value); }
+    private bool _expandedCashFlow { get => IsPrimaryGroupExpanded("cash-flow"); set => SetPrimaryGroupExpanded("cash-flow", value); }
     private bool _canSeeSiMenu;
     private bool _expanded83Stock = false;
-    private bool _expandedCourier = false;
+    private bool _expandedCourier { get => IsPrimaryGroupExpanded("courier"); set => SetPrimaryGroupExpanded("courier", value); }
 
     private HashSet<string> _viewPermissions = new(StringComparer.OrdinalIgnoreCase);
     private string? _permissionUsername;
     private bool _permissionsLoaded;
+    private bool _permissionsLoading;
     private string navMenuBackgroundColor = ThemeDefaults.NavMenuBackgroundColor;
     private string navMenuTextColor = ThemeDefaults.NavMenuTextColor;
 
@@ -828,23 +854,40 @@
     private string? NavHidden(string? menuName) =>
         CanView(menuName) ? null : "display:none;";
 
-    private async Task LoadViewPermissionsAsync()
+    private async Task<bool> LoadViewPermissionsAsync()
     {
-        var authState = await singsv.GetAuth();
-        if (authState.User.Identity?.IsAuthenticated != true)
-            return;
+        if (_permissionsLoaded || _permissionsLoading)
+            return _permissionsLoaded;
 
-        _permissionUsername = authState.User.Identity?.Name;
-        _viewPermissions = await ssv.GetUserViewPermissionsForUser(authState.User);
+        _permissionsLoading = true;
+        try
+        {
+            var authState = await singsv.GetAuth();
+            if (authState.User.Identity?.IsAuthenticated != true)
+                return false;
 
-        Console.WriteLine($"[NavMenu] permUser={_permissionUsername}; listCharge={CanView("ListCharge")}; viewMenus=[{string.Join(",", _viewPermissions)}]");
+            _permissionUsername = authState.User.Identity?.Name;
+            _viewPermissions = await ssv.GetUserViewPermissionsForUser(authState.User);
+            _permissionsLoaded = true;
+
+            Console.WriteLine($"[NavMenu] permUser={_permissionUsername}; listCharge={CanView("ListCharge")}; viewMenus=[{string.Join(",", _viewPermissions)}]");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[NavMenu] Unable to load permissions: {ex.Message}");
+            return false;
+        }
+        finally
+        {
+            _permissionsLoading = false;
+        }
     }
 
     public async Task ReloadPermissionsAsync()
     {
         _permissionsLoaded = false;
         await LoadViewPermissionsAsync();
-        _permissionsLoaded = true;
         await InvokeAsync(StateHasChanged);
     }
 
@@ -870,21 +913,27 @@
             // ignore debug failure
         }
 
+        await LoadViewPermissionsAsync();
         await LoadThemePreference();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender || _permissionsLoaded)
+        if (!firstRender || _permissionsLoaded || _permissionsLoading)
             return;
 
-        var authState = await singsv.GetAuth();
-        if (authState.User.Identity?.IsAuthenticated != true)
-            return;
+        // Authentication/permission services can still be warming up during the
+        // first interactive render. Retry briefly instead of leaving a partial
+        // menu or letting a transient failure terminate the Blazor circuit.
+        for (var attempt = 0; attempt < 5 && !_permissionsLoaded; attempt++)
+        {
+            if (attempt > 0)
+                await Task.Delay(250 * attempt);
 
-        await LoadViewPermissionsAsync();
-        _permissionsLoaded = true;
-        StateHasChanged();
+            await LoadViewPermissionsAsync();
+        }
+
+        await InvokeAsync(StateHasChanged);
     }
 
     public async Task ReloadThemeAsync()

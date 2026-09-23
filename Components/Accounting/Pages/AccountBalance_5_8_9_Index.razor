@@ -673,7 +673,7 @@
 
     private async Task OpenAccountBalanceExcelPickerAsync()
     {
-        await JS.InvokeVoidAsync("eval", "document.getElementById('accountBalanceExcelInput')?.click()");
+        await JS.InvokeVoidAsync("clickElementById", "accountBalanceExcelInput");
     }
 
     private sealed class AccountBalanceStageRow
@@ -1990,16 +1990,11 @@ INNER JOIN #BalanceIds AS B ON AB.Id = B.Id;
 
     private async Task DownloadExcelByBase64Async(string fileName, string base64)
     {
-        await JS.InvokeVoidAsync("eval", $@"
-            (function() {{
-                const link = document.createElement('a');
-                link.download = '{fileName}';
-                link.href = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{base64}';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }})();
-        ");
+        await JS.InvokeVoidAsync(
+            "downloadFileFromBase64",
+            fileName,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            base64);
     }
 
     private async Task CarryForwardAccountBalanceAsync()

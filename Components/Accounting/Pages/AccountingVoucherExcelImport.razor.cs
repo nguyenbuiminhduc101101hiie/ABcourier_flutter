@@ -21,6 +21,14 @@ namespace ABFreight.Components.Accounting.Pages
 {
 public partial class AccountingVoucherExcelImport
 {
+    [Inject]
+    private IServiceScopeFactory ScopeFactory { get; set; } = default!;
+
+    [Inject]
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
+
+    [Inject]
+    private ISnackbar Snackbar { get; set; } = default!;
 
     private const long MaxFileSize = 20L * 1024 * 1024;
 
