@@ -64,8 +64,11 @@
 
   <!-- Đảm bảo folder logs luôn có khi publish (IIS stdoutLogFile=.\logs\stdout) -->
   <ItemGroup>
-    <Content Include="logs\.gitkeep" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="logs\.gitkeep" Condition="Exists('logs\.gitkeep')" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
+  <Target Name="CreateLogsFolderOnPublish" AfterTargets="Publish">
+    <MakeDir Directories="$(PublishDir)logs" />
+  </Target>
 
   <ItemGroup>
     <Content Update="Components\DNTU\Pages\DNHU_Index.razor">

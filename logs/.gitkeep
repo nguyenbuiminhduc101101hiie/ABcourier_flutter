@@ -1,0 +1,2 @@
+# Thư mục stdout log cho IIS (AspNetCoreModule).
+# Giữ file này để publish luôn tạo folder logs.
