@@ -26,10 +26,35 @@ using ABFreight.Services.MultiTenant;
 using Stimulsoft.Drawing;
 using System.Text;
 
-// License Stimulsoft phải gán TRƯỚC mọi API Stimulsoft khác (kể cả GraphicsEngine).
-StimulsoftLicenseHelper.EnsureApplied();
+static void WriteStartupLog(string message)
+{
+    try
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "startup.log");
+        File.AppendAllText(path, $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} {message}{Environment.NewLine}");
+    }
+    catch
+    {
+        // Ignore logging failures during bootstrap.
+    }
+}
+
+WriteStartupLog($"Boot start. BaseDirectory={AppContext.BaseDirectory}");
+
+try
+{
+    // License Stimulsoft phải gán TRƯỚC mọi API Stimulsoft khác (kể cả GraphicsEngine).
+    StimulsoftLicenseHelper.EnsureApplied();
+    WriteStartupLog("Stimulsoft license step completed.");
+}
+catch (Exception ex)
+{
+    WriteStartupLog("Stimulsoft license step FAILED: " + ex);
+    throw;
+}
 
 var builder = WebApplication.CreateBuilder(args);
+WriteStartupLog($"WebApplication builder created. Environment={builder.Environment.EnvironmentName}");
 
 builder.Services.AddLocalization();
 
@@ -38,8 +63,17 @@ builder.Services.AddLocalization();
 // Resources are loaded from LocalizationResources table and cached per culture
 builder.Services.AddSingleton<IStringLocalizerFactory, DbStringLocalizerFactory>();
 
-// Avoid SixLabors.Fonts API mismatch with ClosedXML by using GDI text measurement on Windows
-Graphics.GraphicsEngine = GraphicsEngine.Gdi;
+try
+{
+    // Avoid SixLabors.Fonts API mismatch with ClosedXML by using GDI text measurement on Windows
+    Graphics.GraphicsEngine = GraphicsEngine.Gdi;
+    WriteStartupLog("GraphicsEngine.Gdi assigned.");
+}
+catch (Exception ex)
+{
+    WriteStartupLog("GraphicsEngine.Gdi FAILED: " + ex);
+    throw;
+}
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -65,8 +99,33 @@ builder.Services.AddDistributedSqlServerCache(options =>
 
 // Cookie auth keys must survive IIS app-pool recycle / republish,
 // otherwise the login cookie cannot be decrypted and the user looks "logged out".
+// Prefer ContentRoot/Keys; fall back to LocalAppData if IIS app-pool cannot write the site folder.
 var dataProtectionKeysPath = Path.Combine(builder.Environment.ContentRootPath, "Keys");
-Directory.CreateDirectory(dataProtectionKeysPath);
+try
+{
+    Directory.CreateDirectory(dataProtectionKeysPath);
+}
+catch (Exception ex)
+{
+    WriteStartupLog("Keys under ContentRoot failed: " + ex.Message);
+    dataProtectionKeysPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "ABFreight",
+        "DataProtection-Keys");
+    try
+    {
+        Directory.CreateDirectory(dataProtectionKeysPath);
+    }
+    catch (Exception ex2)
+    {
+        // Last resort: temp folder so startup never dies on IIS AppPoolIdentity permissions.
+        dataProtectionKeysPath = Path.Combine(Path.GetTempPath(), "ABFreight-DataProtection-Keys");
+        Directory.CreateDirectory(dataProtectionKeysPath);
+        WriteStartupLog("Keys fallback to Temp: " + ex2.Message);
+    }
+}
+
+WriteStartupLog("DataProtection keys path: " + dataProtectionKeysPath);
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysPath))
     .SetApplicationName("ABFreight");
@@ -91,7 +150,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         cfg.Cookie.Path = "/";
         cfg.Cookie.SameSite = SameSiteMode.Lax;
         cfg.Cookie.HttpOnly = true;
-        cfg.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        // Site is HTTPS (abfreight.nvocc.vn). Always mark auth cookie Secure so browsers keep it.
+        cfg.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         cfg.ExpireTimeSpan = TimeSpan.FromDays(30);
         cfg.SlidingExpiration = true;
     })
@@ -297,7 +357,11 @@ builder.Services.AddDbContextFactory<AppDbContext>(options =>
 // Change SingletonSerivce to scoped to align with per-request auth/user context and avoid holding onto stale user/context state.
 builder.Services.AddScoped<SingletonSerivce>();
 
-var app = builder.Build(); //--------------------------------------------------
+try
+{
+    WriteStartupLog("Building application host...");
+    var app = builder.Build(); //--------------------------------------------------
+    WriteStartupLog("Application host built.");
 
 var supportedCultures = new[] { "en-US", "vi-VN", "zh-CN" };
 var localizationOptions = new RequestLocalizationOptions()
@@ -376,4 +440,11 @@ app.UseWhen(
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.Run();
+    WriteStartupLog("Starting web host (app.Run)...");
+    app.Run();
+}
+catch (Exception ex)
+{
+    WriteStartupLog("FATAL startup exception: " + ex);
+    throw;
+}

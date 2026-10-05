@@ -844,8 +844,14 @@
         if (LoginOtpSentFlag == "1" && loginStep == 2 && !string.IsNullOrWhiteSpace(loginOtpEmail))
             successMessage = $"Mã OTP đã được gửi tới {loginOtpEmail}. Mã có hiệu lực trong {LoginOtpLifetime.TotalMinutes:0} phút.";
 
-        if (HttpMethods.IsGet(HttpContext.Request.Method))
+        if (HttpMethods.IsGet(HttpContext.Request.Method)
+            && HttpContext.User?.Identity?.IsAuthenticated == true)
+        {
+            // Only clear an existing session when an authenticated user opens Login.
+            // Do NOT sign out on every GET — that breaks RedirectToLogin after a successful SignIn
+            // when the next page briefly looks unauthorized.
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        }
     }
 
     [ValidateAntiForgeryToken]

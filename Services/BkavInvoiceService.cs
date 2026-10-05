@@ -775,6 +775,7 @@ public class BkavInvoiceService(
         var taxAmount = line.thanhtiensauthue.HasValue && line.thanhtien.HasValue
             ? Math.Max(0, line.thanhtiensauthue.Value - line.thanhtien.Value)
             : Math.Round(amount * line.thue.GetValueOrDefault() / 100, 0);
+        var taxRateId = MapTaxRateId(line.thue);
 
         return new BkavInvoiceDetailsWS
         {
@@ -787,7 +788,9 @@ public class BkavInvoiceService(
             Qty = quantity,
             Price = price,
             Amount = amount,
-            TaxRateID = MapTaxRateId(line.thue),
+            TaxRateID = taxRateId,
+            // mã 6 (thuế suất khác, VD 5.263%) theo bảng BKAV luôn đi với TaxRate = -4; tiền thuế vẫn lấy theo thuế suất thực của dòng
+            TaxRate = taxRateId == 6 ? -4 : line.thue.GetValueOrDefault(),
             TaxAmount = taxAmount,
             IsDiscount = false,
             UserDefineDetails = "{}"
@@ -1363,6 +1366,7 @@ public class BkavInvoiceService(
         public double Price { get; set; }
         public double Amount { get; set; }
         public int TaxRateID { get; set; }
+        public double TaxRate { get; set; }
         public double TaxAmount { get; set; }
         public bool IsDiscount { get; set; }
         public string UserDefineDetails { get; set; } = string.Empty;

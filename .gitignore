@@ -400,6 +400,10 @@ FodyWeavers.xsd
 # ASP.NET Data Protection keys (must stay on IIS server across republish)
 Keys/
 
+# IIS stdout logs (keep folder via logs/.gitkeep; ignore generated log files)
+logs/*
+!logs/.gitkeep
+
 # Firebase service account (do not commit)
 Secrets/
 **/firebase-service-account.json

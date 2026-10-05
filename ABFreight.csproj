@@ -4,6 +4,9 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+    <!-- Giữ nguyên web.config trong project khi publish (không để SDK ghi đè processPath=dotnet). -->
+    <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
     <!-- Tránh DiscoverPrecompressedAssets: duplicate key khi nhiều RCL/package cùng logical path (MudBlazor, Bootstrap, v.v.) -->
     <StaticWebAssetsEnableCompressionBuild>false</StaticWebAssetsEnableCompressionBuild>
     <StaticWebAssetsEnableCompressionPublish>false</StaticWebAssetsEnableCompressionPublish>
@@ -57,6 +60,11 @@
     <Folder Include="Data\Migrations\" />
     <Folder Include="docs\" />
     <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
+  <!-- Đảm bảo folder logs luôn có khi publish (IIS stdoutLogFile=.\logs\stdout) -->
+  <ItemGroup>
+    <Content Include="logs\.gitkeep" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
