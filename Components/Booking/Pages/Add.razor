@@ -1,3 +1,5 @@
+﻿@using MudBlazor
+
 @inject ISnackbar Snackbar
 @inject AccountService asv
 @inject BookingService bksv
@@ -33,32 +35,24 @@
                                                     <div class="booking-section-title">Booking information</div>
                                                     <MudGrid Spacing="2" AlignItems="AlignItems.End">
                                                         <MudItem xs="12" sm="6" md="3">
-                                                            <MudAutocomplete Class="booking-field labelCustomColor"
-                                                                             T="string"
-                                                                             Variant="Variant.Outlined"
-                                                                             Margin="Margin.Dense"
-                                                                             @bind-Value="cbofrom"
-                                                                             Label="@Localizer["from"]"
-                                                                             SearchFunc="Search_port_from"
-                                                                             AdornmentColor="@ColorTextFields"
-                                                                             Immediate="true"
-                                                                             CoerceText="true"
-                                                                             Clearable="true"
-                                                                             MaxItems="200" />
+                                                            <MudTextField Class="booking-field labelCustomColor"
+                                                                          Variant="Variant.Outlined"
+                                                                          Margin="Margin.Dense"
+                                                                          @bind-Value="cbofrom"
+                                                                          Label="@Localizer["from"]"
+                                                                          AdornmentColor="@ColorTextFields"
+                                                                          Immediate="true"
+                                                                          Clearable="true" />
                                                         </MudItem>
                                                         <MudItem xs="12" sm="6" md="3">
-                                                            <MudAutocomplete Class="booking-field labelCustomColor"
-                                                                             T="string"
-                                                                             Variant="Variant.Outlined"
-                                                                             Margin="Margin.Dense"
-                                                                             @bind-Value="cboto"
-                                                                             Label="@Localizer["to"]"
-                                                                             SearchFunc="Search_port_to"
-                                                                             AdornmentColor="@ColorTextFields"
-                                                                             Immediate="true"
-                                                                             CoerceText="true"
-                                                                             Clearable="true"
-                                                                             MaxItems="200" />
+                                                            <MudTextField Class="booking-field labelCustomColor"
+                                                                          Variant="Variant.Outlined"
+                                                                          Margin="Margin.Dense"
+                                                                          @bind-Value="cboto"
+                                                                          Label="@Localizer["to"]"
+                                                                          AdornmentColor="@ColorTextFields"
+                                                                          Immediate="true"
+                                                                          Clearable="true" />
                                                         </MudItem>
                                                         <MudItem xs="12" md="1" Class="d-flex justify-content-center justify-content-md-start">
                                                             <MudTooltip Text="@Localizer["BookingNo"]">
@@ -143,19 +137,15 @@
                                                             </MudSelect>
                                                         </MudItem>
                                                         <MudItem xs="12" sm="6" md="2">
-                                                            <MudSelect Class="booking-field labelCustomColor"
-                                                                       T="string?"
-                                                                       Variant="Variant.Outlined"
-                                                                       Margin="Margin.Dense"
-                                                                       @bind-Value="_BookingDetail.Code"
-                                                                       For="@(() => _BookingDetail.Code)"
-                                                                       AdornmentColor="@ColorTextFields"
-                                                                       Immediate="true"
-                                                                       Clearable="true"
-                                                                       Label="Code">
-                                                                <MudSelectItem Value="@("JNL")">JNL</MudSelectItem>
-                                                                <MudSelectItem Value="@("HLS")">HLS</MudSelectItem>
-                                                            </MudSelect>
+                                                            <MudTextField Class="booking-field labelCustomColor"
+                                                                          T="string?"
+                                                                          Variant="Variant.Outlined"
+                                                                          Margin="Margin.Dense"
+                                                                          @bind-Value="_BookingDetail.Code"
+                                                                          For="@(() => _BookingDetail.Code)"
+                                                                          Immediate="true"
+                                                                          Clearable="true"
+                                                                          Label="Code" />
                                                         </MudItem>
                                                         <MudItem xs="12" sm="6" md="2">
                                                             <MudAutocomplete Class="booking-field labelCustomColor"
@@ -185,6 +175,8 @@
                                                                              Label="@Localizer["toshipper"]"
                                                                              @bind-Value="_BookingDetail.CONSIGNEEID"
                                                                              Required="true"
+                                                                             Clearable="true"
+                                                                             ResetValueOnEmptyText="true"
                                                                              AdornmentColor="@ColorTextFields"
                                                                              SearchFunc="Search_customer"
                                                                              ToStringFunc="GetCustomerLabel"
@@ -199,7 +191,8 @@
                                                                              @bind-Value="_BookingDetail.Customer_ID"
                                                                              AdornmentColor="@ColorTextFields"
                                                                              SearchFunc="Search_customer"
-                                                                             Required="true"
+                                                                             Clearable="true"
+                                                                             ResetValueOnEmptyText="true"
                                                                              ToStringFunc="GetCustomerLabel" />
                                                         </MudItem>
                                                         <MudItem xs="12" md="4">
@@ -212,6 +205,8 @@
                                                                              OnBlur="OnMainCusSelected"
                                                                              AdornmentColor="@ColorTextFields"
                                                                              SearchFunc="Search_customer"
+                                                                             Clearable="true"
+                                                                             ResetValueOnEmptyText="true"
                                                                              ToStringFunc="GetCustomerLabel" />
                                                         </MudItem>
                                                     </MudGrid>
@@ -273,7 +268,7 @@
                                                                              Margin="Margin.Dense"
                                                                              @bind-Value="_BookingDetail.hano_POR"
                                                                              Label="@Localizer["POR"]"
-                                                                             SearchFunc="Search_Port"
+                                                                                 SearchFunc="Search_Port_codeha"
                                                                              AdornmentColor="@ColorTextFields"
                                                                              Immediate="true"
                                                                              CoerceText="true"
@@ -295,18 +290,48 @@
                                                                              MaxItems="100" />
                                                         </MudItem>
                                                         <MudItem xs="12" md="6">
-                                                            <MudAutocomplete Class="booking-field labelCustomColor"
-                                                                             T="string"
-                                                                             Variant="Variant.Outlined"
-                                                                             Margin="Margin.Dense"
-                                                                             @bind-Value="_BookingDetail.hano_POT"
-                                                                             Label="@Localizer["POT"]"
-                                                                             SearchFunc="Search_Port"
-                                                                             AdornmentColor="@ColorTextFields"
-                                                                             Immediate="true"
-                                                                             CoerceText="true"
-                                                                             Clearable="true"
-                                                                             MaxItems="100" />
+                                                            <MudStack Spacing="1">
+                                                                @for (var i = 0; i < potEntries.Count; i++)
+                                                                {
+                                                                    var entry = potEntries[i];
+                                                                    var isLast = i == potEntries.Count - 1;
+                                                                    var potLabel = i == 0 ? $"{Localizer["POT"]}" : $"{Localizer["POT"]} {i + 1}";
+
+                                                                    <div class="d-flex align-center ga-2" @key="entry.Id">
+                                                                        <MudAutocomplete Class="booking-field labelCustomColor flex-grow-1"
+                                                                                         T="string"
+                                                                                         Variant="Variant.Outlined"
+                                                                                         Margin="Margin.Dense"
+                                                                                         @bind-Value="entry.Value"
+                                                                                         @bind-Value:after="SyncPotToBookingDetail"
+                                                                                         Label="@potLabel"
+                                                                                         SearchFunc="Search_Port"
+                                                                                         AdornmentColor="@ColorTextFields"
+                                                                                         Immediate="true"
+                                                                                         CoerceText="true"
+                                                                                         Clearable="true"
+                                                                                         MaxItems="100" />
+                                                                        @if (potEntries.Count > 1)
+                                                                        {
+                                                                            <MudTooltip Text="@Localizer["Delete"]">
+                                                                                <MudIconButton Icon="@Icons.Material.Filled.Close"
+                                                                                               Color="Color.Error"
+                                                                                               Size="Size.Small"
+                                                                                               OnClick="@(() => RemovePot(entry))" />
+                                                                            </MudTooltip>
+                                                                        }
+                                                                        @if (isLast)
+                                                                        {
+                                                                            <MudTooltip Text="@Localizer["Add"]">
+                                                                                <MudIconButton Icon="@Icons.Material.Filled.Add"
+                                                                                               Color="Color.Primary"
+                                                                                               Size="Size.Small"
+                                                                                               OnClick="AddPot" />
+                                                                            </MudTooltip>
+                                                                        }
+                                                                    </div>
+                                                                }
+                                                            </MudStack>
                                                         </MudItem>
                                                         <MudItem xs="12" md="6">
                                                             <MudAutocomplete Class="booking-field labelCustomColor"
@@ -357,7 +382,7 @@
                                                 <div class="booking-section">
                                                     <div class="booking-section-title">Other</div>
                                                     <MudGrid Spacing="2">
-                                                        <MudItem xs="12" md="6">
+                                                        <MudItem xs="12" md="4">
                                                             <MudTextField Class="booking-field labelCustomColor"
                                                                           Variant="Variant.Outlined"
                                                                           Margin="Margin.Dense"
@@ -367,7 +392,22 @@
                                                                           Immediate="true"
                                                                           Label="M.Box:" />
                                                         </MudItem>
-                                                        <MudItem xs="12" md="6">
+                                                        <MudItem xs="12" md="4">
+                                                            <MudSelect Class="booking-field labelCustomColor"
+                                                                       T="string?"
+                                                                       Variant="Variant.Outlined"
+                                                                       Margin="Margin.Dense"
+                                                                       @bind-Value="_BookingDetail.Freight_Payable"
+                                                                       For="@(() => _BookingDetail.Freight_Payable)"
+                                                                       AdornmentColor="@ColorTextFields"
+                                                                       Immediate="true"
+                                                                       Clearable="true"
+                                                                       Label="Freight Payable">
+                                                                <MudSelectItem Value="@("Prepaid")">Prepaid</MudSelectItem>
+                                                                <MudSelectItem Value="@("Collect")">Collect</MudSelectItem>
+                                                            </MudSelect>
+                                                        </MudItem>
+                                                        <MudItem xs="12" md="4">
                                                             <MudDatePicker Class="booking-field labelCustomColor"
                                                                            Variant="Variant.Outlined"
                                                                            Margin="Margin.Dense"
@@ -476,7 +516,7 @@
                                                                            For="@(() => _BookingDetail.ETA)"
                                                                            AdornmentColor="@ColorTextFields"
                                                                            Label="ETA:"
-                                                                           Required="true"
+                                                                           Clearable="true"
                                                                            ShowToolbar="false" />
                                                         </MudItem>
                                                         <MudItem xs="12" sm="6" md="3">
@@ -487,6 +527,7 @@
                                                                        @bind-Value="_BookingDetail.etatime"
                                                                        AdornmentColor="@ColorTextFields"
                                                                        Immediate="true"
+                                                                       Clearable="true"
                                                                        Label="ETA Time:">
                                                                 @foreach (var item in timeSiList)
                                                                 {
@@ -973,6 +1014,10 @@
                                             </MudItem>
                                         </MudGrid>
                                     </MudTabPanel>
+                                    <MudTabPanel Text="Import Lệnh Cấp Rỗng">
+                                        <BookingLenhCapRongImportTab BookingDetail="_BookingDetail"
+                                                                     CanSave="@(string.Equals(Status, "edit", StringComparison.OrdinalIgnoreCase))" />
+                                    </MudTabPanel>
                                 </MudTabs>
 
 
@@ -1074,6 +1119,14 @@
                                                                   Variant="Variant.Outlined"
                                                                   Margin="Margin.Dense"
                                                                   T="int?"
+                                                                  Label="20TK:"
+                                                                  @bind-Value="_BookingDetail.TK20" />
+                                                </MudItem>
+                                                <MudItem xs="6" md="3">
+                                                    <MudTextField Class="booking-field labelCustomColor"
+                                                                  Variant="Variant.Outlined"
+                                                                  Margin="Margin.Dense"
+                                                                  T="int?"
                                                                   Label="40FR:"
                                                                   @bind-Value="_BookingDetail.FR40" />
                                                 </MudItem>
@@ -1104,6 +1157,8 @@
                                                                   Value="_BookingDetail.hanoFCL_Quality"
                                                                   ValueChanged="OnHanoFCLQualityChanged" />
                                                 </MudItem>
+                                                @if (_showFclPickupFields)
+                                                {
                                                 <MudItem xs="12">
                                                     <MudAutocomplete Class="booking-field labelCustomColor"
                                                                      T="string"
@@ -1111,7 +1166,7 @@
                                                                      Margin="Margin.Dense"
                                                                      @bind-Value="_BookingDetail.PickupAt"
                                                                      Label="@Localizer["Noilayhang"]"
-                                                                     SearchFunc="Search_Terminal"
+                                                                     SearchFunc="Search_Terminal_pickupat"
                                                                      AdornmentColor="@ColorTextFields"
                                                                      Immediate="true"
                                                                      CoerceText="true"
@@ -1168,6 +1223,7 @@
                                                                    Label="Date Cancel:"
                                                                    ShowToolbar="false" />
                                                 </MudItem>
+                                                }
                                             </MudGrid>
                                         </div>
                                     </MudItem>
@@ -1677,6 +1733,33 @@
                                                                   Label="@Localizer["Userhandle"]"
                                                                   @bind-Value="_BookingDetail.OperationCode_" />
                                                 </MudItem>
+                                                <MudItem xs="12" md="8">
+                                                    <MudTextField Class="booking-field labelCustomColor"
+                                                                  Variant="Variant.Outlined"
+                                                                  Margin="Margin.Dense"
+                                                                  Lines="3"
+                                                                  Label="@Localizer["noidung"]"
+                                                                  @bind-Value="EmailContent" />
+                                                </MudItem>
+                                                <MudItem xs="12" md="4" Class="d-flex justify-content-start justify-content-md-end align-items-end">
+                                                    <MudButton Variant="Variant.Filled"
+                                                               Color="Color.Tertiary"
+                                                               Class="booking-field"
+                                                               Style="max-width:100%;text-transform:none;font-weight:600;"
+                                                               Disabled="_processingSendNotification"
+                                                               StartIcon="@Icons.Material.Filled.Notifications"
+                                                               OnClick="SendNotificationAsync_send">
+                                                        @if (_processingSendNotification)
+                                                        {
+                                                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                                            <MudText Class="ms-2">Processing</MudText>
+                                                        }
+                                                        else
+                                                        {
+                                                            @Localizer["sendnotification"]
+                                                        }
+                                                    </MudButton>
+                                                </MudItem>
                                             </MudGrid>
                                         </div>
                                     </MudItem>
@@ -1870,10 +1953,110 @@
         text-transform: none;
         font-weight: 600;
     }
+
+    /* ===== Màu nền nhạt cho các tab (6.1 Thêm / Sửa Booking) ===== */
+    .booking-card-inner > .mud-tabs > .mud-tabs-toolbar {
+        background: #f3f6fb !important;
+        border: 1px solid #e3e8f0;
+        border-bottom: none;
+        padding: 6px 6px 0;
+    }
+
+    .booking-card-inner > .mud-tabs > .mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper .mud-tab {
+        margin-right: 4px;
+        border-radius: 10px 10px 0 0;
+        border: 1px solid transparent;
+        border-bottom: none;
+        color: #475569;
+        opacity: .85;
+        transition: background .15s, opacity .15s;
+    }
+
+    .booking-card-inner > .mud-tabs > .mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper .mud-tab:hover {
+        opacity: 1;
+    }
+
+    .booking-card-inner > .mud-tabs > .mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper .mud-tab.mud-tab-active {
+        opacity: 1;
+        border-color: #d6dde8;
+        box-shadow: 0 -2px 0 0 currentColor inset;
+    }
+
+    /* Vùng nội dung tab: nền nhạt để các khung trắng nổi lên */
+    .booking-card-inner > .mud-tabs > .mud-tabs-panels {
+        background: #f8fafd;
+        border: 1px solid #e3e8f0;
+        border-top: none;
+        border-radius: 0 0 14px 14px;
+        padding: 14px 12px 12px !important;
+    }
+    .booking-card-inner > .mud-tabs > .mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(1) > .mud-tab { background: #e8f1ff; color: #1d4ed8; }
+    .booking-card-inner > .mud-tabs:has(.mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(1) > .mud-tab-active) > .mud-tabs-panels { background: color-mix(in srgb, #e8f1ff 45%, #ffffff); }
+    .booking-card-inner > .mud-tabs > .mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(2) > .mud-tab { background: #e3f6ec; color: #047857; }
+    .booking-card-inner > .mud-tabs:has(.mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(2) > .mud-tab-active) > .mud-tabs-panels { background: color-mix(in srgb, #e3f6ec 45%, #ffffff); }
+    .booking-card-inner > .mud-tabs > .mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(3) > .mud-tab { background: #e0f5f3; color: #0f766e; }
+    .booking-card-inner > .mud-tabs:has(.mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(3) > .mud-tab-active) > .mud-tabs-panels { background: color-mix(in srgb, #e0f5f3 45%, #ffffff); }
+    .booking-card-inner > .mud-tabs > .mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(4) > .mud-tab { background: #efeaff; color: #6d28d9; }
+    .booking-card-inner > .mud-tabs:has(.mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(4) > .mud-tab-active) > .mud-tabs-panels { background: color-mix(in srgb, #efeaff 45%, #ffffff); }
+    .booking-card-inner > .mud-tabs > .mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(5) > .mud-tab { background: #fff1e0; color: #c2410c; }
+    .booking-card-inner > .mud-tabs:has(.mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(5) > .mud-tab-active) > .mud-tabs-panels { background: color-mix(in srgb, #fff1e0 45%, #ffffff); }
+    .booking-card-inner > .mud-tabs > .mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(6) > .mud-tab { background: #fff7d6; color: #a16207; }
+    .booking-card-inner > .mud-tabs:has(.mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(6) > .mud-tab-active) > .mud-tabs-panels { background: color-mix(in srgb, #fff7d6 45%, #ffffff); }
+    .booking-card-inner > .mud-tabs > .mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(7) > .mud-tab { background: #fdeaf2; color: #be185d; }
+    .booking-card-inner > .mud-tabs:has(.mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(7) > .mud-tab-active) > .mud-tabs-panels { background: color-mix(in srgb, #fdeaf2 45%, #ffffff); }
+    .booking-card-inner > .mud-tabs > .mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(8) > .mud-tab { background: #edf1f7; color: #334155; }
+    .booking-card-inner > .mud-tabs:has(.mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper > .mud-tooltip-root:nth-child(8) > .mud-tab-active) > .mud-tabs-panels { background: color-mix(in srgb, #edf1f7 45%, #ffffff); }
+
+
+    /* ===== Nền nhạt cho từng khung (booking-section), xoay vòng 6 màu ===== */
+    .booking-section .mud-input.mud-input-outlined {
+        background: #ffffff;
+        border-radius: 12px;
+    }
+    .booking-card-inner .mud-grid > .mud-grid-item:nth-child(6n+1) > .booking-section { background: #f2f7ff; border-color: #cfe0fb; }
+    .booking-card-inner .mud-grid > .mud-grid-item:nth-child(6n+1) > .booking-section .booking-section-title::before { background: #2563eb; }
+    .booking-card-inner .mud-grid > .mud-grid-item:nth-child(6n+2) > .booking-section { background: #f1fbf5; border-color: #c8ebd6; }
+    .booking-card-inner .mud-grid > .mud-grid-item:nth-child(6n+2) > .booking-section .booking-section-title::before { background: #059669; }
+    .booking-card-inner .mud-grid > .mud-grid-item:nth-child(6n+3) > .booking-section { background: #fbf6ff; border-color: #e4d5f7; }
+    .booking-card-inner .mud-grid > .mud-grid-item:nth-child(6n+3) > .booking-section .booking-section-title::before { background: #7c3aed; }
+    .booking-card-inner .mud-grid > .mud-grid-item:nth-child(6n+4) > .booking-section { background: #fffaf0; border-color: #f6dfb5; }
+    .booking-card-inner .mud-grid > .mud-grid-item:nth-child(6n+4) > .booking-section .booking-section-title::before { background: #d97706; }
+    .booking-card-inner .mud-grid > .mud-grid-item:nth-child(6n+5) > .booking-section { background: #f0fbfb; border-color: #c4e8e6; }
+    .booking-card-inner .mud-grid > .mud-grid-item:nth-child(6n+5) > .booking-section .booking-section-title::before { background: #0d9488; }
+    .booking-card-inner .mud-grid > .mud-grid-item:nth-child(6n+6) > .booking-section { background: #fff5f8; border-color: #f5d0dd; }
+    .booking-card-inner .mud-grid > .mud-grid-item:nth-child(6n+6) > .booking-section .booking-section-title::before { background: #db2777; }
+
+    /* Tab con (Information > Base Info 1/2/3, Import Lệnh Cấp Rỗng) */
+    .booking-tab-panel .mud-tabs > .mud-tabs-toolbar {
+        background: transparent !important;
+        border-bottom: 1px solid #dbe3ee;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .booking-tab-panel .mud-tabs > .mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper .mud-tab {
+        margin-right: 4px;
+        border-radius: 8px 8px 0 0;
+        background: #ffffffb3;
+        color: #475569;
+        font-weight: 600;
+    }
+
+    .booking-tab-panel .mud-tabs > .mud-tabs-toolbar > .mud-tabs-toolbar-inner > .mud-tabs-toolbar-content > .mud-tabs-toolbar-wrapper .mud-tab.mud-tab-active {
+        background: #ffffff;
+        color: #1d4ed8;
+        box-shadow: 0 -2px 0 0 #3b82f6 inset;
+    }
+
+    .booking-tab-panel .mud-tabs > .mud-tabs-panels {
+        background: transparent;
+    }
 </style>
 
 
 @code {
+    // Hidden per request: Pickup/Drop Off/CN Cust/Special Cont/Date Release/Date Cancel on SEA (FCL) tab
+    private bool _showFclPickupFields = false;
+
 
 
     [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
@@ -1908,6 +2091,69 @@
     List<PortModel> Ports = new List<PortModel>();
     List<string> trangthais = new List<string>();
     private List<string> ListVessel { get; set; } = new List<string>();
+
+    private const string PotSeparator = " | ";
+
+    private sealed class PotEntry
+    {
+        public Guid Id { get; } = Guid.NewGuid();
+        public string? Value { get; set; }
+    }
+
+    private List<PotEntry> potEntries = new List<PotEntry> { new PotEntry() };
+
+    private void LoadPotEntries()
+    {
+        var entries = new List<PotEntry>();
+
+        if (!string.IsNullOrWhiteSpace(_BookingDetail?.hano_POT))
+            entries.Add(new PotEntry { Value = _BookingDetail.hano_POT });
+
+        if (!string.IsNullOrWhiteSpace(_BookingDetail?.hano_POT_Ext))
+        {
+            var extras = _BookingDetail.hano_POT_Ext
+                .Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(x => new PotEntry { Value = x });
+            entries.AddRange(extras);
+        }
+
+        if (entries.Count == 0)
+            entries.Add(new PotEntry());
+
+        potEntries = entries;
+    }
+
+    private void SyncPotToBookingDetail()
+    {
+        if (_BookingDetail == null)
+            return;
+
+        var values = potEntries
+            .Select(x => x.Value?.Trim())
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToList();
+
+        // Report BookingRequestNVOCC.mrt đọc thẳng cột hano_POT nên cột này chỉ giữ POT đầu tiên.
+        _BookingDetail.hano_POT = values.FirstOrDefault();
+        _BookingDetail.hano_POT_Ext = values.Count > 1
+            ? string.Join(PotSeparator, values.Skip(1))
+            : null;
+    }
+
+    private void AddPot()
+    {
+        potEntries.Add(new PotEntry());
+    }
+
+    private void RemovePot(PotEntry entry)
+    {
+        potEntries.Remove(entry);
+
+        if (potEntries.Count == 0)
+            potEntries.Add(new PotEntry());
+
+        SyncPotToBookingDetail();
+    }
 
 
     MudForm form;
@@ -2022,6 +2268,8 @@
         if ((await ssv.CheckPermission(asv.GetAuth().Result.User.Identity.Name, "Edit", "Booking-Request") || await ssv.CheckPermission(asv.GetAuth().Result.User.Identity.Name, "New", "Booking-Request")))
         {
 
+            SyncPotToBookingDetail();
+
             await form.Validate();
 
             if (form.IsValid)
@@ -2047,6 +2295,7 @@
     protected override async Task OnInitializedAsync()
     {
         SyncDatePickersFromBookingDetail();
+        LoadPotEntries();
 
         ListFrom = await bksv.GetList_From() ?? new List<string>();
 
@@ -2059,11 +2308,11 @@
         listCus_Trucking =  await bksv.GetlistCus_trucking(_BookingDetail.soxe) ?? new List<string>();
         listCus_soxethuchien =  await bksv.GetlistCus_trucking(_BookingDetail.soxetai) ?? new List<string>();
         ListTerminal = await bksv.GetList_Terminal(_BookingDetail.Emptydepot) ?? new List<string>();
-        ListTerminal_pickupat= await bksv.GetList_Terminal(_BookingDetail.PickupAt) ?? new List<string>();
+        ListTerminal_pickupat = await bksv.GetList_Terminal_Codeha(_BookingDetail.PickupAt) ?? new List<string>();
         ListTerminal_dropoff= await bksv.GetList_Terminal(_BookingDetail.DropOff) ?? new List<string>();
         ListUser = await bksv.GetList_User(UserHanding) ?? new List<string>();
         Quotations = await QuoSV.GetListQuotation();
-        customers = await CusSV.GetList();
+        customers = await CusSV.GetList_booking();
         sales = await CusSV.GetList_sale();
         Ports = await bksv.GetList_PORT();
         ListPort_2char_from = await bksv.GetList_PortCode(cbofrom) ?? new List<string>();
@@ -2154,7 +2403,7 @@
         }
         catch(Exception ex)
         {
-            CallSnackBar("Error while bind, code: " + ex.Message, MudBlazor.Severity.Error);
+            CallSnackBar(string.Format(Localizer["BindError"], ex.Message), MudBlazor.Severity.Error);
         }
 
     }
@@ -2170,7 +2419,7 @@
         }
         catch (Exception ex)
         {
-            CallSnackBar("Error while bind, code: " + ex.Message, MudBlazor.Severity.Error);
+            CallSnackBar(string.Format(Localizer["BindError"], ex.Message), MudBlazor.Severity.Error);
         }
 
     }
@@ -2351,6 +2600,14 @@
         return ListTerminal.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Distinct();
     }
 
+    private async Task<IEnumerable<string>> Search_Terminal_pickupat(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return ListTerminal_pickupat.Distinct();
+
+        return ListTerminal_pickupat.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Distinct();
+    }
+
 
     private async Task<IEnumerable<Guid>> SearchQuotations(string value)
     {
@@ -2397,7 +2654,21 @@
             .Where(x => (x.PORT+"_"+x.PORT_CODE).Contains(value, StringComparison.InvariantCultureIgnoreCase))
             .Select(x => (x.PORT + "_" + x.PORT_CODE)).Distinct();
     }
+    private async Task<IEnumerable<string>> Search_Port_codeha(string value)
+    {
+        string FormatPort(PortModel x) =>
+            string.IsNullOrEmpty(x.MARKETCODETS)
+                ? $"{x.PORT}_{x.PORT_CODE}"
+                : $"{x.PORT}_{x.PORT_CODE}-{x.MARKETCODETS}";
 
+        if (string.IsNullOrEmpty(value))
+            return Ports.Select(FormatPort).Distinct();
+
+        return Ports
+            .Where(x => FormatPort(x).Contains(value, StringComparison.InvariantCultureIgnoreCase))
+            .Select(FormatPort)
+            .Distinct();
+    }
     private async Task<IEnumerable<Guid?>> Search_Salecode(string value)
     {
         if (string.IsNullOrEmpty(value))
@@ -2433,7 +2704,7 @@
         var formattedMonth = int.Parse(currentMonth).ToString();
         if (so == null)
         {
-            CallSnackBar("Hết Số Booking Liên Hệ Admin", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["BookingNumberExhausted"], MudBlazor.Severity.Warning);
             return;
         }
         else
@@ -2491,6 +2762,7 @@
         Add(_BookingDetail.OT20, "20OT");
         Add(_BookingDetail.OT40, "40OT");
         Add(_BookingDetail.FR20, "20FR");
+        Add(_BookingDetail.TK20, "20TK");
         Add(_BookingDetail.FR40, "40FR");
 
         var quantity = parts.Count == 0
@@ -2543,17 +2815,75 @@
 
 
 
+    private bool _processingSendNotification;
+
+    private async Task SendNotificationAsync_send()
+    {
+        if (string.IsNullOrWhiteSpace(_BookingDetail.OperationCode_))
+        {
+            CallSnackBar(Localizer["UserEmpty"], MudBlazor.Severity.Warning);
+            return;
+        }
+
+        var noidung = EmailContent?.Trim();
+        if (string.IsNullOrWhiteSpace(noidung))
+        {
+            noidung = string.IsNullOrWhiteSpace(_BookingDetail.BookingNo)
+                ? "Booking"
+                : $"Booking: {_BookingDetail.BookingNo}";
+        }
+
+        try
+        {
+            _processingSendNotification = true;
+            await Task.Delay(1);
+            StateHasChanged();
+
+            string[] users = _BookingDetail.OperationCode_.Split(',');
+            var listid = new List<string>();
+
+            foreach (var user in users)
+            {
+                var userName = user?.Trim();
+                if (string.IsNullOrEmpty(userName))
+                    continue;
+
+                Guid? inputid = await gsv.GetIdfromUser(userName);
+                if (inputid != null && inputid != Guid.Empty)
+                {
+                    listid.Add(inputid.ToString()!);
+                }
+            }
+
+            if (listid.Count == 0)
+            {
+                CallSnackBar(Localizer["UserEmpty"], MudBlazor.Severity.Warning);
+                return;
+            }
+
+            await _notificationService.SendNotificationAsync(listid.ToArray(), noidung);
+            CallSnackBar(Localizer["SendSuccess"], MudBlazor.Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            CallSnackBar(string.Format(Localizer["SomethingWentWrong"], ex.Message), MudBlazor.Severity.Error);
+        }
+        finally
+        {
+            _processingSendNotification = false;
+        }
+    }
+
     private async Task SendEmailAsync_send()
     {
         if (string.IsNullOrWhiteSpace(_BookingDetail.OperationCode_))
         {
-            CallSnackBar("User is empty!", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["UserEmpty"], MudBlazor.Severity.Warning);
             return;
         }
 
         string[] users = _BookingDetail.OperationCode_.Split(',');
         List<string> emails = new List<string>();
-        List<string> listid = new List<string>();
 
         foreach (var user in users)
         {
@@ -2566,12 +2896,6 @@
             {
                 emails.Add(inputemail);
             }
-
-            Guid? inputid = await gsv.GetIdfromUser(userName);
-            if (inputid != null && inputid != Guid.Empty)
-            {
-                listid.Add(inputid.ToString()!);
-            }
         }
 
         string[] emailarray = emails.ToArray();
@@ -2580,21 +2904,16 @@
             bool result = await emsv.SendEmailAsync_1(EmailContent, emailarray, Attachments);
             if (result)
             {
-                if (listid.Count > 0 && !string.IsNullOrWhiteSpace(EmailContent))
-                {
-                    await _notificationService.SendNotificationAsync(listid.ToArray(), EmailContent);
-                }
-
-                CallSnackBar("Email đã gửi thành công!", MudBlazor.Severity.Success);
+                CallSnackBar(Localizer["EmailSentSuccess"], MudBlazor.Severity.Success);
             }
             else
             {
-                CallSnackBar("Email đã gửi thất bại!", MudBlazor.Severity.Error);
+                CallSnackBar(Localizer["EmailSentFailed"], MudBlazor.Severity.Error);
             }
         }
         else
         {
-            CallSnackBar("Email is empty!", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["EmailEmpty"], MudBlazor.Severity.Warning);
         }
     }
     string save_text_vessel;
