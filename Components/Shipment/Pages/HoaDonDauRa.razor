@@ -85,6 +85,14 @@
                     <EditTemplate>
                     </EditTemplate>
                 </PropertyColumn>
+                <PropertyColumn Property="x => x.thuho" Title="@Localizer["On Behaft"]" Required="false">
+                    <CellTemplate>
+                        <MudCheckBox @bind-Checked="context.Item.thuho" ReadOnly="true" />
+                    </CellTemplate>
+                    <EditTemplate>
+                        <MudCheckBox @bind-Checked="context.Item.thuho" Label="@Localizer["On Behaft"]" />
+                    </EditTemplate>
+                </PropertyColumn>
                 <PropertyColumn Property="x => CusidtoCusCode(x.customerid)" Title="Customer" Required="false">
                     <EditTemplate>
                         <MudAutocomplete @bind-Value="context.Item.customerid" Label="@Localizer["Customer"]" Required
@@ -192,10 +200,8 @@
     }
     string CusidtoCusCode(Guid cusid)
     {
-        if (cusid == null || cusid == Guid.Empty)
-            return string.Empty;
-        var rs = Customers.FirstOrDefault(x => x.Customer_ID == cusid);
-        return rs == null ? string.Empty : rs.shortname + "_" + rs.COMPANY!;
+        var rs = Customers?.FirstOrDefault(x => x.Customer_ID == cusid);
+        return rs.CodeName();
     }
     private void Submit()
     {
@@ -409,7 +415,7 @@
                 return Customers.Select(x => x.Customer_ID);
             }
             // MBL.Porname = mst_Consignee;
-            return Customers.Where(x => (x.shortname + "_" + x.COMPANY).Contains(text, StringComparison.OrdinalIgnoreCase)).Select(x => x.Customer_ID);
+            return Customers.Where(x => x.SearchKey().Contains(text, StringComparison.OrdinalIgnoreCase)).Select(x => x.Customer_ID);
         }
         catch (Exception)
         {

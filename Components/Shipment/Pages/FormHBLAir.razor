@@ -224,11 +224,6 @@
                         <MudItem xs="12" lg="6">
                             <MudGrid Spacing="1">
                                 <MudItem xs="12">
-                                    <div class="air-bl-sample">
-                                        <MudImage Src="/imageforreport/airwaybill.png" Alt="Air waybill reference" />
-                                    </div>
-                                </MudItem>
-                                <MudItem xs="12">
                                     <MudTextField Class="air-bl-input air-bl-textarea-tall"
                                                   @bind-Value="HBLdetail.Air_AccountingInfomation"
                                                   Label="Accounting Infomation"
@@ -482,8 +477,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        customers = await csv.GetList();
-        cuscmb = customers.Where(x => !string.IsNullOrEmpty(x.MainCode) && x.MainCode!.Contains("Shipping")).Select(x => x.EnglishName + "\n" + x.addresstiengviet + "\n" + x.Tel + "\n" + x.Fax).ToList();
+        customers = await csv.GetListAll();
+        cuscmb = customers.Where(x => !string.IsNullOrWhiteSpace(x.EnglishName) || !string.IsNullOrWhiteSpace(x.addresstiengviet)).Select(x => x.EnglishName + "\n" + x.addresstiengviet + "\n" + x.Tel + "\n" + x.Fax).ToList();
     }
 
     private async Task<IEnumerable<string>> Search(string value)

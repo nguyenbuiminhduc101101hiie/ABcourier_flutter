@@ -1,4 +1,4 @@
-
+﻿
 @inject ReportServices rsv
 @inject CustomerService csv
 @inject SupportServices supsv
@@ -7,6 +7,7 @@
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject ShipmentService shipsv
+@inject BookingService bksv
 @inject GlobalServices gsv
 @inject IStringLocalizer<SharedResource> Localizer
 @using System.Globalization
@@ -214,26 +215,34 @@
                 </PropertyColumn>
                 <PropertyColumn Property="x => CusidtoCusCode(x.CustomerID)" Title="@Localizer["Main Customer"]" Required CellClass="no-wrap-cell">
                     <EditTemplate>
-                        <MudAutocomplete @bind-Value="context.Item.CustomerID" Label="@Localizer["Main Customer"]" Required
-                        SearchFunc="SearchCustomer" ToStringFunc="CusidtoCusCode" />
+                        <div class="d-flex align-center">
+                            <MudAutocomplete @bind-Value="context.Item.CustomerID" Label="@Localizer["Main Customer"]" Required
+                            SearchFunc="SearchCustomer" ToStringFunc="CusidtoCusCode" />
+                            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Title="New Customer"
+                            OnClick="@(() => CreateNewCustomer(context.Item, "Customer"))" />
+                        </div>
                     </EditTemplate>
                 </PropertyColumn>
                 <PropertyColumn Property="x => AgentidtoName(x.AgentID)" Title="@Localizer["Agent"]" Required CellClass="no-wrap-cell">
                     <EditTemplate>
-                        <MudAutocomplete @bind-Value="context.Item.AgentID" Label="@Localizer["Agent"]" Required
-                        SearchFunc="SearchAgent" ToStringFunc="AgentidtoName" />
+                        <div class="d-flex align-center">
+                            <MudAutocomplete @bind-Value="context.Item.AgentID" Label="@Localizer["Agent"]" Required
+                            SearchFunc="SearchAgent" ToStringFunc="AgentidtoName" />
+                            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Title="New Agent"
+                            OnClick="@(() => CreateNewCustomer(context.Item, "Agent-Network"))" />
+                        </div>
                     </EditTemplate>
                 </PropertyColumn>
                 <PropertyColumn Property="x => x.bkno" Title="@Localizer["Bkno"]" />
                 <PropertyColumn Property="x => x.Air_wareHouse" Title="@Localizer["Warehouse"]">
                     <EditTemplate>
-                        <MudAutocomplete @bind-Value="context.Item.Air_wareHouse" Label="@Localizer["Warehouse"]" Required
+                        <MudAutocomplete @bind-Value="context.Item.Air_wareHouse" Label="@Localizer["Warehouse"]"
                         SearchFunc="SearchWHouse" CoerceValue />
                     </EditTemplate>
                 </PropertyColumn>
                 <PropertyColumn Property="x => x.Air_type" Title="@Localizer["LoaiHang"]" >
                     <EditTemplate>
-                        <MudAutocomplete @bind-Value="context.Item.Air_type" Label="@Localizer["LoaiHang"]" Required
+                        <MudAutocomplete @bind-Value="context.Item.Air_type" Label="@Localizer["LoaiHang"]"
                         SearchFunc="SearchCFS" CoerceValue/>
                     </EditTemplate>
                 </PropertyColumn>
@@ -247,7 +256,7 @@
                                 <MudButton Class="pl-4 pa-10" Style="background-color: #007BFF; color: white;" Size="Size.Small" Color="Color.Primary" OnClick="() => Get_linkshipper(context.Item)">>>></MudButton>
                             </MudItem>
 
-                            <MudTextField @bind-Value="context.Item.shipper" Label="@Localizer["Shipper"]" Lines="4" Required />
+                            <MudTextField @bind-Value="context.Item.shipper" Label="@Localizer["Shipper"]" Lines="4" />
                         </MudStack>
                     </EditTemplate>
                 </PropertyColumn>
@@ -282,9 +291,9 @@
                     </EditTemplate>
                 </PropertyColumn>
 
-                <PropertyColumn Property="x => x.SaleName" Title="@Localizer["Sale Name"]" Required CellClass="no-wrap-cell">
+                <PropertyColumn Property="x => x.SaleName" Title="@Localizer["Sale Name"]" CellClass="no-wrap-cell">
                     <EditTemplate>
-                        <MudSelect @bind-Value="context.Item.SaleName" Label="@Localizer["Sale Name"]" Required>
+                        <MudSelect @bind-Value="context.Item.SaleName" Label="@Localizer["Sale Name"]">
                             @foreach (var item in SaleNames)
                             {
                                 <MudSelectItem Value="item">@item</MudSelectItem>
@@ -292,9 +301,9 @@
                         </MudSelect>
                     </EditTemplate>
                 </PropertyColumn>
-                <PropertyColumn Property="x => x.OPS" Title="@Localizer["OPS"]" Required CellClass="no-wrap-cell">
+                <PropertyColumn Property="x => x.OPS" Title="@Localizer["OPS"]" CellClass="no-wrap-cell">
                     <EditTemplate>
-                        <MudSelect @bind-Value="context.Item.OPS" Label="@Localizer["OPS"]" Required>
+                        <MudSelect @bind-Value="context.Item.OPS" Label="@Localizer["OPS"]">
                             @foreach (var item in ListUsers)
                             {
                                 <MudSelectItem Value="item">@item</MudSelectItem>
@@ -302,9 +311,9 @@
                         </MudSelect>
                     </EditTemplate>
                 </PropertyColumn>
-                <PropertyColumn Property="x => x.DOC" Title="@Localizer["DOC"]" Required CellClass="no-wrap-cell">
+                <PropertyColumn Property="x => x.DOC" Title="@Localizer["DOC"]" CellClass="no-wrap-cell">
                     <EditTemplate>
-                        <MudSelect @bind-Value="context.Item.DOC" Label="@Localizer["DOC"]" Required>
+                        <MudSelect @bind-Value="context.Item.DOC" Label="@Localizer["DOC"]">
                             @foreach (var item in ListUsers)
                             {
                                 <MudSelectItem Value="item">@item</MudSelectItem>
@@ -394,6 +403,9 @@
     string salecode_injob = "";
     /// <summary>Loại job (M_Job.Loai) — dùng tra TiepDauNgu khi ghép số HBL.</summary>
     string? _jobLoai;
+    /// <summary>Số booking của job — dùng lấy dữ liệu booking điền sẵn cho HBL mới.</summary>
+    string? _jobBookingNo;
+    List<PortModel> Ports = new List<PortModel>();
     protected async override Task OnInitializedAsync()
     {
         try
@@ -411,16 +423,18 @@
             Warehouse = await supsv.GetlistWhouse();
             SaleNames = await supsv.GetListSale();
             ListUsers = await supsv.GetListUsers();
+            Ports = await supsv.GetListPort();
             type = await shipsv.GetTypeByMBLID(MBLDetail.MblID); // Sea Air Truck HQ
             salecode_injob = await shipsv.GetsaleinJob_byJobId(MBLDetail.Jobid);
             var job = await shipsv.GetJob_byid(MBLDetail.Jobid);
             _jobLoai = job?.Loai_Nvo_Fre;
+            _jobBookingNo = job?.BookingNo;
             await Refresh();
 
         }
         catch (Exception ex)
         {
-            CallSnackBar("Please slow down!", MudBlazor.Severity.Error);
+            CallSnackBar(Localizer["PleaseSlowDown"], MudBlazor.Severity.Error);
 
         }
     }
@@ -515,35 +529,86 @@
     {
         if (!await ssv.CheckPermission(usr, "Add", "HBL"))
         {
-            CallSnackBar("You have not access to Add", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["NoPermission_Add"], MudBlazor.Severity.Warning);
             return;
         }
         // HBL mới: form trống; số HBL chỉ sinh sau khi user chọn ngày (dialog / grid).
         var item = new M_HBL();
+        await ApplyMblAndBookingInfoAsync(item);
         await ShowHblEditDialogAsync(item, Localizer["Add"], checkApproved: false);
+    }
+
+    // HBL mới lấy tuyến, tàu và lịch tàu từ MBL cha; riêng số lượng cont thì lấy từ booking của job.
+    async Task ApplyMblAndBookingInfoAsync(M_HBL item)
+    {
+        if (MBLDetail != null)
+        {
+            item.bkno = MBLDetail.Bkno;
+            item.polname = MBLDetail.Polname;
+            item.polcode = MBLDetail.Polcode;
+            item.podname = MBLDetail.Podname;
+            item.podcode = MBLDetail.Podcode;
+            item.vessel = MBLDetail.Vessel;
+            item.voy = MBLDetail.Voy;
+            item.ETD = MBLDetail.ETD;
+            item.ETA = MBLDetail.ETA;
+            if (MBLDetail.CustomerID != Guid.Empty)
+                item.CustomerID = MBLDetail.CustomerID;
+        }
+
+        var bookingNo = _jobBookingNo?.Trim();
+        if (string.IsNullOrWhiteSpace(bookingNo))
+            return;
+
+        if (string.IsNullOrWhiteSpace(item.bkno))
+            item.bkno = bookingNo;
+
+        var bk = await bksv.GetDetailBookingFromBookingNo(bookingNo);
+        if (bk == null)
+            return;
+
+        if (string.IsNullOrWhiteSpace(item.remarks))
+            item.remarks = bk.congviecthuchien4;
+
+        if (string.IsNullOrWhiteSpace(item.Carrier))
+            item.Carrier = bk.Carrier;
+
+        if (item.CustomerID == Guid.Empty)
+        {
+            var customerId = bk.MaincusBk_Id_ ?? bk.Customer_ID;
+            if ((!customerId.HasValue || customerId.Value == Guid.Empty)
+                && Guid.TryParse(bk.MaincusBk_Id, out var parsedCustomerId)
+                && parsedCustomerId != Guid.Empty)
+            {
+                customerId = parsedCustomerId;
+            }
+
+            if (customerId.HasValue && customerId.Value != Guid.Empty)
+                item.CustomerID = customerId.Value;
+        }
     }
 
     async Task DeleteItem(M_HBL item)
     {
         if (!await ssv.CheckPermission(usr, "Delete", "HBL"))
         {
-            CallSnackBar("You have not access to Delete", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["NoPermission_Delete"], MudBlazor.Severity.Warning);
             return;
         }
         if (item == null)
         {
-            CallSnackBar("you must select 1 row.", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["SelectOneRow"], MudBlazor.Severity.Warning);
             return;
         }
         if (item.approve.HasValue && item.approve.Value)
         {
-            CallSnackBar("This HBL is approved!", MudBlazor.Severity.Info);
+            CallSnackBar(Localizer["HblApproved"], MudBlazor.Severity.Info);
             return;
         }
         var resultMess = await DialogService.ShowMessageBox(
-                "Warning",
-                "Deleting can not be undone!",
-                yesText: "Delete!", cancelText: "Cancel");
+                Localizer["Warning"],
+                Localizer["DeleteConfirmBody"],
+                yesText: Localizer["delete"], cancelText: Localizer["cancel"]);
 
         if (resultMess.HasValue)
         {
@@ -626,7 +691,7 @@
         }
         catch (Exception ex)
         {
-            CallSnackBar("somethings went wrong while commit HBL, code: " + ex.Message, MudBlazor.Severity.Error);
+            CallSnackBar(string.Format(Localizer["CommitHblError"], ex.Message), MudBlazor.Severity.Error);
         }
         finally
         {
@@ -653,7 +718,7 @@
     async Task RowClicked(DataGridRowClickEventArgs<M_HBL> args)
     {
         if(args.Item.approve.HasValue && args.Item.approve.Value)
-            CallSnackBar("This HBL is approved!", MudBlazor.Severity.Info);
+            CallSnackBar(Localizer["HblApproved"], MudBlazor.Severity.Info);
         else
         {
             hbldetail = args.Item;
@@ -675,7 +740,7 @@
             await Task.Delay(1);
             if (hbldetail == null)
             {
-                CallSnackBar("you must select 1 HBL.", MudBlazor.Severity.Warning);
+                CallSnackBar(Localizer["SelectOneHbl"], MudBlazor.Severity.Warning);
                 return;
             }
             if ( type == "SE" || type == "SI")
@@ -715,7 +780,7 @@
         }
         catch (Exception ex)
         {
-            CallSnackBar("Throw exception: " + ex.Message, MudBlazor.Severity.Error);
+            CallSnackBar(string.Format(Localizer["Error_Message"], ex.Message), MudBlazor.Severity.Error);
         }
         finally
         {
@@ -732,7 +797,7 @@
             await Task.Delay(1);
             if (hbldetail == null)
             {
-                CallSnackBar("you must select 1 HBL.", MudBlazor.Severity.Warning);
+                CallSnackBar(Localizer["SelectOneHbl"], MudBlazor.Severity.Warning);
                 return;
             }
 
@@ -761,7 +826,7 @@
         }
         catch (Exception ex)
         {
-            CallSnackBar("Throw exception: " + ex.Message, MudBlazor.Severity.Error);
+            CallSnackBar(string.Format(Localizer["Error_Message"], ex.Message), MudBlazor.Severity.Error);
         }
         finally
         {
@@ -773,7 +838,7 @@
     {
         if (hbldetail == null)   
         {
-            CallSnackBar("you must select 1 HBL.", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["SelectOneHbl"], MudBlazor.Severity.Warning);
             return;
         }
         if (type != "SI" && type != "SE" && type != "AI" && type != "AE")
@@ -843,7 +908,7 @@
             await Task.Delay(1);
             if (hbldetail == null)
             {
-                CallSnackBar("you must select 1 HBL.", MudBlazor.Severity.Warning);
+                CallSnackBar(Localizer["SelectOneHbl"], MudBlazor.Severity.Warning);
                 return;
             }
 
@@ -857,7 +922,7 @@
         }
         catch (Exception ex)
         {
-            CallSnackBar("Throw exception: " + ex.Message, MudBlazor.Severity.Error);
+            CallSnackBar(string.Format(Localizer["Error_Message"], ex.Message), MudBlazor.Severity.Error);
         }
         finally
         {
@@ -869,7 +934,7 @@
     {
         if (hbldetail == null)
         {
-            CallSnackBar("you must select 1 HBL.", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["SelectOneHbl"], MudBlazor.Severity.Warning);
             return;
         }
         if (type != "SI" && type != "SE" && type != "AI" && type != "AE")
@@ -892,7 +957,7 @@
     {
         if (string.IsNullOrWhiteSpace(item.hbl))
         {
-            CallSnackBar("HBL number is empty.", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["HblNumberEmpty"], MudBlazor.Severity.Warning);
             return;
         }
 
@@ -915,17 +980,22 @@
             await Task.Delay(1);
             if (hbldetail == null)
             {
-                CallSnackBar("you must select 1 HBL.", MudBlazor.Severity.Warning);
+                CallSnackBar(Localizer["SelectOneHbl"], MudBlazor.Severity.Warning);
                 return;
             }
 
-            var rs = await shipsv.ExportBBGN(hbldetail);
+            var bbgnDialogParams = new DialogParameters { ["FormKind"] = ABFreight.Models.BillLayoutFormKind.Bbgn };
+            var dialogRef = await DialogService.ShowAsync<Shipment.Pages.DialogLayoutFormExportOption>("Export BBGN - Chọn mẫu form", bbgnDialogParams, optionsdialog);
+            var result = await dialogRef.Result;
+            if (result.Canceled) return;
+            var opts = (Shipment.Pages.DialogLayoutFormExportOption.LayoutFormExportOptions)result.Data!;
+            var rs = await shipsv.ExportBBGN(hbldetail, opts.LayoutFormId);
             CallSnackBar(rs.Message, rs.Flag ? MudBlazor.Severity.Success : MudBlazor.Severity.Error);
 
         }
         catch (Exception ex)
         {
-            CallSnackBar("Throw exception: " + ex.Message, MudBlazor.Severity.Error);
+            CallSnackBar(string.Format(Localizer["Error_Message"], ex.Message), MudBlazor.Severity.Error);
         }
         finally
         {
@@ -936,7 +1006,7 @@
     {
         if (item.approve.HasValue && item.approve.Value)
         {
-            CallSnackBar("This HBL is approved!", MudBlazor.Severity.Info);
+            CallSnackBar(Localizer["HblApproved"], MudBlazor.Severity.Info);
             return;
         }
         detail = JsonSerializer.Deserialize<M_HBL>(JsonSerializer.Serialize(item));
@@ -981,22 +1051,69 @@
         }
         else
         {
-            CallSnackBar("Chưa có form edit cho loại Job này!", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["NoEditFormForJobType"], MudBlazor.Severity.Warning);
+        }
+    }
+    /// <summary>Mở dialog tạo mới M_Customer với MainCode điền sẵn ("Customer" / "Agent-Network"), lưu xong gán vào HBL đang edit.</summary>
+    private async Task CreateNewCustomer(M_HBL item, string mainCode)
+    {
+        try
+        {
+            if (!await ssv.CheckPermission(usr, "Add", "System-Customer"))
+            {
+                CallSnackBar(Localizer["NoPermission_Add"], MudBlazor.Severity.Warning);
+                return;
+            }
+            var cusnew = new M_Customer { MainCode = mainCode };
+            var cuscode = await csv.GetCustomerCode();
+            if (!cuscode.Item1.Flag)
+                CallSnackBar(cuscode.Item1.Message, MudBlazor.Severity.Error);
+            else
+                cusnew.Customer_Code = cuscode.Item2.CustomerCode_Ref;
+
+            var options = new DialogOptions
+            {
+                ClassBackground = "class-dialog-custom class-dialog-customer-wide",
+                FullWidth = true,
+                MaxWidth = MaxWidth.False,
+                CloseOnEscapeKey = false,
+                DisableBackdropClick = true
+            };
+            var parameters = new DialogParameters<ABFreight.Components.CUSTOMER.Pages.Edit> { { x => x.customer, cusnew }, { x => x.EditOrNot, false } };
+            var dialog = await DialogService.ShowAsync<ABFreight.Components.CUSTOMER.Pages.Edit>(Localizer["Customer_CreateTitle"], parameters, options);
+            var result = await dialog.Result;
+            if (result.Canceled)
+                return;
+
+            var data = (M_Customer)result.Data;
+            var rs = await csv.UpdateOrCreate(data, null!, "");
+            CallSnackBar(rs.Message, rs.Flag ? MudBlazor.Severity.Success : MudBlazor.Severity.Error);
+            if (!rs.Flag)
+                return;
+
+            Customers ??= new List<M_Customer>();
+            if (!Customers.Any(x => x.Customer_ID == data.Customer_ID))
+                Customers.Add(data);
+            if (mainCode == "Customer")
+                item.CustomerID = data.Customer_ID;
+            else
+                item.AgentID = data.Customer_ID;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            CallSnackBar(string.Format(Localizer["Error_Message"], ex.Message), MudBlazor.Severity.Error);
         }
     }
     string CusidtoCusCode(Guid cusid)
     {
-        if (cusid == null || cusid == Guid.Empty)
-            return string.Empty;
-        var rs = Customers.FirstOrDefault(x => x.Customer_ID == cusid);
-        return rs == null ? string.Empty : rs.COMPANY!;
+        var rs = Customers?.FirstOrDefault(x => x.Customer_ID == cusid);
+        return rs.CodeName();
     }
     string AgentidtoName(Guid id)
     {
-        if (id == null || id == Guid.Empty)
-            return string.Empty;
-        var rs = Customers.FirstOrDefault(x => x.Customer_ID == id);
-        return rs == null ? string.Empty : rs.COMPANY!;
+        var rs = Customers?.FirstOrDefault(x => x.Customer_ID == id);
+        return rs.CodeName();
     }
     string formatDate(DateTime? date)
     {
@@ -1014,7 +1131,7 @@
                 return Customers.Select(x => x.Customer_ID);
             }
             // MBL.Porname = mst_Consignee;
-            return Customers.Where(x => (x.shortname + "_" + x.COMPANY).Contains(text, StringComparison.OrdinalIgnoreCase)).Select(x => x.Customer_ID);
+            return Customers.Where(x => x.SearchKey().Contains(text, StringComparison.OrdinalIgnoreCase)).Select(x => x.Customer_ID);
         }
         catch (Exception)
         {
@@ -1027,10 +1144,10 @@
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                return Customers.Where(x => !string.IsNullOrWhiteSpace(x.MainCode) && x.MainCode.Contains("Agent")).Select(x => x.Customer_ID);
+                return Customers.Select(x => x.Customer_ID);
             }
             // MBL.Porname = mst_Consignee;
-            return Customers.Where(x => (x.shortname + "_" + x.COMPANY).Contains(text, StringComparison.OrdinalIgnoreCase)).Select(x => x.Customer_ID);
+            return Customers.Where(x => x.SearchKey().Contains(text, StringComparison.OrdinalIgnoreCase)).Select(x => x.Customer_ID);
         }
         catch (Exception)
         {
@@ -1153,7 +1270,7 @@
     {
         if (!await ssv.CheckPermission(usr, "Approve", "HBL"))
         {
-            CallSnackBar("You have not access to Approve", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["NoPermission_Approve"], MudBlazor.Severity.Warning);
             return;
         }
         item.dateupdate = DateTime.Now.ToString("dd/MMM/yyyy", new CultureInfo("en-US"));
@@ -1165,7 +1282,7 @@
     {
         if (checkApproved && sourceItem.approve.HasValue && sourceItem.approve.Value)
         {
-            CallSnackBar("This HBL is approved!", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["HblApproved"], MudBlazor.Severity.Warning);
             return;
         }
 
@@ -1194,6 +1311,7 @@
                 { x => x.SaleNames, SaleNames ?? new List<string>() },
                 { x => x.ListUsers, ListUsers ?? new List<string>() },
                 { x => x.TrangThai, trangthais ?? new List<string>() },
+                { x => x.Ports, Ports ?? new List<PortModel>() },
                 { x => x.ListDebit, ListDebit ?? new List<M_Debit>() },
                 { x => x.ListCredit, ListCredit ?? new List<M_Credit>() },
                 { x => x.CurrentUserRole, currentUserRole },
@@ -1220,12 +1338,12 @@
     {
         if (!await ssv.CheckPermission(usr, "Add", "HBL"))
         {
-            CallSnackBar("You have not access to Add", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["NoPermission_Add"], MudBlazor.Severity.Warning);
             return;
         }
         if (hbldetail == null)
         {
-            CallSnackBar("you must select 1 row.", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["SelectOneRow"], MudBlazor.Severity.Warning);
             return;
         }
         var optionsdialog = new DialogOptions
@@ -1348,7 +1466,7 @@
         {
             if (hbldetail == null)
             {
-                CallSnackBar("you must select 1 HBL.", MudBlazor.Severity.Warning);
+                CallSnackBar(Localizer["SelectOneHbl"], MudBlazor.Severity.Warning);
                 return;
             }
             _processingUploadManifest = true;
@@ -1359,7 +1477,7 @@
         }
         catch (Exception ex)
         {
-            CallSnackBar("Throw exception: " + ex.Message, MudBlazor.Severity.Error);
+            CallSnackBar(string.Format(Localizer["Error_Message"], ex.Message), MudBlazor.Severity.Error);
         }
         finally
         {

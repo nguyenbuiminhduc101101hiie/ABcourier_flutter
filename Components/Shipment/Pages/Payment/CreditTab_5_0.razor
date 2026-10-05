@@ -1,4 +1,4 @@
-@using System.Globalization﻿﻿
+﻿@using System.Globalization﻿﻿
 @using MudBlazor
 @inject CustomerService csv
 @inject SupportServices supsv
@@ -10,6 +10,7 @@
 @inject GlobalServices gsv
 @inject IStringLocalizer<SharedResource> Localizer
 @inject HistoryLogService HistoryLogService
+@inject tigiaVCBservices Vcbsv
 @using System.Text.Json;
 
 <style>
@@ -173,6 +174,7 @@
                         </MudStack>
                     </HeaderTemplate>
                     <CellTemplate>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Visibility" OnClick="@(()=>ViewItem(context.Item))" />
                         <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(()=>TryStartEditing(context.Item))" Disabled="@IsCreditCompletedLocked" />
                         <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(()=>DeleteItem(context.Item))" Disabled="@IsCreditCompletedLocked" />
                     </CellTemplate>
@@ -196,6 +198,13 @@
                     <EditTemplate>
                     </EditTemplate>
                 </PropertyColumn>
+                <PropertyColumn Property="x=>x.dathanhtoan" Title="Đã Thanh Toán" IsEditable="false" Required="false">
+                    <CellTemplate>
+                        <MudCheckBox @bind-Checked="context.Item.dathanhtoan" @bind-Value="context.Item.dathanhtoan" @bind-Value:after="@(()=>UpdateDaThanhToanByCheckboxClick(context.Item))" Disabled="@IsCreditCompletedLocked" />
+                    </CellTemplate>
+                    <EditTemplate>
+                    </EditTemplate>
+                </PropertyColumn>
                 <PropertyColumn Property="x => x.dongia" Title="@Localizer["Unit Price"]" Format="#,##0.##" Required="false">
                     <EditTemplate>
                         <MudNumericField @bind-Value="context.Item.dongia" Class="text-right"
@@ -205,7 +214,9 @@
                 </PropertyColumn>
                 <PropertyColumn Property="x=>x.type" Title="@Localizer["Type"]" Required="false">
                     <EditTemplate>
-                        <MudAutocomplete @bind-Value="context.Item.type" Label="@Localizer["Type"]" Required
+                        <MudAutocomplete @bind-Value="context.Item.type"
+                        @bind-Value:after="@(() => ApplyQuantityByType(context.Item))"
+                        Label="@Localizer["Type"]" Required
                         SearchFunc="SearchType" />
                     </EditTemplate>
                 </PropertyColumn>
@@ -250,14 +261,30 @@
                 </PropertyColumn>
                 <PropertyColumn Property="x => x.tigiacredit" Title="@Localizer["Exchange Rate Credit"]" Format="#,##0.##" Required="false">
                     <EditTemplate>
-                        <MudNumericField @bind-Value="context.Item.tigiacredit" Label="@Localizer["Exchange Rate Credit"]"
-                        Format="#,##0.##" Culture="@_en" T="double?" Class="text-right" HideSpinButtons="true" Required/>
+                        <MudStack Row Spacing="1" AlignItems="AlignItems.Center">
+                            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small"
+                                       Style="min-width: 80px; height: 36px; padding: 5px 10px;"
+                                       OnClick="@(() => GetTigia(context.Item))">
+                                @Localizer["gettigia"]
+                            </MudButton>
+                            <MudNumericField @bind-Value="context.Item.tigiacredit" Label="@Localizer["Exchange Rate Credit"]"
+                                             Format="#,##0.##" Culture="@_en" T="double?" Class="text-right"
+                                             HideSpinButtons="true" Required />
+                        </MudStack>
                     </EditTemplate>
                 </PropertyColumn>
                 <PropertyColumn Property="x => x.tigiahoadondauvao" Title="@Localizer["Exchange Rate Invoice"]" Format="#,##0.##" Required="false">
                     <EditTemplate>
-                        <MudNumericField @bind-Value="context.Item.tigiahoadondauvao" Label="@Localizer["Exchange Rate Invoice"]"
-                        Format="#,##0.##" Culture="@_en" T="double?" Class="text-right" HideSpinButtons="true" Required />
+                        <MudStack Row Spacing="1" AlignItems="AlignItems.Center">
+                            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small"
+                                       Style="min-width: 80px; height: 36px; padding: 5px 10px;"
+                                       OnClick="@(() => GetTigia_invoice(context.Item))">
+                                @Localizer["gettigia"]
+                            </MudButton>
+                            <MudNumericField @bind-Value="context.Item.tigiahoadondauvao" Label="@Localizer["Exchange Rate Invoice"]"
+                                             Format="#,##0.##" Culture="@_en" T="double?" Class="text-right"
+                                             HideSpinButtons="true" Required />
+                        </MudStack>
                     </EditTemplate>
                 </PropertyColumn>
                 <PropertyColumn Property="x => x.ContainerNo" Title="@Localizer["Cont. No."]" Required="false" CellClass="no-wrap-cell">
@@ -379,7 +406,7 @@
         }
         catch (Exception ex)
         {
-            CallSnackBar("Please slow down!", MudBlazor.Severity.Error);
+            CallSnackBar(Localizer["PleaseSlowDown"], MudBlazor.Severity.Error);
 
         }
     }
@@ -400,7 +427,7 @@
             await Task.Delay(500);
             if (!await ssv.CheckPermission(usr, "View", "MBL"))
             {
-                CallSnackBar("You have not access to view", MudBlazor.Severity.Warning);
+                CallSnackBar(Localizer["NoPermission_View"], MudBlazor.Severity.Warning);
                 return;
             }
             if (isMBL)
@@ -433,28 +460,36 @@
     }
     string CusidtoCusCode(Guid cusid)
     {
-        if (cusid == null || cusid == Guid.Empty)
-            return string.Empty;
-        var rs = Customers.FirstOrDefault(x => x.Customer_ID == cusid);
-        return rs == null ? string.Empty : $"{rs.shortname} - {rs.COMPANY}"!;
+        var rs = Customers?.FirstOrDefault(x => x.Customer_ID == cusid);
+        return rs.CodeName();
     }
+    private async Task GetTigia(M_Credit item)
+    {
+        item.tigiacredit = await Vcbsv.Getexchange_cur(item.tiente);
+    }
+
+    private async Task GetTigia_invoice(M_Credit item)
+    {
+        item.tigiahoadondauvao = await Vcbsv.Getexchange_cur(item.tiente);
+    }
+
     async Task DeleteItem(M_Credit item)
     {
         if (!EnsureCanMutateCredit()) return;
         if (item == null)
         {
-            CallSnackBar("you must select 1 row.", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["SelectOneRow"], MudBlazor.Severity.Warning);
             return;
         }
         if (item.approve.HasValue && item.approve.Value)
         {
-            CallSnackBar("This Credit is approved!", MudBlazor.Severity.Info);
+            CallSnackBar(Localizer["CreditApproved"], MudBlazor.Severity.Info);
             return;
         }
         var resultMess = await DialogService.ShowMessageBox(
-                "Warning",
-                "Deleting can not be undone!",
-                yesText: "Delete!", cancelText: "Cancel");
+                Localizer["Warning"],
+                Localizer["DeleteConfirmBody"],
+                yesText: Localizer["delete"], cancelText: Localizer["cancel"]);
 
         if (resultMess.HasValue)
         {
@@ -527,7 +562,7 @@
     void RowClicked(DataGridRowClickEventArgs<M_Credit> args)
     {
         if (args.Item.approve.HasValue && args.Item.approve.Value)
-            CallSnackBar("This Credit is approved!", MudBlazor.Severity.Info);
+            CallSnackBar(Localizer["CreditApproved"], MudBlazor.Severity.Info);
         else detail = args.Item;
     }
 
@@ -578,7 +613,7 @@
                 return Customers.Select(x => x.Customer_ID);
             }
             // MBL.Porname = mst_Consignee;
-            return Customers.Where(x => (x.shortname + "_" + x.COMPANY).Contains(text, StringComparison.OrdinalIgnoreCase)).Select(x => x.Customer_ID);
+            return Customers.Where(x => x.SearchKey().Contains(text, StringComparison.OrdinalIgnoreCase)).Select(x => x.Customer_ID);
         }
         catch (Exception)
         {
@@ -626,6 +661,68 @@
 
 
     }
+
+    private static readonly System.Text.RegularExpressions.Regex ContainerSizeTokenRegex =
+        new(@"(20|40|45)[A-Za-z]{0,4}", System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    private static string NormalizeAlnum(string? s)
+        => string.IsNullOrWhiteSpace(s) ? string.Empty : new string(s.Where(char.IsLetterOrDigit).ToArray()).ToUpperInvariant();
+
+    private static double SumContainerCbm(IEnumerable<M_Container> containers)
+    {
+        double sum = 0;
+        foreach (var c in containers)
+        {
+            if (string.IsNullOrWhiteSpace(c.cbm))
+                continue;
+            var s = c.cbm.Trim().Replace(',', '.');
+            if (double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out var v))
+                sum += v;
+            else if (double.TryParse(c.cbm.Trim(), NumberStyles.Any, CultureInfo.GetCultureInfo("vi-VN"), out v))
+                sum += v;
+        }
+        return sum;
+    }
+
+    /// <summary>
+    /// Khi chọn Type: "CBM" -> tổng CBM container của HBL; type chứa cont size (20/40/45, vd CONT 20GP)
+    /// -> đếm số container cùng size/type đó trong HBL; type khác -> mặc định 1.
+    /// Chỉ set giá trị gợi ý ban đầu, người dùng vẫn sửa lại Quantity thủ công được sau đó.
+    /// </summary>
+    private void ApplyQuantityByType(M_Credit item)
+    {
+        if (item == null || string.IsNullOrWhiteSpace(item.type))
+            return;
+
+        var typeText = item.type.Trim();
+        var normalizedType = NormalizeAlnum(typeText);
+        var containers = GetContainerSourceForCurrentShipment().ToList();
+
+        if (normalizedType.Contains("CBM"))
+        {
+            item.soluong = Math.Round(SumContainerCbm(containers), 2);
+        }
+        else if (typeText.Contains("20") || typeText.Contains("40") || typeText.Contains("45"))
+        {
+            var tokenMatch = ContainerSizeTokenRegex.Match(normalizedType);
+            var digitPrefix = tokenMatch.Success
+                ? tokenMatch.Groups[1].Value
+                : typeText.Contains("20") ? "20" : typeText.Contains("40") ? "40" : "45";
+            var fullToken = tokenMatch.Success ? tokenMatch.Value : digitPrefix;
+
+            var exactCount = containers.Count(c => NormalizeAlnum(c.CTN_SIZE_TYPE) == fullToken);
+            item.soluong = exactCount > 0
+                ? exactCount
+                : containers.Count(c => NormalizeAlnum(c.CTN_SIZE_TYPE).Contains(digitPrefix));
+        }
+        else
+        {
+            item.soluong = 1;
+        }
+
+        CalculateTotal(item);
+    }
+
     double getVATfromCusID(Guid? cusid)
     {
         var rs = Customers.First(x => x.Customer_ID == cusid);
@@ -653,7 +750,7 @@
     {
         if (!await ssv.CheckPermission(usr, "Approve", "HBL"))
         {
-            CallSnackBar("You have not access to Approve", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["NoPermission_Approve"], MudBlazor.Severity.Warning);
             return;
         }
         item.dateupdate = DateTime.Now.ToString("dd/MMM/yyyy", new CultureInfo("en-US"));
@@ -661,12 +758,24 @@
         var rs = await shipsv.UpdateCreditMBL_approve(item);
         if (!rs.Flag) CallSnackBar(rs.Message, rs.Flag ? MudBlazor.Severity.Success : MudBlazor.Severity.Error);
     }
+    async Task UpdateDaThanhToanByCheckboxClick(M_Credit item)
+    {
+        if (!EnsureCanMutateCredit())
+        {
+            item.dathanhtoan = !item.dathanhtoan;
+            return;
+        }
+        item.dateupdate = DateTime.Now.ToString("dd/MMM/yyyy", new CultureInfo("en-US"));
+        item.userupdate = usr;
+        var rs = await shipsv.UpdateCreditMBL_approve(item);
+        CallSnackBar(rs.Message, rs.Flag ? MudBlazor.Severity.Success : MudBlazor.Severity.Error);
+    }
     async Task TryStartEditing(M_Credit item)
     {
         if (!EnsureCanMutateCredit()) return;
         if (item.approve.HasValue && item.approve.Value)
         {
-            CallSnackBar("This Credit is approved!", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["CreditApproved"], MudBlazor.Severity.Warning);
             return;
         }
   
@@ -718,7 +827,7 @@
         {
             if (MBLDetail == null || MBLDetail.MblID == Guid.Empty)
             {
-                CallSnackBar("Please select 1 row MBL", MudBlazor.Severity.Warning);
+                CallSnackBar(Localizer["SelectOneRowMbl"], MudBlazor.Severity.Warning);
                 return;
             }
         }
@@ -726,7 +835,7 @@
         {
             if (HBLDetail == null || HBLDetail.hblID == Guid.Empty)
             {
-                CallSnackBar("Please select 1 row HBL", MudBlazor.Severity.Warning);
+                CallSnackBar(Localizer["SelectOneRowHbl"], MudBlazor.Severity.Warning);
                 return;
             }
         }
@@ -793,7 +902,7 @@
         }
         catch (Exception ex)
         {
-            CallSnackBar("Throw exception: " + ex.Message, MudBlazor.Severity.Error);
+            CallSnackBar(string.Format(Localizer["Error_Message"], ex.Message), MudBlazor.Severity.Error);
         }
         finally
         {
@@ -900,6 +1009,18 @@
             return false;
         }
         return true;
+    }
+
+    private async Task ViewItem(M_Credit item)
+    {
+        var optionsdialog = new DialogOptions { ClassBackground = "class-dialog-custom", FullWidth = true, MaxWidth = MaxWidth.Medium, CloseOnEscapeKey = true };
+        var parameters = new DialogParameters<ViewCreditDialog>
+        {
+            { x => x.Item, item },
+            { x => x.CustomerText, CusidtoCusCode(item.customerid) },
+            { x => x.ItemText, Charidtocharge(item.itemid) }
+        };
+        await DialogService.ShowAsync<ViewCreditDialog>("Xem chi tiết Credit", parameters, optionsdialog);
     }
 
     async Task ToggleCreditCompleted()

@@ -4,6 +4,7 @@ using Microsoft.Office.Interop.Excel;
 using Stimulsoft.Report;
 using Stimulsoft.Report.Blazor;
 using System.Buffers;
+using System.Linq.Expressions;
 using ABFreight.Data;
 using ABFreight.Models;
 using ABFreight.Response;
@@ -325,6 +326,84 @@ namespace ABFreight.Services
             }
         }
 
+
+        public async Task<List<string>> GetList_Terminal_Codeha(string searchValue)
+        {
+            try
+            {
+                _context.ChangeTracker.Clear();
+                var rs = await _context.Terminal.Where(x => x.TermiNalName != null)
+                    .Select(x => string.IsNullOrEmpty(x.Codeha)
+                        ? x.TermiNalName!
+                        : x.TermiNalName + "-" + x.Codeha)
+                    .Distinct().ToListAsync();
+
+                return rs!;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null!;
+            }
+        }
+
+        public async Task<Booking?> GetDetailBookingFromBookingNo(string? bookingNo)
+        {
+            if (string.IsNullOrWhiteSpace(bookingNo))
+                return null;
+
+            _context.ChangeTracker.Clear();
+            var key = bookingNo.Trim();
+
+            return await _context.CONTAINEROUTBOUNDNOTIFY_sale
+                .AsNoTracking()
+                .Where(x => x.BookingNo == key)
+                .OrderByDescending(x => x.UpdateTime)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Booking>> GetListBookingByNos(IEnumerable<string> bookingNos)
+        {
+            var keys = bookingNos
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            if (keys.Count == 0)
+                return new List<Booking>();
+
+            _context.ChangeTracker.Clear();
+
+            // Avoid keys.Contains(...) — EF Core 8 translates it to OPENJSON ... WITH,
+            // which fails on SQL Server compatibility levels below 130.
+            var result = new List<Booking>();
+            foreach (var chunk in keys.Chunk(80))
+            {
+                var predicate = BuildBookingNoOrPredicate(chunk.ToList());
+                var batch = await _context.CONTAINEROUTBOUNDNOTIFY_sale
+                    .AsNoTracking()
+                    .Where(predicate)
+                    .ToListAsync();
+                result.AddRange(batch);
+            }
+
+            return result;
+        }
+
+        private static Expression<Func<Booking, bool>> BuildBookingNoOrPredicate(List<string> keys)
+        {
+            var param = Expression.Parameter(typeof(Booking), "x");
+            var prop = Expression.Property(param, nameof(Booking.BookingNo));
+            Expression? body = null;
+            foreach (var key in keys)
+            {
+                var eq = Expression.Equal(prop, Expression.Constant(key, typeof(string)));
+                body = body == null ? eq : Expression.OrElse(body, eq);
+            }
+
+            return Expression.Lambda<Func<Booking, bool>>(body ?? Expression.Constant(false), param);
+        }
 
         public async Task<Booking> GetDetailBookingFromID(Guid? id)
         {

@@ -35,9 +35,9 @@ public class CustomerService(AppDbContext _context, HistoryLogService HistoryLog
 
             //var rs = await _context.Customer.Where(x => x.SaleName != "NOMI").OrderByDescending(x => x.Customer_Code).AsNoTracking().ToListAsync();
             var rs = await _context.Customer
-                .Where(x =>
-                    (x.MainCode.Contains("Vendor")) ||
-                    (!x.MainCode.Contains("Vendor") && x.SaleName != "NOMI"))
+                //.Where(x =>
+                //    (x.MainCode.Contains("Vendor")) ||
+                //    (!x.MainCode.Contains("Vendor") && x.SaleName != "NOMI"))
                 .OrderByDescending(x => x.Customer_Code)
                 .AsNoTracking()
                 .ToListAsync();
@@ -89,13 +89,52 @@ public class CustomerService(AppDbContext _context, HistoryLogService HistoryLog
             return new List<M_Customer>();
         }
     }
+    /// <summary>Toàn bộ khách hàng, không điều kiện (dùng cho 2.1 / 5.0 / 6.0 / 6.1 / 5.1.1 / 5.1.2). Dòng rỗng đầu danh sách giống GetList().</summary>
+    public async Task<List<M_Customer>> GetListAll()
+    {
+        try
+        {
+            _context.ChangeTracker.Clear();
+            var rs = await _context.Customer
+                .OrderBy(x => x.Customer_Code)
+                .AsNoTracking()
+                .ToListAsync();
+            rs.Insert(0, new M_Customer { COMPANY = "" });
+            return rs;
+        }
+        catch (Exception)
+        {
+            return new List<M_Customer>();
+        }
+    }
+    public async Task<List<M_Customer>> GetList_booking()
+    {
+        try
+        {
+            _context.ChangeTracker.Clear();
+            var rs = await _context.Customer
+                //.Where(x =>
+                //    string.IsNullOrEmpty(x.MainCode) ||
+                //    !x.MainCode.Contains("Customer") ||
+                //    x.SaleName != "NOMI")
+                .OrderByDescending(x => x.Customer_Code)
+                .AsNoTracking()
+                .ToListAsync();
+            rs.Insert(0, new M_Customer { COMPANY = "" });
+            return rs;
+        }
+        catch (Exception ex)
+        {
+            return new List<M_Customer>();
+        }
+    }
     public async Task<List<M_Customer>> GetListBySale(AuthUser user)
     {
         try
         {
             _context.ChangeTracker.Clear();
             var rs = await _context.Customer.OrderByDescending(x => x.Customer_Code).AsNoTracking().ToListAsync();
-            if (user.Department!.Contains("ADMIN"))
+            if (user.Department!.Contains("ADMIN") || user.Department!.Equals("SALES MANAGER", StringComparison.OrdinalIgnoreCase))
                 //rs = rs.Where(x => !string.IsNullOrEmpty(x.SaleName) && (x.SaleName == "NOMI" || x.SaleName.ToUpper() == user.Usr.ToUpper())).OrderBy(x => x.SaleName).ToList();
 
                 rs = rs.Where(x =>
@@ -505,6 +544,48 @@ public class CustomerService(AppDbContext _context, HistoryLogService HistoryLog
             return null;
         }
     }
+
+    public async Task<List<CustomerReportStatRow>> GetCustomerReportStatistics(DateTime? from, DateTime? to)
+    {
+        try
+        {
+            _context.ChangeTracker.Clear();
+            var query = from r in _context.CUSTOMERREPORT.AsNoTracking()
+                        join c in _context.Customer.AsNoTracking() on r.Customer_ID equals c.Customer_ID into cj
+                        from c in cj.DefaultIfEmpty()
+                        where r.continued == true
+                        select new CustomerReportStatRow
+                        {
+                            CusReport_ID = r.CusReport_ID,
+                            Customer_ID = r.Customer_ID,
+                            Customer_Code = c != null ? c.Customer_Code : null,
+                            COMPANY = c != null ? c.COMPANY : null,
+                            Visitdate = r.Visitdate,
+                            Daily = r.Daily,
+                            hoanThanh = r.hoanThanh,
+                            ValidUser = r.ValidUser,
+                            thoigian = r.thoigian,
+                            KPI = r.KPI,
+                            Remarks = r.Remarks,
+                            userid = r.userid,
+                            updatetime = r.updatetime
+                        };
+
+            if (from.HasValue)
+                query = query.Where(x => x.Visitdate == null || x.Visitdate >= from.Value.Date);
+            if (to.HasValue)
+            {
+                var toEnd = to.Value.Date.AddDays(1).AddTicks(-1);
+                query = query.Where(x => x.Visitdate == null || x.Visitdate <= toEnd);
+            }
+
+            return await query.OrderByDescending(x => x.Visitdate).ThenByDescending(x => x.updatetime).ToListAsync();
+        }
+        catch (Exception)
+        {
+            return new List<CustomerReportStatRow>();
+        }
+    }
     public async Task<List<MARKET>> GetListMarket()
     {
         try
@@ -906,6 +987,13 @@ public class CustomerService(AppDbContext _context, HistoryLogService HistoryLog
         noSpace = noSpace.Replace(".", string.Empty);
         return noSpace.Trim().ToUpperInvariant();
     }
+
+    /// <summary>
+    /// AMSS Partner list uses "xxx" as a dummy tax code for many different companies.
+    /// It must not participate in uniqueness checks, otherwise only the first row is imported.
+    /// </summary>
+    private static bool IsPlaceholderTaxCode(string? taxCode)
+        => NormalizeTaxCodeForCompare(taxCode) == "XXX";
 
     public async Task<BoolandMessReponse> UpdateCustomerCode(CustomerCode c)
     {
@@ -1555,7 +1643,7 @@ public class CustomerService(AppDbContext _context, HistoryLogService HistoryLog
 
             var existingTaxCodes = new HashSet<string>(
                 existing
-                    .Where(x => !string.IsNullOrWhiteSpace(x.TaxCode))
+                    .Where(x => !string.IsNullOrWhiteSpace(x.TaxCode) && !IsPlaceholderTaxCode(x.TaxCode))
                     .Select(x => NormalizeTaxCodeForCompare(x.TaxCode!)),
                 StringComparer.OrdinalIgnoreCase);
 
@@ -1598,10 +1686,12 @@ public class CustomerService(AppDbContext _context, HistoryLogService HistoryLog
                     continue;
 
                 var mappedMainCode = MapPartnerGroupToMainCode(groupM);
-                var normalizedTax = NormalizeTaxCodeForCompare(taxCode);
+                var isPlaceholderTax = IsPlaceholderTaxCode(taxCode);
+                var normalizedTax = isPlaceholderTax ? string.Empty : NormalizeTaxCodeForCompare(taxCode);
                 var companyKey = company.Trim();
 
-                bool taxExists = !string.IsNullOrWhiteSpace(normalizedTax) &&
+                bool taxExists = !isPlaceholderTax &&
+                    !string.IsNullOrWhiteSpace(normalizedTax) &&
                     (existingTaxCodes.Contains(normalizedTax) || batchTaxCodes.Contains(normalizedTax));
                 bool companyExists = existingCompanies.Contains(companyKey) || batchCompanies.Contains(companyKey);
 
@@ -1639,7 +1729,7 @@ public class CustomerService(AppDbContext _context, HistoryLogService HistoryLog
                 }
 
                 string customerCode;
-                if (!string.IsNullOrWhiteSpace(taxCode))
+                if (!string.IsNullOrWhiteSpace(taxCode) && !isPlaceholderTax)
                 {
                     customerCode = taxCode.Trim();
                 }

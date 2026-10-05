@@ -8,6 +8,7 @@ namespace ABFreight.Models
         AnAir,
         Do,
         Trang2,
-        Booking
+        Booking,
+        Bbgn
     }
 }

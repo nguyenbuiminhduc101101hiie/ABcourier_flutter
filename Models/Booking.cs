@@ -186,6 +186,9 @@ namespace ABFreight.Models
         public string? VentOpen { get; set; }
         public string? PIC { get; set; }
         public string? Code { get; set; }
+        public string? hano_POT_Ext { get; set; }
+        public int? TK20 { get; set; }
+        public string? Freight_Payable { get; set; }
    
     }
 }

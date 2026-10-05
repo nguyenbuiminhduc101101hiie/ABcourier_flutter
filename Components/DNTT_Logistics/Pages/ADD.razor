@@ -1,4 +1,4 @@
-@using System.Globalization
+﻿@using System.Globalization
 @inject ISnackbar Snackbar
 @inject AccountService asv
 @inject TrainScheduleServices trainsv
@@ -360,7 +360,7 @@
         }
 
         DNTTs = DNTUSV.GetListDNTT_all();
-        customers = await CusSV.GetList();
+        customers = await CusSV.GetListAll();
         M_Trangthais = await supsv.GetListTrangThai();
         var tts = await supsv.GetListTrangThai();
         trangthais = tts.Where(x => x.Tieude == "DNTT").OrderBy(x => x.Noidung).Select(x => x.Noidung).ToList();
@@ -544,7 +544,7 @@
         }
         catch (Exception ex)
         {
-            CallSnackBar("Throw exception code: " + ex.Message, MudBlazor.Severity.Error);
+            CallSnackBar(string.Format(Localizer["Error_Message"], ex.Message), MudBlazor.Severity.Error);
         }
     }
     async Task AttachFileToFTP(IBrowserFile file, M_DNTT_Logistics item)
@@ -557,7 +557,7 @@
         }
         catch (Exception ex)
         {
-            CallSnackBar("Throw exception code: " + ex.Message, MudBlazor.Severity.Error);
+            CallSnackBar(string.Format(Localizer["Error_Message"], ex.Message), MudBlazor.Severity.Error);
         }
     }
 
@@ -580,7 +580,7 @@
             return customers.Select(x => (Guid?)x.Customer_ID);
 
         return customers
-        .Where(x => !string.IsNullOrEmpty(x.COMPANY) && x.COMPANY.Contains(value, StringComparison.InvariantCultureIgnoreCase))
+        .Where(x => x.SearchKey().Contains(value, StringComparison.InvariantCultureIgnoreCase))
         .Select(x => (Guid?)x.Customer_ID)  // Convert Customer_ID to Guid?
         .ToList();
 
@@ -589,8 +589,8 @@
 
     private string GetCustomerLable(Guid? id)
     {
-        var customer = customers.FirstOrDefault(x => x.Customer_ID == id);
-        return customer != null ? customer.COMPANY : string.Empty;
+        var rs = customers?.FirstOrDefault(x => x.Customer_ID == id);
+        return rs.CodeName();
     }
 
     private bool _processingUpload = false;
@@ -638,7 +638,7 @@
             else
             {
 
-                CallSnackBar("Email is empty!", MudBlazor.Severity.Warning);
+                CallSnackBar(Localizer["EmailEmpty"], MudBlazor.Severity.Warning);
                 return;
             }
 
@@ -648,7 +648,7 @@
         }
         catch (Exception ex)
         {
-            CallSnackBar("Somethings went wrong!, error code: " + ex.Message, MudBlazor.Severity.Error);
+            CallSnackBar(string.Format(Localizer["SomethingWentWrong"], ex.Message), MudBlazor.Severity.Error);
         }
         finally
         {

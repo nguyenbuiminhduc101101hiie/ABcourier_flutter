@@ -6,6 +6,10 @@
 @inject BookingService bksv
 @inject ISnackbar Snackbar
 @inject IDbContextFactory<AppDbContext> DbFactory
+@inject CustomerService csv
+@inject SharedServices ssv
+@inject AccountService asv
+@inject IDialogService DialogService
 
 
 <style>
@@ -140,6 +144,7 @@
 
     <MudDialog>
         <DialogContent>
+            <MudForm @ref="_form">
             <MudContainer Class="hbl-container hbl-compact">
                 <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="hbl-header">
                     <div>
@@ -179,18 +184,30 @@
                         </MudItem>
 
                         <MudItem xs="12" md="3">
-                            <MudAutocomplete Class="pl-0"
-                                             T="string"
-                                             @bind-Value="Item.bkno"
-                                             @bind-Value:after="OnBknoChangedAsync"
-                                             For="@(() => Item.bkno)"
-                                             Label="@Localizer["Bkno"]"
-                                             SearchFunc="SearchBookingNo"
-                                             Immediate="true"
-                                             CoerceText="true"
-                                             Clearable="true"
-                                             MaxItems="200"
-                                             Margin="Margin.Dense" />
+                            <MudStack Row="true" AlignItems="AlignItems.End" Spacing="1">
+                                <MudAutocomplete Class="pl-0 flex-grow-1"
+                                                 T="string"
+                                                 @bind-Value="Item.bkno"
+                                                 @bind-Value:after="OnBknoChangedAsync"
+                                                 For="@(() => Item.bkno)"
+                                                 Label="@Localizer["Bkno"]"
+                                                 SearchFunc="SearchBookingNo"
+                                                 Immediate="true"
+                                                 CoerceText="true"
+                                                 Clearable="true"
+                                                 MaxItems="200"
+                                                 Margin="Margin.Dense" />
+                                <MudTooltip Text="Link thông tin từ booking đã chọn">
+                                    <MudButton Variant="Variant.Filled"
+                                               Color="Color.Primary"
+                                               Size="Size.Small"
+                                               Class="hbl-party-button"
+                                               Style="min-width:42px;height:40px;margin-bottom:4px;"
+                                               Disabled="_linkingBooking"
+                                               StartIcon="@Icons.Material.Filled.Link"
+                                               OnClick="LinkFromBookingAsync" />
+                                </MudTooltip>
+                            </MudStack>
                         </MudItem>
 
                         <MudItem xs="12" md="3">
@@ -364,27 +381,38 @@
                         </MudItem>
 
                         <MudItem xs="12" md="3">
-                            <MudAutocomplete @bind-Value="Item.CustomerID"
-                                             Label="@Localizer["Main Customer"]"
-                                             Required="true"
-                                             SearchFunc="SearchCustomer"
-                                             ToStringFunc="CusidtoCusCode"
-                                             Margin="Margin.Dense" />
+                            <div class="d-flex align-center">
+                                <MudAutocomplete T="Guid"
+                                                 @bind-Value="Item.CustomerID"
+                                                 Label="@Localizer["Main Customer"]"
+                                                 Required="true"
+                                                 SearchFunc="SearchCustomer"
+                                                 ToStringFunc="CusidtoCusCode"
+                                                 MaxItems="100"
+                                                 Clearable="true"
+                                                 ResetValueOnEmptyText="false"
+                                                 Margin="Margin.Dense" />
+                                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Title="New Customer"
+                                               OnClick="@(() => CreateNewCustomer("Customer"))" />
+                            </div>
                         </MudItem>
 
                         <MudItem xs="12" md="3">
-                            <MudAutocomplete @bind-Value="Item.AgentID"
-                                             Label="@Localizer["Agent"]"
-                                             Required="true"
-                                             SearchFunc="SearchAgent"
-                                             ToStringFunc="AgentidtoName"
-                                             Margin="Margin.Dense" />
+                            <div class="d-flex align-center">
+                                <MudAutocomplete @bind-Value="Item.AgentID"
+                                                 Label="@Localizer["Agent"]"
+                                                 Required="true"
+                                                 SearchFunc="SearchAgent"
+                                                 ToStringFunc="AgentidtoName"
+                                                 Margin="Margin.Dense" />
+                                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Title="New Agent"
+                                               OnClick="@(() => CreateNewCustomer("Agent-Network"))" />
+                            </div>
                         </MudItem>
 
                         <MudItem xs="12" md="3">
                             <MudAutocomplete @bind-Value="Item.Air_wareHouse"
                                              Label="@Localizer["Warehouse"]"
-                                             Required="true"
                                              SearchFunc="SearchWHouse"
                                              CoerceValue="true"
                                              Margin="Margin.Dense" />
@@ -393,7 +421,6 @@
                         <MudItem xs="12" md="3">
                             <MudAutocomplete @bind-Value="Item.Air_type"
                                              Label="@Localizer["LoaiHang"]"
-                                             Required="true"
                                              SearchFunc="SearchCFS"
                                              CoerceValue="true"
                                              Margin="Margin.Dense" />
@@ -409,7 +436,7 @@
                         </MudItem>
 
                         <MudItem xs="12" md="3">
-                            <MudSelect @bind-Value="Item.SaleName" Label="@Localizer["Sale Name"]" Required="true" Margin="Margin.Dense">
+                            <MudSelect @bind-Value="Item.SaleName" Label="@Localizer["Sale Name"]" Margin="Margin.Dense">
                                 @foreach (var item in SaleNames)
                                 {
                                     <MudSelectItem Value="@item">@item</MudSelectItem>
@@ -418,7 +445,7 @@
                         </MudItem>
 
                         <MudItem xs="12" md="3">
-                            <MudSelect @bind-Value="Item.OPS" Label="@Localizer["OPS"]" Required="true" Margin="Margin.Dense">
+                            <MudSelect @bind-Value="Item.OPS" Label="@Localizer["OPS"]" Margin="Margin.Dense">
                                 @foreach (var item in ListUsers)
                                 {
                                     <MudSelectItem Value="@item">@item</MudSelectItem>
@@ -427,20 +454,80 @@
                         </MudItem>
 
                         <MudItem xs="12" md="3">
-                            <MudSelect @bind-Value="Item.DOC" Label="@Localizer["DOC"]" Required="true" Margin="Margin.Dense">
+                            <MudSelect @bind-Value="Item.DOC" Label="@Localizer["DOC"]" Margin="Margin.Dense">
                                 @foreach (var item in ListUsers)
                                 {
                                     <MudSelectItem Value="@item">@item</MudSelectItem>
                                 }
                         </MudSelect>
                     </MudItem>
+
+                        <MudItem xs="12" md="3">
+                            <MudTextField @bind-Value="Item.Carrier"
+                                          Label="@Localizer["Carrier"]"
+                                          Margin="Margin.Dense" />
+                        </MudItem>
                 </MudGrid>
             </MudPaper>
 
-                <!-- 5. Parties -->
+                <!-- 5. Route & vessel -->
                 <MudPaper Class="hbl-section" Elevation="0">
                     <MudText Class="hbl-section-title">
-                        5. Parties
+                        5. Route &amp; Vessel
+                        <span class="hbl-section-subtitle">Lấy sẵn từ MBL cha — vẫn sửa được</span>
+                    </MudText>
+
+                    <MudGrid Spacing="2">
+                        <MudItem xs="12" md="3">
+                            <MudAutocomplete T="string"
+                                             Value="Item.polname"
+                                             ValueChanged="OnPolnameChanged"
+                                             Label="@Localizer["POL"]"
+                                             SearchFunc="SearchPort"
+                                             CoerceValue="true"
+                                             Clearable="true"
+                                             MaxItems="100"
+                                             Margin="Margin.Dense" />
+                        </MudItem>
+
+                        <MudItem xs="12" md="3">
+                            <MudAutocomplete T="string"
+                                             Value="Item.podname"
+                                             ValueChanged="OnPodnameChanged"
+                                             Label="@Localizer["POD"]"
+                                             SearchFunc="SearchPort"
+                                             CoerceValue="true"
+                                             Clearable="true"
+                                             MaxItems="100"
+                                             Margin="Margin.Dense" />
+                        </MudItem>
+
+                        <MudItem xs="12" md="3">
+                            <MudTextField @bind-Value="Item.vessel"
+                                          Label="@Localizer["Vessel/Fly"]"
+                                          Margin="Margin.Dense" />
+                        </MudItem>
+
+                        <MudItem xs="12" md="3">
+                            <MudTextField @bind-Value="Item.voy"
+                                          Label="@Localizer["voyage_no"]"
+                                          Margin="Margin.Dense" />
+                        </MudItem>
+
+                        <MudItem xs="12" md="3">
+                            <MudTextField Value="@($"{Item.polcode} / {Item.podcode}")"
+                                          Label="POL / POD Code"
+                                          ReadOnly="true"
+                                          Disabled="true"
+                                          Margin="Margin.Dense" />
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+
+                <!-- 6. Parties -->
+                <MudPaper Class="hbl-section" Elevation="0">
+                    <MudText Class="hbl-section-title">
+                        6. Parties
                         <span class="hbl-section-subtitle">Search customer information, then apply it into the text box</span>
                     </MudText>
 
@@ -465,7 +552,6 @@
                                 <MudTextField @bind-Value="Item.shipper"
                                               Label="@Localizer["Shipper"]"
                                               Lines="4"
-                                              Required="true"
                                               Margin="Margin.Dense" />
                             </div>
                         </MudItem>
@@ -490,7 +576,7 @@
                                 <MudTextField @bind-Value="Item.consignee"
                                               Label="@Localizer["Consignee"]"
                                               Lines="4"
-                                              Required="true"
+                                              Required="false"
                                               Margin="Margin.Dense" />
                             </div>
                         </MudItem>
@@ -514,17 +600,17 @@
                                 <MudTextField @bind-Value="Item.notify1"
                                               Label="@Localizer["Notify"]"
                                               Lines="4"
-                                              Required="true"
+                                              Required="false"
                                               Margin="Margin.Dense" />
                             </div>
                         </MudItem>
                     </MudGrid>
                 </MudPaper>
 
-                <!-- 6. Remarks and free time -->
+                <!-- 7. Remarks and free time -->
                 <MudPaper Class="hbl-section" Elevation="0">
                     <MudText Class="hbl-section-title">
-                        6. Remarks & Free Time
+                        7. Remarks & Free Time
                         <span class="hbl-section-subtitle">Internal remarks and DEM/DET information</span>
                     </MudText>
 
@@ -576,6 +662,7 @@
                     </MudGrid>
                 </MudPaper>
             </MudContainer>
+            </MudForm>
         </DialogContent>
 
         <DialogActions>
@@ -589,6 +676,8 @@
 @code {
     [CascadingParameter] public MudDialogInstance MudDialog { get; set; } = default!;
 
+    private MudForm? _form;
+
     [Parameter] public M_HBL Item { get; set; } = default!;
 
     [Parameter] public List<M_Customer> Customers { get; set; } = new();
@@ -597,6 +686,7 @@
     [Parameter] public List<string> SaleNames { get; set; } = new();
     [Parameter] public List<string> ListUsers { get; set; } = new();
     [Parameter] public List<string> TrangThai { get; set; } = new();
+    [Parameter] public List<PortModel> Ports { get; set; } = new();
 
     [Parameter] public List<M_Debit> ListDebit { get; set; } = new();
     [Parameter] public List<M_Credit> ListCredit { get; set; } = new();
@@ -619,6 +709,7 @@
     private List<string> BookingNoList { get; set; } = new();
     private string _lastBknoValidated = string.Empty;
     private string _lastBknoWarned = string.Empty;
+    private bool _linkingBooking;
 
     List<string> Shippers = new();
     List<string> Consignees = new();
@@ -734,10 +825,175 @@
         }
     }
 
+    private async Task LinkFromBookingAsync()
+    {
+        var bkno = Item?.bkno?.Trim();
+        if (string.IsNullOrWhiteSpace(bkno))
+        {
+            Snackbar.Add("Vui lòng chọn số booking trước.", MudBlazor.Severity.Warning);
+            return;
+        }
+
+        try
+        {
+            _linkingBooking = true;
+            await Task.Delay(1);
+
+            var bk = await bksv.GetDetailBookingFromBookingNo(bkno);
+            if (bk == null)
+            {
+                Snackbar.Add($"Không tìm thấy booking {bkno} để lấy dữ liệu.", MudBlazor.Severity.Warning);
+                return;
+            }
+
+            Item.bkno = bkno;
+
+            var (polName, polCode) = ResolveBookingPort(bk.hano_POL, bk.hano_POLCode);
+            if (!string.IsNullOrWhiteSpace(polName))
+                Item.polname = polName;
+            if (!string.IsNullOrWhiteSpace(polCode))
+                Item.polcode = polCode;
+
+            var (podName, podCode) = ResolveBookingPort(bk.hano_POD, bk.hano_PODCode);
+            if (!string.IsNullOrWhiteSpace(podName))
+                Item.podname = podName;
+            if (!string.IsNullOrWhiteSpace(podCode))
+                Item.podcode = podCode;
+
+            if (!string.IsNullOrWhiteSpace(bk.Vessel))
+                Item.vessel = bk.Vessel;
+            if (!string.IsNullOrWhiteSpace(bk.VoyNo))
+                Item.voy = bk.VoyNo;
+            if (bk.ETD.HasValue)
+                Item.ETD = bk.ETD;
+            if (bk.ETA.HasValue)
+                Item.ETA = bk.ETA;
+            if (!string.IsNullOrWhiteSpace(bk.Carrier))
+                Item.Carrier = bk.Carrier;
+            if (!string.IsNullOrWhiteSpace(bk.congviecthuchien4))
+                Item.remarks = bk.congviecthuchien4;
+
+            var customerId = bk.MaincusBk_Id_ ?? bk.Customer_ID;
+            if ((!customerId.HasValue || customerId.Value == Guid.Empty)
+                && Guid.TryParse(bk.MaincusBk_Id, out var parsedCustomerId)
+                && parsedCustomerId != Guid.Empty)
+            {
+                customerId = parsedCustomerId;
+            }
+
+            if (customerId.HasValue && customerId.Value != Guid.Empty)
+                Item.CustomerID = customerId.Value;
+
+            var agentId = ResolveBookingAgentId(bk);
+            if (agentId != Guid.Empty)
+                Item.AgentID = agentId;
+
+            var sale = FirstNonEmpty(bk.SaleCode, bk.SaleName);
+            if (!string.IsNullOrWhiteSpace(sale)
+                && SaleNames.Any(x => string.Equals(x, sale, StringComparison.OrdinalIgnoreCase)))
+            {
+                Item.SaleName = SaleNames.First(x => string.Equals(x, sale, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!string.IsNullOrWhiteSpace(bk.OPSCode)
+                && ListUsers.Any(x => string.Equals(x, bk.OPSCode, StringComparison.OrdinalIgnoreCase)))
+            {
+                Item.OPS = ListUsers.First(x => string.Equals(x, bk.OPSCode, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (SetActualdeldateAsync != null)
+                await SetActualdeldateAsync(Item);
+
+            Snackbar.Add($"Đã link thông tin từ booking {bkno}.", MudBlazor.Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Không link được booking: {ex.Message}", MudBlazor.Severity.Error);
+        }
+        finally
+        {
+            _linkingBooking = false;
+        }
+    }
+
+    private (string? Name, string? Code) ResolveBookingPort(string? bookingPort, string? bookingPortCode)
+    {
+        var code = string.IsNullOrWhiteSpace(bookingPortCode) ? null : bookingPortCode.Trim();
+
+        if (string.IsNullOrWhiteSpace(bookingPort))
+            return (null, code);
+
+        var raw = bookingPort.Trim();
+        var name = raw;
+
+        var separator = raw.LastIndexOf('_');
+        if (separator > 0)
+        {
+            name = raw.Substring(0, separator).Trim();
+            var parsedCode = raw.Substring(separator + 1).Trim();
+            if (!string.IsNullOrWhiteSpace(parsedCode))
+                code = parsedCode;
+        }
+
+        var port = Ports.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.PORT)
+                       && x.PORT!.Equals(name, StringComparison.OrdinalIgnoreCase))
+                   ?? Ports.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.PORT_CODE)
+                       && x.PORT_CODE!.Equals(code, StringComparison.OrdinalIgnoreCase));
+
+        return port != null ? (port.PORT, port.PORT_CODE) : (name, code);
+    }
+
+    private Guid ResolveBookingAgentId(Booking bk)
+    {
+        if (Customers == null)
+            return Guid.Empty;
+
+        if (bk.agencyID.HasValue && bk.agencyID.Value != Guid.Empty
+            && Customers.Any(x => x.Customer_ID == bk.agencyID.Value))
+            return bk.agencyID.Value;
+
+        // Booking stores the agency as "shortname___COMPANY" text.
+        var name = bk.agencyname_box?.Trim();
+        if (string.IsNullOrWhiteSpace(name))
+            return Guid.Empty;
+
+        var match = Customers.FirstOrDefault(x =>
+                        string.Equals((x.shortname + "___" + x.COMPANY).Trim(), name, StringComparison.OrdinalIgnoreCase))
+                    ?? Customers.FirstOrDefault(x =>
+                        string.Equals(x.COMPANY?.Trim(), name, StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(x.shortname?.Trim(), name, StringComparison.OrdinalIgnoreCase));
+
+        return match?.Customer_ID ?? Guid.Empty;
+    }
+
+    private static string? FirstNonEmpty(params string?[] values)
+        => values.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
+
     void Cancel() => MudDialog.Cancel();
 
-    void Submit()
+    async Task Submit()
     {
+        if (_form == null)
+            return;
+
+        await _form.Validate();
+        if (!_form.IsValid)
+        {
+            Snackbar.Add("Vui lòng nhập đầy đủ các trường bắt buộc.", MudBlazor.Severity.Warning);
+            return;
+        }
+
+        // Các trường không bắt buộc: thiếu thì chỉ cảnh báo, vẫn cho lưu
+        var missing = new List<string>();
+        if (string.IsNullOrWhiteSpace(Item.Air_wareHouse)) missing.Add(Localizer["Warehouse"]);
+        if (string.IsNullOrWhiteSpace(Item.Air_type)) missing.Add(Localizer["LoaiHang"]);
+        if (string.IsNullOrWhiteSpace(Item.SaleName)) missing.Add(Localizer["Sale Name"]);
+        if (string.IsNullOrWhiteSpace(Item.OPS)) missing.Add(Localizer["OPS"]);
+        if (string.IsNullOrWhiteSpace(Item.DOC)) missing.Add(Localizer["DOC"]);
+        if (string.IsNullOrWhiteSpace(Item.shipper)) missing.Add(Localizer["Shipper"]);
+        if (missing.Count > 0)
+            Snackbar.Add($"Chưa nhập: {string.Join(", ", missing)}", MudBlazor.Severity.Warning);
+
         RecalcCombine();
         MudDialog.Close(Item);
     }
@@ -756,45 +1012,102 @@
         await UpdateHBLNoAsync(Item, date.Value);
     }
 
+    /// <summary>Mở dialog tạo mới M_Customer với MainCode điền sẵn ("Customer" / "Agent-Network"), lưu xong gán vào HBL đang edit.</summary>
+    private async Task CreateNewCustomer(string mainCode)
+    {
+        try
+        {
+            var usr = (await asv.GetAuth()).User.Identity!.Name!;
+            if (!await ssv.CheckPermission(usr, "Add", "System-Customer"))
+            {
+                Snackbar.Add(Localizer["NoPermission_Add"], MudBlazor.Severity.Warning);
+                return;
+            }
+            var cusnew = new M_Customer { MainCode = mainCode };
+            var cuscode = await csv.GetCustomerCode();
+            if (!cuscode.Item1.Flag)
+                Snackbar.Add(cuscode.Item1.Message, MudBlazor.Severity.Error);
+            else
+                cusnew.Customer_Code = cuscode.Item2.CustomerCode_Ref;
+
+            var options = new DialogOptions
+            {
+                ClassBackground = "class-dialog-custom class-dialog-customer-wide",
+                FullWidth = true,
+                MaxWidth = MaxWidth.False,
+                CloseOnEscapeKey = false,
+                DisableBackdropClick = true
+            };
+            var parameters = new DialogParameters<ABFreight.Components.CUSTOMER.Pages.Edit> { { x => x.customer, cusnew }, { x => x.EditOrNot, false } };
+            var dialog = await DialogService.ShowAsync<ABFreight.Components.CUSTOMER.Pages.Edit>(Localizer["Customer_CreateTitle"], parameters, options);
+            var result = await dialog.Result;
+            if (result.Canceled)
+                return;
+
+            var data = (M_Customer)result.Data;
+            var rs = await csv.UpdateOrCreate(data, null!, "");
+            Snackbar.Add(rs.Message, rs.Flag ? MudBlazor.Severity.Success : MudBlazor.Severity.Error);
+            if (!rs.Flag)
+                return;
+
+            Customers ??= new List<M_Customer>();
+            if (!Customers.Any(x => x.Customer_ID == data.Customer_ID))
+                Customers.Add(data);
+            if (mainCode == "Customer")
+                Item.CustomerID = data.Customer_ID;
+            else
+                Item.AgentID = data.Customer_ID;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(string.Format(Localizer["Error_Message"], ex.Message), MudBlazor.Severity.Error);
+        }
+    }
+
     string CusidtoCusCode(Guid cusid)
     {
-        if (cusid == Guid.Empty) return string.Empty;
-        var rs = Customers.FirstOrDefault(x => x.Customer_ID == cusid);
-        return rs == null ? string.Empty : rs.COMPANY ?? string.Empty;
+        var rs = Customers?.FirstOrDefault(x => x.Customer_ID == cusid);
+        return rs.CodeName();
     }
 
     string AgentidtoName(Guid id)
     {
-        if (id == Guid.Empty) return string.Empty;
-        // In the current page, Agent name is read from Customers table.
-        var rs = Customers.FirstOrDefault(x => x.Customer_ID == id);
-        return rs == null ? string.Empty : rs.COMPANY ?? string.Empty;
+        var rs = Customers?.FirstOrDefault(x => x.Customer_ID == id);
+        return rs.CodeName();
     }
 
     private async Task<IEnumerable<Guid>> SearchCustomer(string text)
     {
         await Task.Delay(1);
-        if (string.IsNullOrWhiteSpace(text))
-            return Customers.Select(x => x.Customer_ID);
+        if (Customers == null) return Array.Empty<Guid>();
 
-        return Customers
-            .Where(x => (x.shortname + "_" + x.COMPANY).Contains(text, StringComparison.OrdinalIgnoreCase))
-            .Select(x => x.Customer_ID);
+        IEnumerable<M_Customer> query = Customers;
+        if (!string.IsNullOrWhiteSpace(text))
+        {
+            query = Customers.Where(x =>
+                x.SearchKey().Contains(text, StringComparison.OrdinalIgnoreCase));
+        }
+
+        var ids = query.Select(x => x.Customer_ID).Distinct().ToList();
+        if (Item.CustomerID != Guid.Empty && !ids.Contains(Item.CustomerID))
+            ids.Insert(0, Item.CustomerID);
+        return ids;
     }
 
     private async Task<IEnumerable<Guid>> SearchAgent(string text)
     {
         await Task.Delay(1);
-        if (string.IsNullOrWhiteSpace(text))
+        IEnumerable<M_Customer> query = Customers;
+        if (!string.IsNullOrWhiteSpace(text))
         {
-            return Customers
-                .Where(x => !string.IsNullOrWhiteSpace(x.MainCode) && x.MainCode.Contains("Agent"))
-                .Select(x => x.Customer_ID);
+            query = query.Where(x => (x.shortname + "___" + x.COMPANY).Contains(text, StringComparison.OrdinalIgnoreCase));
         }
 
-        return Customers
-            .Where(x => (x.shortname + "_" + x.COMPANY).Contains(text, StringComparison.OrdinalIgnoreCase))
-            .Select(x => x.Customer_ID);
+        var ids = query.Select(x => x.Customer_ID).Distinct().ToList();
+        if (Item.AgentID != Guid.Empty && !ids.Contains(Item.AgentID))
+            ids.Insert(0, Item.AgentID);
+        return ids;
     }
 
     private async Task<IEnumerable<string?>> SearchCFS(string text)
@@ -847,6 +1160,43 @@
     private Task Get_linkNotify()
     {
         Item.notify1 = search_Notify;
+        return Task.CompletedTask;
+    }
+
+    private async Task<IEnumerable<string>> SearchPort(string text)
+    {
+        await Task.Delay(1);
+        var names = Ports
+            .Where(x => !string.IsNullOrWhiteSpace(x.PORT))
+            .Select(x => x.PORT!)
+            .Distinct();
+
+        if (string.IsNullOrWhiteSpace(text))
+            return names;
+
+        return names.Where(x => x.Contains(text, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private string? LookupPortCode(string? portName)
+    {
+        if (string.IsNullOrWhiteSpace(portName))
+            return null;
+
+        return Ports.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.PORT)
+            && x.PORT!.Equals(portName.Trim(), StringComparison.OrdinalIgnoreCase))?.PORT_CODE;
+    }
+
+    private Task OnPolnameChanged(string? value)
+    {
+        Item.polname = value;
+        Item.polcode = LookupPortCode(value);
+        return Task.CompletedTask;
+    }
+
+    private Task OnPodnameChanged(string? value)
+    {
+        Item.podname = value;
+        Item.podcode = LookupPortCode(value);
         return Task.CompletedTask;
     }
 

@@ -175,6 +175,19 @@
                     <MudNumericField @bind-Value="_item.Labor_Rate" Label="Labor Rate" Variant="Variant.Outlined" Margin="Margin.Dense" Format="#,##0.##" Culture="@_en" HideSpinButtons="true" />
                 </MudItem>
 
+                <MudItem xs="12" sm="6" md="3">
+                    <MudTextField @bind-Value="_item.EstNo" Label="Est No" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </MudItem>
+                <MudItem xs="12" sm="6" md="3">
+                    <MudTextField @bind-Value="_item.Grade" Label="Grade" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </MudItem>
+                <MudItem xs="12" sm="6" md="6">
+                    <MudTextField @bind-Value="_item.DamageDetail" Label="Damage Detail" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_item.Remark" Label="Remark" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="2" />
+                </MudItem>
+
                 <MudItem xs="12">
                     <MudTextField @bind-Value="_item.ghichu_credit"
                                   Label="@Localizer["Notes"]"
@@ -270,9 +283,8 @@
 
     private string CusidtoCusCode(Guid cusid)
     {
-        if (cusid == Guid.Empty) return string.Empty;
-        var rs = Customers.FirstOrDefault(x => x.Customer_ID == cusid);
-        return rs == null ? string.Empty : $"{rs.shortname} - {rs.COMPANY}";
+        var rs = Customers?.FirstOrDefault(x => x.Customer_ID == cusid);
+        return rs.CodeName();
     }
 
     private string Charidtocharge(Guid id)
@@ -287,7 +299,7 @@
         if (string.IsNullOrWhiteSpace(text))
             return Task.FromResult(Customers.Select(x => x.Customer_ID));
         return Task.FromResult(Customers
-            .Where(x => (x.shortname + "_" + x.COMPANY).Contains(text, StringComparison.OrdinalIgnoreCase))
+            .Where(x => x.SearchKey().Contains(text, StringComparison.OrdinalIgnoreCase))
             .Select(x => x.Customer_ID));
     }
 

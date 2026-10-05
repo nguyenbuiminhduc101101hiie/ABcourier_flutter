@@ -1,4 +1,4 @@
-@* @page "/shipment" *@
+﻿@* @page "/shipment" *@
 @inject CustomerService csv
 @inject SupportServices supsv
 @inject SharedServices ssv
@@ -44,7 +44,7 @@
         <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="shipment-summary">
             <MudStack Spacing="1">
                 <MudText Typo="Typo.h6" Class="shipment-title">Shipment Payment Workspace</MudText>
-                <MudText Typo="Typo.body2" Class="shipment-subtitle">Quản lý job, MBL/HBL, payment và charges trong cùng một màn hình.</MudText>
+                <MudText Typo="Typo.body2" Class="shipment-subtitle">@Localizer["Shipment5_Subtitle"]</MudText>
             </MudStack>
 
             <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="shipment-stat-group">
@@ -229,6 +229,7 @@
                         <MudSwitch @bind-Value="chkAE" Label="AE" Color="Color.Primary" Size="Size.Small" Class="shipment-type-switch" />
                         <MudSwitch @bind-Value="chkTruck" Label="Truck" Color="Color.Primary" Size="Size.Small" Class="shipment-type-switch" />
                         <MudSwitch @bind-Value="chkCustoms" Label="Customs" Color="Color.Primary" Size="Size.Small" Class="shipment-type-switch" />
+                        <MudSwitch @bind-Value="chkWH" Label="WH" Color="Color.Primary" Size="Size.Small" Class="shipment-type-switch" />
                     </MudStack>
                 </MudStack>
             </MudStack>
@@ -287,6 +288,7 @@
                             <MudSelectItem Value="@("SE")">SE</MudSelectItem>
                             <MudSelectItem Value="@("Truck")">Truck</MudSelectItem>
                             <MudSelectItem Value="@("Customs")">Customs</MudSelectItem>
+                            <MudSelectItem Value="@("WH")">WH</MudSelectItem>
                         </MudSelect>
                     </EditTemplate>
                 </PropertyColumn>
@@ -807,6 +809,8 @@
     [Parameter] public string? InitialHBL { get; set; }
     [Parameter] public string? InitialBK { get; set; }
     [Parameter] public string? InitialContainer { get; set; }
+    [Parameter] public Guid? InitialCustomerId { get; set; }
+    [Parameter] public string? InitialCustomerName { get; set; }
 
     private string? SearchJobNo;
     private string? SearchMBL;
@@ -818,7 +822,8 @@
         || !string.IsNullOrWhiteSpace(InitialMBL)
         || !string.IsNullOrWhiteSpace(InitialHBL)
         || !string.IsNullOrWhiteSpace(InitialBK)
-        || !string.IsNullOrWhiteSpace(InitialContainer);
+        || !string.IsNullOrWhiteSpace(InitialContainer)
+        || (InitialCustomerId.HasValue && InitialCustomerId.Value != Guid.Empty);
 
     private string ViewDocFilterText()
     {
@@ -828,15 +833,25 @@
         if (!string.IsNullOrWhiteSpace(InitialHBL)) parts.Add($"HBL: {InitialHBL}");
         if (!string.IsNullOrWhiteSpace(InitialBK)) parts.Add($"BK: {InitialBK}");
         if (!string.IsNullOrWhiteSpace(InitialContainer)) parts.Add($"Container: {InitialContainer}");
+        if (InitialCustomerId.HasValue && InitialCustomerId.Value != Guid.Empty)
+        {
+            var cusLabel = !string.IsNullOrWhiteSpace(InitialCustomerName)
+                ? InitialCustomerName
+                : CusidtoCusCode(InitialCustomerId.Value);
+            parts.Add($"Cus: {cusLabel}");
+        }
         return string.Join(" • ", parts);
     }
 
     private async Task ClearViewDocFilter()
     {
         InitialJobNo = InitialMBL = InitialHBL = InitialBK = InitialContainer = null;
+        InitialCustomerId = null;
+        InitialCustomerName = null;
         SearchJobNo = SearchMBL = SearchBK = null;
         SearchHBL = null;
         SearchContNo = null;
+        SearchCusID = Guid.Empty;
         chkSearchAd = false;
         isExpand = false;
         if (mudTable != null)
@@ -855,7 +870,9 @@
 
             userdetail = asv.GetUserDetail();
             Customers = await csv.GetList(userdetail);
-            if (!string.IsNullOrEmpty(userdetail.Department) && userdetail.Department.ToUpper().Contains("SALES"))
+            if (!string.IsNullOrEmpty(userdetail.Department)
+                && userdetail.Department.ToUpper().Contains("SALES")
+                && !userdetail.Department.Equals("SALES MANAGER", StringComparison.OrdinalIgnoreCase))
             {
                 isSale = true;
                 _SaleName = userdetail.Usr;
@@ -872,13 +889,14 @@
                 SearchHBL = InitialHBL?.Trim();
                 SearchBK = InitialBK?.Trim();
                 SearchContNo = InitialContainer?.Trim();
+                SearchCusID = InitialCustomerId ?? Guid.Empty;
                 chkSearchAd = true;
                 isExpand = true;
             }
         }
         catch (Exception ex)
         {
-            CallSnackBar("Please slow down!", MudBlazor.Severity.Error);
+            CallSnackBar(Localizer["PleaseSlowDown"], MudBlazor.Severity.Error);
 
         }
     }
@@ -888,8 +906,8 @@
         if (firstRender && HasViewDocFilter && !_viewDocAutoLoaded)
         {
             _viewDocAutoLoaded = true;
-            await Refresh();
-            await ApplyViewDocFilterToGrid();
+            if (await Refresh())
+                await ApplyViewDocFilterToGrid();
             StateHasChanged();
         }
     }
@@ -938,7 +956,7 @@
     List<M_HoaDonDauRa> ListHoaDonDRa = new List<M_HoaDonDauRa>();
     List<M_HoaDonDauVao> ListHoaDonDVao = new List<M_HoaDonDauVao>();
     M_Job jobdetail;
-    async Task Refresh()
+    async Task<bool> Refresh()
     {
         try
         {
@@ -961,11 +979,13 @@
 
             if (!await ssv.CheckPermission(usr, "View", "Shipment5"))
             {
-                CallSnackBar("You have not access to view", MudBlazor.Severity.Warning);
-                return;
+                CallSnackBar(Localizer["NoPermission_View"], MudBlazor.Severity.Warning);
+                return false;
             }
             Listdata = await shipsv.GetListJob_by_roles_Dept();
-            if (!string.IsNullOrEmpty(_SaleName)) // nếu có sale chỉ lấy sale
+            // SALES MANAGER xem hết; sale thường chỉ lấy job của mình
+            if (!string.IsNullOrEmpty(_SaleName)
+                && !(userdetail.Department?.Equals("SALES MANAGER", StringComparison.OrdinalIgnoreCase) ?? false))
             {
                 var mblIdsWithSale = ListHBLs
                    .Where(h => h.SaleName == _SaleName)
@@ -982,6 +1002,7 @@
                 Listdata = Listdata.Where(job => jobIdsWithSale.Contains(job.JobID)).ToList();
 
             }
+            return true;
         }
         finally
         {
@@ -1000,7 +1021,7 @@
     {
         if (!await ssv.CheckPermission(usr, "Add", "Shipment5"))
         {
-            CallSnackBar("You have not access to Add", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["NoPermission_Add"], MudBlazor.Severity.Warning);
             return;
         }
         CopyOps = new();
@@ -1013,12 +1034,12 @@
     {
         if (!await ssv.CheckPermission(usr, "Add", "Shipment5"))
         {
-            CallSnackBar("You have not access to Add", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["NoPermission_Add"], MudBlazor.Severity.Warning);
             return;
         }
         if (jobdetail == null)
         {
-            CallSnackBar("you must select 1 row.", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["SelectOneRow"], MudBlazor.Severity.Warning);
             return;
         }
         var optionsdialog = new DialogOptions
@@ -1045,23 +1066,23 @@
     {
         if (!await ssv.CheckPermission(usr, "Delete", "Shipment5"))
         {
-            CallSnackBar("You have not access to Delete", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["NoPermission_Delete"], MudBlazor.Severity.Warning);
             return;
         }
         if (item == null)
         {
-            CallSnackBar("You must select 1 row.", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["SelectOneRow"], MudBlazor.Severity.Warning);
             return;
         }
         if (item.Approve.HasValue &&  item.Approve.Value)
         {
-            CallSnackBar("You can't delete Job approved", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["CannotDeleteApprovedJob"], MudBlazor.Severity.Warning);
             return;
         }
         var resultMess = await DialogService.ShowMessageBox(
-                "Warning",
-                "Deleting can not be undone!",
-                yesText: "Delete!", cancelText: "Cancel");
+                Localizer["Warning"],
+                Localizer["DeleteConfirmBody"],
+                yesText: Localizer["delete"], cancelText: Localizer["cancel"]);
 
         if (resultMess.HasValue)
         {
@@ -1158,7 +1179,7 @@
         }
         catch (Exception ex)
         {
-            CallSnackBar("somethings went wrong while commit Item, code: " + ex.Message, MudBlazor.Severity.Error);
+            CallSnackBar(string.Format(Localizer["SomethingWentWrong"], ex.Message), MudBlazor.Severity.Error);
         }
         finally
         {
@@ -1170,7 +1191,7 @@
     {
         if (item.Approve.HasValue && item.Approve.Value)
         {
-            CallSnackBar("This Job is Approved!", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["JobApproved"], MudBlazor.Severity.Warning);
             return;
         }
 
@@ -1182,17 +1203,17 @@
     {
         if (!await ssv.CheckPermission(usr, "Add", "Shipment5"))
         {
-            CallSnackBar("You have not access to Create", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["NoPermission_Add"], MudBlazor.Severity.Warning);
             return;
         }
         if (jobdetail == null)
         {
-            CallSnackBar("you must select 1 row.", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["SelectOneRow"], MudBlazor.Severity.Warning);
             return;
         }
         if (jobdetail.Approve.HasValue && jobdetail.Approve.Value)
         {
-            CallSnackBar("this Job is approved", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["JobApproved"], MudBlazor.Severity.Warning);
             return;
         }
         var optionsdialog = new DialogOptions
@@ -1212,17 +1233,17 @@
 
         if (jobdetail == null)
         {
-            CallSnackBar("you must select 1 row.", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["SelectOneRow"], MudBlazor.Severity.Warning);
             return;
         }
         if (!await ssv.CheckPermission(usr, "Add", "Shipment5"))
         {
-            CallSnackBar("You have not access to Create", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["NoPermission_Add"], MudBlazor.Severity.Warning);
             return;
         }
         if (jobdetail.Approve.HasValue && jobdetail.Approve.Value)
         {
-            CallSnackBar("this Job is approved", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["JobApproved"], MudBlazor.Severity.Warning);
             return;
         }
         var optionsdialog = new DialogOptions
@@ -1242,17 +1263,17 @@
 
         if (jobdetail == null)
         {
-            CallSnackBar("you must select 1 row.", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["SelectOneRow"], MudBlazor.Severity.Warning);
             return;
         }
         if (jobdetail.Approve.HasValue && jobdetail.Approve.Value)
         {
-            CallSnackBar("this Job is approved", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["JobApproved"], MudBlazor.Severity.Warning);
             return;
         }
         if (!await ssv.CheckPermission(usr, "Add", "Shipment5"))
         {
-            CallSnackBar("You have not access to Create", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["NoPermission_Add"], MudBlazor.Severity.Warning);
             return;
         }
 
@@ -1313,7 +1334,7 @@
     {
         return item.Loai == "Customs";
     }
-    bool chkSI = false, chkSE = false, chkAI = false, chkAE = false, chkTruck = false, chkCustoms = false;
+    bool chkSI = false, chkSE = false, chkAI = false, chkAE = false, chkTruck = false, chkCustoms = false, chkWH = false;
 
 
     // private Func<M_Job, bool> _quickFilter => x =>
@@ -1345,13 +1366,14 @@
     private Func<M_Job, bool> _quickFilter => x =>
     {
         // 1. Kiểm tra theo loại (checkbox)
-        bool matchLoai = !chkSI && !chkSE && !chkAI && !chkAE && !chkTruck && !chkCustoms
+        bool matchLoai = !chkSI && !chkSE && !chkAI && !chkAE && !chkTruck && !chkCustoms && !chkWH
                          || (chkSI && x.Loai?.Equals("SI", StringComparison.OrdinalIgnoreCase) == true)
                          || (chkSE && x.Loai?.Equals("SE", StringComparison.OrdinalIgnoreCase) == true)
                          || (chkAI && x.Loai?.Equals("AI", StringComparison.OrdinalIgnoreCase) == true)
                          || (chkAE && x.Loai?.Equals("AE", StringComparison.OrdinalIgnoreCase) == true)
                          || (chkTruck && x.Loai?.Equals("Truck", StringComparison.OrdinalIgnoreCase) == true)
-                         || (chkCustoms && x.Loai?.Equals("Customs", StringComparison.OrdinalIgnoreCase) == true);
+                         || (chkCustoms && x.Loai?.Equals("Customs", StringComparison.OrdinalIgnoreCase) == true)
+                         || (chkWH && x.Loai?.Equals("WH", StringComparison.OrdinalIgnoreCase) == true);
 
         // 2. Kiểm tra theo search
         bool matchSearch = true;
@@ -1416,7 +1438,7 @@
         return matchLoai && matchSearch;
     };
 
-    // Khớp filter "View Document": tìm theo Job/MBL/HBL/BK/Container.
+    // Khớp filter "View Document": tìm theo Job/MBL/HBL/BK/Container/Customer.
     private bool MatchesViewDocFilter(M_Job x)
     {
         if (!HasViewDocFilter) return true;
@@ -1431,7 +1453,8 @@
         bool needCheckChildren = !string.IsNullOrWhiteSpace(SearchMBL)
             || !string.IsNullOrWhiteSpace(SearchHBL)
             || !string.IsNullOrWhiteSpace(SearchBK)
-            || !string.IsNullOrWhiteSpace(SearchContNo);
+            || !string.IsNullOrWhiteSpace(SearchContNo)
+            || SearchCusID != Guid.Empty;
 
         if (!needCheckChildren) return true;
 
@@ -1470,6 +1493,12 @@
             if (!(ListConts?.Any(c => c.hblid.HasValue && hblIds.Contains(c.hblid.Value)
                 && !string.IsNullOrWhiteSpace(c.CONTAINER_NO)
                 && c.CONTAINER_NO.Contains(SearchContNo, StringComparison.OrdinalIgnoreCase)) ?? false))
+                return false;
+        }
+
+        if (SearchCusID != Guid.Empty)
+        {
+            if (!hbls.Any(h => h.CustomerID == SearchCusID))
                 return false;
         }
 
@@ -1516,10 +1545,8 @@
     }
     string CusidtoCusCode(Guid cusid)
     {
-        if (cusid == null || cusid == Guid.Empty)
-            return string.Empty;
-        var rs = Customers.FirstOrDefault(x => x.Customer_ID == cusid);
-        return rs == null ? string.Empty : $"{rs.Customer_Code} - {rs.COMPANY!}";
+        var rs = Customers?.FirstOrDefault(x => x.Customer_ID == cusid);
+        return rs.CodeName();
     }
     private async Task<IEnumerable<string?>> SearchPort(string text)
     {
@@ -1823,7 +1850,7 @@
     {
         if (!await ssv.CheckPermission(usr, "Approve", "Shipment5"))
         {
-            CallSnackBar("You have not access to Approve", MudBlazor.Severity.Warning);
+            CallSnackBar(Localizer["NoPermission_Approve"], MudBlazor.Severity.Warning);
             return;
         }
         var rs = await shipsv.UpdateJobDetail(item);

@@ -2660,44 +2660,349 @@ namespace ABFreight.Services
             }
         }
 
-        public async Task<BoolandMessReponse> ExportBBGN(M_HBL detail)
+        public async Task<BoolandMessReponse> ExportBBGN(M_HBL detail, Guid? layoutFormId = null)
         {
             try
             {
+                var (templateBytes, reportLogo) = await ResolveArrivalOrDoTemplateAsync(BillLayoutFormKind.Bbgn, layoutFormId);
                 var report = new StiReport();
-                var rpt = Path.Combine(_env.WebRootPath, "Reports", "BienBanGiaoNhan.mrt");
                 StiBlazorHelper.Initialize(JSRuntime);
                 report = StimulsoftLicenseHelper.CreateReport();
-                report.Load(rpt);
+                report.Load(new MemoryStream(templateBytes));
+                ApplyArrivalReportSetup(report, reportLogo);
+                ApplyLogoToImageComponent(report, "Image1", reportLogo);
                 report.Dictionary.Variables["hblid"].Value = detail.hblID.ToString();
 
                 var shippername = string.Join("\n", detail.shipper);
                 shippername = shippername.Trim();
                 var shipper_id = await GetIDCus_englishname(shippername);
-                if (shipper_id.HasValue)
-                {
-                    report.Dictionary.Variables["shipper_id"].Value = shipper_id.Value.ToString();
-                }
-                else
-                {
-                    report.Dictionary.Variables["shipper_id"].Value = shipper_id?.ToString() ?? "00000000-0000-0000-0000-000000000000";
-
-                }
+                report.Dictionary.Variables["shipper_id"].Value =
+                    shipper_id?.ToString() ?? "00000000-0000-0000-0000-000000000000";
 
                 var consigneename = string.Join("\n", detail.consignee);
                 consigneename = consigneename.Trim();
                 var consignee_id = await GetIDCus_englishname(consigneename);
-                if (shipper_id.HasValue)
+                report.Dictionary.Variables["consignee_id"].Value =
+                    consignee_id?.ToString() ?? "00000000-0000-0000-0000-000000000000";
+
+                StimulsoftLicenseHelper.PrepareAndRender(report);
+                using (var ms = new MemoryStream())
                 {
-                    report.Dictionary.Variables["consignee_id"].Value = consignee_id.Value.ToString();
+                    report.ExportDocument(StiExportFormat.Pdf, ms);
+                    var pdfData = ms.ToArray();
+                    await JSRuntime.InvokeVoidAsync("openReportInNewTab", pdfData);
                 }
-                else
+                return new BoolandMessReponse(true, "Export successfully!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new BoolandMessReponse(false, "Export failed!, Error code: " + ex.Message);
+            }
+        }
+
+        public async Task<List<M_Container>> GetListContainerHBLAsync(Guid? id)
+        {
+            try
+            {
+                _context.ChangeTracker.Clear();
+
+                var rs = await _context.Container
+                    .Where(x => x.hblid == id && x.CONTINUED == true)
+                    .ToListAsync();
+
+                return rs;
+            }
+            catch (Exception ex)
+            {
+                return new List<M_Container>();
+            }
+        }
+
+        /// <summary>
+        /// Số MBL tự động khi người dùng để trống: "MBL" + yyMM + 5 số thứ tự trong tháng (vd MBL260900001).
+        /// Số thứ tự = số lớn nhất đang có dạng MBL&lt;yyMM&gt;xxxxx trong bảng MBL + 1.
+        /// </summary>
+        public async Task<string> GenerateMblNoAsync(DateTime? at = null)
+        {
+            var prefix = "MBL" + (at ?? DateTime.Now).ToString("yyMM");
+            await using var db = await _dbFactory.CreateDbContextAsync();
+            var existing = await db.MBL.AsNoTracking()
+                .Where(x => x.Mbl != null && x.Mbl.StartsWith(prefix))
+                .Select(x => x.Mbl!)
+                .ToListAsync();
+            var max = 0;
+            foreach (var no in existing)
+            {
+                var tail = no.Trim().Substring(prefix.Length);
+                if (tail.Length > 0 && tail.All(char.IsDigit) && int.TryParse(tail, out var n) && n > max) max = n;
+            }
+            return prefix + (max + 1).ToString("D5");
+        }
+
+        string GetLastValue(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return "";
+
+            return value
+                .Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries)
+                .Last()
+                .Trim();
+        }
+        public async Task<BoolandMessReponse> ExportDebitMau1(M_Debit detail,int? mau)
+        {
+            string cur_type="";
+            try
+            {
+                var report = new StiReport();
+                string rpt;
+
+                cur_type = "VND";
+                rpt = Path.Combine(_env.WebRootPath, "Reports", "ReportDebitNote_Mau1.mrt");
+
+                StiBlazorHelper.Initialize(JSRuntime);
+                report = StimulsoftLicenseHelper.CreateReport();
+                var connectionString = ResolveReportConnectionString();
+                var companyLogo = await GetCompanyLogoAsync();
+
+                report.Load(rpt);
+                report.Culture = "en-US";
+                ApplyReportConnectionString(report, connectionString);
+                ApplyCompanyLogoToReport(report, companyLogo, showLogo: true);
+                var hblinfo = await GetHBL_byHBLid(detail.hblid); // lay ra say volume
+                var fcl = await GetFLCByMBLID(hblinfo.mblid); //
+
+                var list_debit = await GetListDebit_Debitno(detail.debitno);
+
+                double? total_payment = 0;
+                double? total_amount_notvat = 0;
+
+                double? total_amount_Tax = 0;
+                foreach (var item_debit in list_debit)
                 {
-                    report.Dictionary.Variables["consignee_id"].Value = consignee_id?.ToString() ?? "00000000-0000-0000-0000-000000000000";
-
+                    if (item_debit.tiente == "VND")
+                    {
+                        total_payment += item_debit.thanhtiensauthue;
+                        total_amount_notvat += item_debit.dongia * item_debit.soluong;
+                        total_amount_Tax += (item_debit.dongia * item_debit.soluong) * (item_debit.thue / 100);
+                    }
+                    else
+                    {
+                        total_payment += item_debit.thanhtiensauthue * item_debit.tigiadebit;
+                        total_amount_notvat += (item_debit.dongia * item_debit.soluong) * item_debit.tigiadebit;
+                        total_amount_Tax += ((item_debit.dongia * item_debit.soluong) * (item_debit.thue / 100)) * item_debit.tigiadebit;
+                    }
                 }
 
+                report.Dictionary.Variables["Total_shipment"].Value = (total_payment ?? 0).ToString("#,##0");
+                report.Dictionary.Variables["total_amount_notvat"].Value = (total_amount_notvat ?? 0).ToString("#,##0.##");
+                report.Dictionary.Variables["total_amount_Tax"].Value = (total_amount_Tax ?? 0).ToString("#,##0.##");
+                report.Dictionary.Variables["qty"].Value = hblinfo.say;
+               
+                report.Dictionary.Variables["volume"].Value =
+                GetLastValue(hblinfo.NoOfPackages)
+                + " / " +
+                GetLastValue(hblinfo.gross)
+                + " / " +
+                GetLastValue(hblinfo.cbm);
+    
+                report.Dictionary.Variables["DatetimeNow"].Value = DateTime.Now.ToString("dd-MMM-yyyy", CultureInfo.InvariantCulture);
+                report.Dictionary.Variables["eta"].Value = hblinfo.ETA.HasValue ? hblinfo.ETA.Value.ToString("dd-MMM-yyyy", CultureInfo.InvariantCulture) : "";
+                report.Dictionary.Variables["etd"].Value = hblinfo.ETD.HasValue ? hblinfo.ETA.Value.ToString("dd-MMM-yyyy", CultureInfo.InvariantCulture) : "";
+                total_payment = Math.Round(total_payment ?? 0, 2);
+                report.Dictionary.Variables["In_Word"].Value = ConvertToWords(total_payment, cur_type);
+                report.Dictionary.Variables["Cur_type"].Value = cur_type;
+                report.Dictionary.Variables["DatetimeNow"].Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                var mblinfo = await GetMBL_byHBLid(hblinfo.mblid);
+                var infojob = await GetJob_byid(mblinfo.Jobid);
+                report.Dictionary.Variables["Refno"].Value = infojob.JobNo.ToString();
+                report.Dictionary.Variables["HBLID"].Value = detail.hblid.ToString();
+                report.Dictionary.Variables["debitno"].Value = detail.debitno;
+                StimulsoftLicenseHelper.PrepareAndRender(report);
+                using (var ms = new MemoryStream())
+                {
+                    report.ExportDocument(StiExportFormat.Pdf, ms);
+                    var pdfData = ms.ToArray();
+                    await JSRuntime.InvokeVoidAsync("openReportInNewTab", pdfData);
+                }
+                return new BoolandMessReponse(true, "Export successfully!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new BoolandMessReponse(false, "Export failed!, Error code: " + ex.Message);
+            }
+        }
 
+        public async Task<BoolandMessReponse> ExportDebitMau2(M_Debit detail, int? mau)
+        {
+            string cur_type = "";
+            try
+            {
+                var report = new StiReport();
+                string rpt;
+
+                cur_type = "VND";
+                rpt = Path.Combine(_env.WebRootPath, "Reports", "ReportDebitNote_Mau2.mrt");
+
+                StiBlazorHelper.Initialize(JSRuntime);
+                report = StimulsoftLicenseHelper.CreateReport();
+                var connectionString = ResolveReportConnectionString();
+                var companyLogo = await GetCompanyLogoAsync();
+
+                report.Load(rpt);
+                report.Culture = "en-US";
+                ApplyReportConnectionString(report, connectionString);
+                ApplyCompanyLogoToReport(report, companyLogo, showLogo: true);
+                var hblinfo = await GetHBL_byHBLid(detail.hblid); // lay ra say volume
+                var fcl = await GetFLCByMBLID(hblinfo.mblid); //
+
+                var list_debit = await GetListDebit_Debitno(detail.debitno);
+
+                double? total_payment = 0;
+                double? total_amount_notvat = 0;
+
+                double? total_amount_Tax = 0;
+                foreach (var item_debit in list_debit)
+                {
+                    if (item_debit.tiente == "VND")
+                    {
+                        total_payment += item_debit.thanhtiensauthue;
+                        total_amount_notvat += item_debit.dongia * item_debit.soluong;
+                        total_amount_Tax += (item_debit.dongia * item_debit.soluong) * (item_debit.thue / 100);
+                    }
+                    else
+                    {
+                        total_payment += item_debit.thanhtiensauthue * item_debit.tigiadebit;
+                        total_amount_notvat += (item_debit.dongia * item_debit.soluong) * item_debit.tigiadebit;
+                        total_amount_Tax += ((item_debit.dongia * item_debit.soluong) * (item_debit.thue / 100)) * item_debit.tigiadebit;
+                    }
+                }
+
+                report.Dictionary.Variables["Total_shipment"].Value = (total_payment ?? 0).ToString("#,##0" );
+                report.Dictionary.Variables["total_amount_notvat"].Value = (total_amount_notvat ?? 0).ToString("#,##0.##");
+                report.Dictionary.Variables["total_amount_Tax"].Value = (total_amount_Tax ?? 0).ToString("#,##0.##");
+                report.Dictionary.Variables["qty"].Value = hblinfo.say;
+
+                report.Dictionary.Variables["volume"].Value =
+                GetLastValue(hblinfo.NoOfPackages)
+                + " / " +
+                GetLastValue(hblinfo.gross)
+                + " / " +
+                GetLastValue(hblinfo.cbm);
+
+                report.Dictionary.Variables["DatetimeNow"].Value = DateTime.Now.ToString("dd-MMM-yyyy", CultureInfo.InvariantCulture);
+                report.Dictionary.Variables["eta"].Value = hblinfo.ETA.HasValue ? hblinfo.ETA.Value.ToString("dd-MMM-yyyy", CultureInfo.InvariantCulture) : "";
+                report.Dictionary.Variables["etd"].Value = hblinfo.ETD.HasValue ? hblinfo.ETA.Value.ToString("dd-MMM-yyyy", CultureInfo.InvariantCulture) : "";
+                total_payment = Math.Round(total_payment ?? 0, 2);
+                report.Dictionary.Variables["In_Word"].Value = ConvertToWords(total_payment, cur_type);
+                report.Dictionary.Variables["Cur_type"].Value = cur_type;
+                report.Dictionary.Variables["DatetimeNow"].Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                var mblinfo = await GetMBL_byHBLid(hblinfo.mblid);
+                var infojob = await GetJob_byid(mblinfo.Jobid);
+                report.Dictionary.Variables["Refno"].Value = infojob.JobNo.ToString();
+                report.Dictionary.Variables["HBLID"].Value = detail.hblid.ToString();
+                report.Dictionary.Variables["debitno"].Value = detail.debitno;
+                StimulsoftLicenseHelper.PrepareAndRender(report);
+                using (var ms = new MemoryStream())
+                {
+                    report.ExportDocument(StiExportFormat.Pdf, ms);
+                    var pdfData = ms.ToArray();
+                    await JSRuntime.InvokeVoidAsync("openReportInNewTab", pdfData);
+                }
+                return new BoolandMessReponse(true, "Export successfully!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new BoolandMessReponse(false, "Export failed!, Error code: " + ex.Message);
+            }
+        }
+        public async Task<BoolandMessReponse> ExportDebitMau3(M_Debit detail, int? mau)
+        {
+            string cur_type = "";
+            try
+            {
+                var report = new StiReport();
+                string rpt;
+
+                cur_type = "USD";
+                rpt = Path.Combine(_env.WebRootPath, "Reports", "ReportDebitNote_Mau3.mrt");
+
+                StiBlazorHelper.Initialize(JSRuntime);
+                report = StimulsoftLicenseHelper.CreateReport();
+                var connectionString = ResolveReportConnectionString();
+                var companyLogo = await GetCompanyLogoAsync();
+
+                report.Load(rpt);
+                report.Culture = "en-US";
+                ApplyReportConnectionString(report, connectionString);
+                ApplyCompanyLogoToReport(report, companyLogo, showLogo: true);
+                var hblinfo = await GetHBL_byHBLid(detail.hblid); // lay ra say volume
+                List<M_Container> containerinfo = await GetListContainerHBLAsync(detail.hblid);
+                string chuoikienkgcbm = "";
+                double? total_kien = 0;
+                double? total_kg = 0;
+                double? total_cbm = 0;
+
+                foreach (var item_cont in containerinfo)
+                {
+                    total_kien += item_cont.GrossWeight;
+                    total_kg += item_cont.NETWEIGHT;
+                    total_cbm += double.TryParse(item_cont.cbm, out var cbm) ? cbm : 0;
+                }
+                chuoikienkgcbm = total_kien + "(kgs) / " + total_kg + "(kgs) / " + total_cbm + "(cbm) / ";
+                report.Dictionary.Variables["sokienkgcbm"].Value = chuoikienkgcbm;
+                var fcl = await GetFLCByMBLID(hblinfo.mblid); //
+
+                var list_debit = await GetListDebit_Debitno(detail.debitno);
+
+                double? total_payment = 0;
+                double? total_amount_notvat = 0;
+
+                double? total_amount_Tax = 0;
+                foreach (var item_debit in list_debit)
+                {
+                    if(item_debit.tiente == "USD")
+                        {
+                        total_payment += item_debit.thanhtiensauthue;
+                        total_amount_notvat += item_debit.dongia * item_debit.soluong;
+                        total_amount_Tax += (item_debit.dongia * item_debit.soluong) * (item_debit.thue / 100);
+                    }
+                        else
+                    {
+                        total_payment += item_debit.thanhtiensauthue / item_debit.tigiadebit;
+                        total_amount_notvat += (item_debit.dongia * item_debit.soluong) / item_debit.tigiadebit;
+                        total_amount_Tax += ((item_debit.dongia * item_debit.soluong) * (item_debit.thue / 100)) / item_debit.tigiadebit;
+
+                    }
+                }
+
+                report.Dictionary.Variables["Total_shipment"].Value = (total_payment ?? 0).ToString("#,##0");
+                report.Dictionary.Variables["total_amount_notvat"].Value = (total_amount_notvat ?? 0).ToString("#,##0.##");
+                report.Dictionary.Variables["total_amount_Tax"].Value = (total_amount_Tax ?? 0).ToString("#,##0.##");
+                report.Dictionary.Variables["qty"].Value = hblinfo.say;
+
+                report.Dictionary.Variables["volume"].Value =
+                GetLastValue(hblinfo.NoOfPackages)
+                + " / " +
+                GetLastValue(hblinfo.gross)
+                + " / " +
+                GetLastValue(hblinfo.cbm);
+
+                report.Dictionary.Variables["DatetimeNow"].Value = DateTime.Now.ToString("dd-MMM-yyyy", CultureInfo.InvariantCulture);
+                report.Dictionary.Variables["eta"].Value = hblinfo.ETA.HasValue ? hblinfo.ETA.Value.ToString("dd-MMM-yyyy", CultureInfo.InvariantCulture) : "";
+                report.Dictionary.Variables["etd"].Value = hblinfo.ETD.HasValue ? hblinfo.ETA.Value.ToString("dd-MMM-yyyy", CultureInfo.InvariantCulture) : "";
+                total_payment = Math.Round(total_payment ?? 0, 2);
+                report.Dictionary.Variables["In_Word"].Value = ConvertToWords(total_payment, cur_type);
+                report.Dictionary.Variables["Cur_type"].Value = cur_type;
+                report.Dictionary.Variables["DatetimeNow"].Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                var mblinfo = await GetMBL_byHBLid(hblinfo.mblid);
+                var infojob = await GetJob_byid(mblinfo.Jobid);
+                report.Dictionary.Variables["Refno"].Value = infojob.JobNo.ToString();
+                report.Dictionary.Variables["HBLID"].Value = detail.hblid.ToString();
+                report.Dictionary.Variables["debitno"].Value = detail.debitno;
                 StimulsoftLicenseHelper.PrepareAndRender(report);
                 using (var ms = new MemoryStream())
                 {

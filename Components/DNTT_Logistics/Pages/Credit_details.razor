@@ -13,7 +13,6 @@
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject FontService FontSizeService
-@inject IStringLocalizer<SharedResource> Localizer
 @inject ShipmentService shipsv
 
 <style>
@@ -125,7 +124,7 @@
 
             if (!await ssv.CheckPermission(asv.GetAuth().Result.User.Identity!.Name!, "View", "MBL"))
             {
-                CallSnackBar("You have not access to view", MudBlazor.Severity.Warning);
+                CallSnackBar(Localizer["NoPermission_View"], MudBlazor.Severity.Warning);
                 return;
             }
             ListCredit = await shipsv.GetListCredit_sodntt(_dntt_details.So);
@@ -147,10 +146,8 @@
     }
     string CusidtoCusCode(Guid cusid)
     {
-        if (cusid == null || cusid == Guid.Empty)
-            return string.Empty;
-        var rs = Customers.FirstOrDefault(x => x.Customer_ID == cusid);
-        return rs == null ? string.Empty : $"{rs.shortname} - {rs.COMPANY}"!;
+        var rs = Customers?.FirstOrDefault(x => x.Customer_ID == cusid);
+        return rs.CodeName();
     }
 
     string Charidtocharge(Guid id)

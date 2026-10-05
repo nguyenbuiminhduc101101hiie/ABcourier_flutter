@@ -38,5 +38,7 @@ namespace ABFreight.Models
         public string? BkavXmlPath { get; set; }
         public int? BkavStatusID { get; set; }
         public string? BkavLastMessage { get; set; }
+        public bool? thuho { get; set; } = false;
+        public bool? dathanhtoan { get; set; } = false;
     }
 }
